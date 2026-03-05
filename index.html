@@ -458,6 +458,7 @@ function toggleTimer(personName) {
   if (!t.running) {
     t.running = true;
     t.startTime = Date.now();
+    saveTimerState();
     t.interval = setInterval(() => {
       const el = document.getElementById(`timer-display-${slugify(personName)}`);
       if (el) el.textContent = formatTime(t.elapsed + (Date.now() - t.startTime));
@@ -470,22 +471,33 @@ function toggleTimer(personName) {
     t.elapsed += endedAt - startedAt;
     t.running = false;
     t.startTime = null;
+    saveTimerState();
     updateTimerBtn(personName);
     saveSessionToSupabase(personName, startedAt, endedAt);
   }
 }
 
-function updateTimerBtn(personName) {
-  const btn = document.getElementById(`timer-btn-${slugify(personName)}`);
-  const t = timers[personName];
-  if (!btn) return;
-  if (t && t.running) {
-    btn.textContent = 'Stop Timer';
-    btn.classList.add('running');
-  } else {
-    btn.textContent = 'Start Timer';
-    btn.classList.remove('running');
-  }
+function saveTimerState() {
+  const serializable = {};
+  Object.entries(timers).forEach(([name, t]) => {
+    serializable[name] = { running: t.running, startTime: t.startTime, elapsed: t.elapsed };
+  });
+  localStorage.setItem('maracuya_timers', JSON.stringify(serializable));
+}
+
+function loadTimerState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('maracuya_timers') || '{}');
+    Object.entries(saved).forEach(([name, t]) => {
+      timers[name] = { running: t.running, startTime: t.startTime, elapsed: t.elapsed };
+      if (t.running) {
+        timers[name].interval = setInterval(() => {
+          const el = document.getElementById(`timer-display-${slugify(name)}`);
+          if (el) el.textContent = formatTime(timers[name].elapsed + (Date.now() - timers[name].startTime));
+        }, 1000);
+      }
+    });
+  } catch(e) { console.warn('Timer state load failed', e); }
 }
 
 // ── RENDER ──
@@ -615,6 +627,7 @@ window.addEventListener('scroll', function() {
 (async () => {
   document.getElementById('globalLabel').textContent = 'Loading…';
   await loadFromSupabase();
+  loadTimerState();
   renderAll();
 })();
 </script>
