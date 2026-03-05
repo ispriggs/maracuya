@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ViviApp</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #8a9e85;
+    --sage-light: #c5d4c2;
+    --sage-dark: #5c7057;
+    --terracotta: #c27b5a;
+    --terracotta-light: #e8c4ae;
+    --sand: #f5f0e8;
+    --deep: #2c2c2c;
+    --muted: #7a7a7a;
+    --card-bg: rgba(255,255,255,0.75);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(194,123,90,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(138,158,133,0.15) 0%, transparent 50%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--deep);
+  }
+
+  .hero {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 7vw, 72px);
+    font-weight: 600;
+    color: var(--deep);
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  h1 span {
+    color: var(--terracotta);
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 400px;
+    margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    border: 1px solid rgba(138,158,133,0.3);
+    border-radius: 100px;
+    padding: 10px 22px;
+    font-size: 13px;
+    color: var(--muted);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  /* ── HAMBURGER & DRAWER ── */
+  .hamburger {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid rgba(138,158,133,0.25);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: box-shadow 0.2s;
+  }
+  .hamburger:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.13); }
+  .hamburger span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--deep);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44,44,44,0.3);
+    backdrop-filter: blur(3px);
+    z-index: 900;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+  .drawer {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%;
+    width: 280px;
+    background: white;
+    z-index: 950;
+    padding: 80px 32px 40px;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 40px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--deep); margin-bottom: 6px; }
+  .drawer-tagline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
+  .drawer-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sage); font-weight: 500; margin-bottom: 14px; }
+  .drawer-nav { display: flex; flex-direction: column; gap: 8px; }
+  .drawer-link {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; border-radius: 12px;
+    text-decoration: none; color: var(--deep);
+    transition: background 0.15s, transform 0.15s;
+    border: 1px solid transparent;
+  }
+  .drawer-link:hover { background: var(--sand); border-color: rgba(138,158,133,0.2); transform: translateX(3px); }
+  .drawer-link.active { background: rgba(194,123,90,0.08); border-color: rgba(194,123,90,0.25); }
+  .drawer-link-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .link-eshop .drawer-link-icon { background: rgba(138,158,133,0.15); }
+  .link-vivi .drawer-link-icon { background: rgba(194,123,90,0.12); }
+  .drawer-link-text { font-size: 14px; font-weight: 500; }
+  .drawer-link-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .drawer-footer { margin-top: auto; font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-logo">Maracuya</div>
+  <div class="drawer-tagline">Team Workspace</div>
+  <div class="drawer-label">Projects</div>
+  <nav class="drawer-nav">
+    <a href="index.html" class="drawer-link link-eshop">
+      <div class="drawer-link-icon">🛍️</div>
+      <div>
+        <div class="drawer-link-text">E-Shop</div>
+        <div class="drawer-link-sub">Product &amp; Launch Tracker</div>
+      </div>
+    </a>
+    <a href="vivi.html" class="drawer-link link-vivi active">
+      <div class="drawer-link-icon">✨</div>
+      <div>
+        <div class="drawer-link-text">ViviApp</div>
+        <div class="drawer-link-sub">Coming soon</div>
+      </div>
+    </a>
+  </nav>
+  <div class="drawer-footer">Maracuya Team &copy; 2026</div>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">Coming Soon</div>
+  <h1>Vivi<span>App</span></h1>
+  <p class="subtitle">Something exciting is being built here. Check back soon.</p>
+  <div class="badge">
+    <div class="badge-dot"></div>
+    Currently in development
+  </div>
+</div>
+
+<script>
+function toggleDrawer() {
+  const hamburger = document.getElementById('hamburger');
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawerOverlay');
+  hamburger.classList.toggle('open');
+  drawer.classList.toggle('open');
+  overlay.classList.toggle('open');
+}
+</script>
+</body>
+</html>
