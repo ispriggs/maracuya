@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Task Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #8a9e85;
+    --sage-light: #c5d4c2;
+    --sage-dark: #5c7057;
+    --terracotta: #c27b5a;
+    --terracotta-light: #e8c4ae;
+    --sand: #f5f0e8;
+    --deep: #2c2c2c;
+    --muted: #7a7a7a;
+    --white: #ffffff;
+    --card-bg: rgba(255,255,255,0.75);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(138,158,133,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(194,123,90,0.12) 0%, transparent 50%);
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    color: var(--deep);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 52px;
+  }
+
+  header .eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 600;
+    color: var(--deep);
+    line-height: 1.15;
+  }
+
+  header p {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 300;
+  }
+
+  .progress-bar-wrap {
+    width: 220px;
+    height: 4px;
+    background: var(--sage-light);
+    border-radius: 10px;
+    margin: 18px auto 0;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sage-dark), var(--terracotta));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .person-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 32px 28px 28px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.9);
+    box-shadow: 0 4px 24px rgba(92,112,87,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .person-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(92,112,87,0.13), 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .person-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .p1 .avatar { background: rgba(138,158,133,0.25); }
+  .p2 .avatar { background: rgba(194,123,90,0.2); }
+  .p3 .avatar { background: rgba(92,112,87,0.18); }
+
+  .person-meta h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .person-meta .role {
+    font-size: 11.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 3px;
+    font-weight: 500;
+  }
+
+  .person-progress {
+    margin: 16px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mini-bar {
+    flex: 1;
+    height: 5px;
+    background: #e8e2d8;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .mini-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+  .p1 .mini-fill { background: linear-gradient(90deg, var(--sage), var(--sage-dark)); }
+  .p2 .mini-fill { background: linear-gradient(90deg, var(--terracotta-light), var(--terracotta)); }
+  .p3 .mini-fill { background: linear-gradient(90deg, #a2b59e, var(--sage-dark)); }
+
+  .mini-pct {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  .section {
+    margin-bottom: 22px;
+  }
+
+  .section-title {
+    font-size: 10.5px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(194,123,90,0.2);
+  }
+
+  .p2 .section-title { color: var(--sage-dark); border-color: rgba(138,158,133,0.3); }
+  .p3 .section-title { color: #6b7c68; border-color: rgba(107,124,104,0.25); }
+
+  .task-group {
+    margin-bottom: 14px;
+  }
+
+  .task-group-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--deep);
+    margin-bottom: 7px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .task-group-name::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    flex-shrink: 0;
+  }
+
+  .p2 .task-group-name::before { background: var(--terracotta-light); }
+  .p3 .task-group-name::before { background: #b5c8b2; }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    margin-bottom: 3px;
+    user-select: none;
+  }
+
+  .task-item:hover { background: rgba(138,158,133,0.08); }
+
+  .task-item input[type="checkbox"] { display: none; }
+
+  .custom-check {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--sage-light);
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: white;
+  }
+
+  .p2 .custom-check { border-color: var(--terracotta-light); }
+  .p3 .custom-check { border-color: #b5c8b2; }
+
+  .task-item.done .custom-check {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+  .p2 .task-item.done .custom-check {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+  }
+  .p3 .task-item.done .custom-check {
+    background: var(--sage-dark);
+    border-color: var(--sage-dark);
+  }
+
+  .custom-check svg {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.18s ease;
+  }
+  .task-item.done .custom-check svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .task-label {
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--deep);
+    transition: color 0.2s, text-decoration 0.2s;
+  }
+
+  .task-item.done .task-label {
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  .deliverables-section {
+    background: rgba(138,158,133,0.07);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-top: 6px;
+  }
+
+  .p2 .deliverables-section { background: rgba(194,123,90,0.06); }
+  .p3 .deliverables-section { background: rgba(92,112,87,0.07); }
+
+  .reset-btn {
+    display: block;
+    margin: 10px auto 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: 1px solid #d8d2c8;
+    border-radius: 20px;
+    padding: 6px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Project Tracker</div>
+  <h1>Team Task Dashboard</h1>
+  <p>Click any task to mark it complete</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="globalFill" style="width:0%"></div>
+  </div>
+  <div class="progress-label" id="globalLabel">0 of 0 tasks complete</div>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const people = [
+  {
+    id: "p1",
+    emoji: "🌿",
+    name: "Person 1",
+    role: "Product & Supplier Lead",
+    sections: [
+      {
+        title: "Core Tasks",
+        groups: [
+          { name: "1. Product Research", tasks: [
+            "Identify 5–8 high-potential products in Natural Jewellery",
+            "Identify 5–8 high-potential products in Yoga Items",
+            "Identify 5–8 high-potential products in Wellness Items",
+            "Analyze competitors' pricing and positioning",
+            "Identify product trends (eco, spiritual, minimalist, premium)"
+          ]},
+          { name: "2. Supplier Shortlisting", tasks: [
+            "Research 15–25 suppliers per category",
+            "Compare MOQ across suppliers",
+            "Compare pricing tiers (500 / 1000 units)",
+            "Compare custom branding options",
+            "Compare certifications and production timelines"
+          ]},
+          { name: "3. Supplier Outreach", tasks: [
+            "Send structured outreach emails",
+            "Request samples shipped to Costa Rica",
+            "Request bulk shipping quotes to Florida",
+            "Request private label capabilities",
+            "Request compliance documentation"
+          ]},
+          { name: "4. Sample Coordination", tasks: [
+            "Track sample orders",
+            "Log delivery timelines",
+            "Maintain supplier comparison sheet"
+          ]}
+        ]
+      },
+      {
+        title: "Weekly Deliverables",
+        groups: [
+          { name: "", tasks: [
+            "Updated supplier spreadsheet",
+            "Shortlist of best 2–3 suppliers per product",
+            "Sample tracking report"
+          ]}
+        ]
+      }
+    ]
+  },
+  {
+    id: "p2",
+    emoji: "✨",
+    name: "Person 2",
+    role: "Branding, Positioning & Market Strategy",
+    sections: [
+      {
+        title: "Core Tasks",
+        groups: [
+          { name: "1. Brand Definition", tasks: [
+            "Define target customer profile",
+            "Define brand tone (premium, conscious lifestyle, spiritual-modern)",
+            "Define core brand values (eco, ethical, performance)",
+            "Draft brand story"
+          ]},
+          { name: "2. Pricing Strategy", tasks: [
+            "Define target margins (65–75% ideal)",
+            "Create landed cost estimate",
+            "Create retail price model",
+            "Create bundle pricing strategy",
+            "Identify optimal price bands for US & Canada"
+          ]},
+          { name: "3. Competitive Analysis", tasks: [
+            "Identify 10 competitors",
+            "Document competitor price ranges",
+            "Document best-selling items",
+            "Document shipping times",
+            "Document customer complaints (opportunity insights)"
+          ]},
+          { name: "4. Bundle Strategy", tasks: [
+            "Develop Yoga Starter Kit concept",
+            "Develop Chakra Balance Set concept",
+            "Develop Morning Ritual Bundle concept",
+            "Develop Mindfulness Gift Box concept",
+            "Develop 1–2 additional bundle concepts"
+          ]}
+        ]
+      },
+      {
+        title: "Weekly Deliverables",
+        groups: [
+          { name: "", tasks: [
+            "Brand positioning summary (1–2 pages)",
+            "Pricing model draft",
+            "Competitor comparison sheet",
+            "Bundle strategy outline"
+          ]}
+        ]
+      }
+    ]
+  },
+  {
+    id: "p3",
+    emoji: "📦",
+    name: "Person 3",
+    role: "Logistics & Operations Lead",
+    sections: [
+      {
+        title: "Core Tasks",
+        groups: [
+          { name: "1. Fulfillment Research", tasks: [
+            "Compare US-based 3PL providers",
+            "Analyze storage fees",
+            "Analyze pick & pack fees",
+            "Analyze shipping rates to US & Canada",
+            "Analyze return handling costs"
+          ]},
+          { name: "2. Shipping Model Comparison", tasks: [
+            "Evaluate direct-from-origin shipping",
+            "Evaluate bulk to Florida + 3PL fulfillment",
+            "Compare delivery time across models",
+            "Compare cost per unit across models",
+            "Compare customer experience & return logistics"
+          ]},
+          { name: "3. Compliance & Risk Review", tasks: [
+            "Research US product compliance (skin-contact items)",
+            "Research labeling requirements",
+            "Research import duties for jewellery & wellness goods",
+            "Research Canadian import considerations"
+          ]},
+          { name: "4. Landed Cost Modeling", tasks: [
+            "Calculate unit cost",
+            "Calculate freight costs",
+            "Calculate duties",
+            "Calculate fulfillment fees",
+            "Calculate total landed cost"
+          ]}
+        ]
+      },
+      {
+        title: "Weekly Deliverables",
+        groups: [
+          { name: "", tasks: [
+            "Fulfillment comparison summary",
+            "Shipping cost breakdown",
+            "Risk/compliance checklist",
+            "Landed cost calculator (draft)"
+          ]}
+        ]
+      }
+    ]
+  }
+];
+
+// ── SUPABASE CONFIG ──────────────────────────────────────────
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';       // e.g. https://xxxx.supabase.co
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+// ─────────────────────────────────────────────────────────────
+
+let state = {};
+let allTaskIds = [];
+let saving = false;
+
+async function loadFromSupabase() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/task_state?select=id,done`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    const rows = await res.json();
+    if (Array.isArray(rows)) {
+      rows.forEach(r => { state[r.id] = r.done; });
+    }
+  } catch (e) {
+    console.warn('Supabase load failed, using local state.', e);
+  }
+}
+
+async function saveToSupabase(id, done) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/task_state`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ id, done, updated_at: new Date().toISOString() })
+    });
+  } catch (e) {
+    console.warn('Supabase save failed.', e);
+  }
+}
+
+async function resetPersonInSupabase(personId) {
+  const ids = Object.keys(state).filter(k => k.startsWith(personId));
+  await Promise.all(ids.map(id => saveToSupabase(id, false)));
+}
+
+function taskId(personId, sectionIdx, groupIdx, taskIdx) {
+  return `${personId}-s${sectionIdx}-g${groupIdx}-t${taskIdx}`;
+}
+
+function renderAll() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  people.forEach(person => {
+    const card = document.createElement('div');
+    card.className = `person-card ${person.id}`;
+
+    let personTaskIds = [];
+    let sectionHtml = '';
+
+    person.sections.forEach((section, si) => {
+      let groupsHtml = '';
+      section.groups.forEach((group, gi) => {
+        let tasksHtml = '';
+        group.tasks.forEach((task, ti) => {
+          const id = taskId(person.id, si, gi, ti);
+          personTaskIds.push(id);
+          allTaskIds.push(id);
+          const done = state[id] ? 'done' : '';
+          tasksHtml += `
+            <div class="task-item ${done}" data-id="${id}" onclick="toggleTask('${id}')">
+              <span class="custom-check">
+                <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                  <path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="task-label">${task}</span>
+            </div>`;
+        });
+
+        const groupNameHtml = group.name
+          ? `<div class="task-group-name">${group.name}</div>`
+          : '';
+
+        groupsHtml += `<div class="task-group">${groupNameHtml}${tasksHtml}</div>`;
+      });
+
+      const isDeliverable = section.title.toLowerCase().includes('deliverable');
+      const wrapClass = isDeliverable ? 'deliverables-section' : '';
+
+      sectionHtml += `
+        <div class="section">
+          <div class="section-title">${section.title}</div>
+          <div class="${wrapClass}">${groupsHtml}</div>
+        </div>`;
+    });
+
+    const doneCount = personTaskIds.filter(id => state[id]).length;
+    const pct = personTaskIds.length ? Math.round(doneCount / personTaskIds.length * 100) : 0;
+
+    card.innerHTML = `
+      <div class="person-header">
+        <div class="avatar">${person.emoji}</div>
+        <div class="person-meta">
+          <h2>${person.name}</h2>
+          <div class="role">${person.role}</div>
+        </div>
+      </div>
+      <div class="person-progress">
+        <div class="mini-bar"><div class="mini-fill" style="width:${pct}%"></div></div>
+        <div class="mini-pct">${pct}%</div>
+      </div>
+      ${sectionHtml}
+      <button class="reset-btn" data-person="${person.id}">Reset</button>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  updateGlobal();
+  attachListeners();
+}
+
+function updateGlobal() {
+  const total = allTaskIds.length;
+  const done = allTaskIds.filter(id => state[id]).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('globalFill').style.width = pct + '%';
+  document.getElementById('globalLabel').textContent = `${done} of ${total} tasks complete`;
+}
+
+async function toggleTask(id) {
+  state[id] = !state[id];
+  allTaskIds = [];
+  renderAll();
+  await saveToSupabase(id, state[id]);
+}
+
+function attachListeners() {
+  document.querySelectorAll('.reset-btn').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const personId = btn.dataset.person;
+      await resetPersonInSupabase(personId);
+      Object.keys(state).forEach(k => { if (k.startsWith(personId)) delete state[k]; });
+      allTaskIds = [];
+      renderAll();
+    });
+  });
+}
+
+// Init — load from Supabase then render
+(async () => {
+  document.getElementById('globalLabel').textContent = 'Loading…';
+  await loadFromSupabase();
+  renderAll();
+})();
+</script>
+</body>
+</html>
