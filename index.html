@@ -329,6 +329,7 @@
   backdrop-filter: blur(8px);
   cursor: pointer;
   display: flex;
+  transition: background 0.2s, opacity 0.3s ease;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -806,8 +807,18 @@ function toggleDrawer() {
   overlay.classList.toggle('open');
 }
 
-  window.addEventListener('scroll', () => {
-  document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 300);
+window.addEventListener('scroll', function() {
+  const btn = document.getElementById('backToTop');
+  const burger = document.getElementById('hamburger');
+  if (window.scrollY > 300) {
+    btn.classList.add('visible');
+    burger.style.opacity = '0';
+    burger.style.pointerEvents = 'none';
+  } else {
+    btn.classList.remove('visible');
+    burger.style.opacity = '1';
+    burger.style.pointerEvents = 'all';
+  }
 });
   
 </script>
