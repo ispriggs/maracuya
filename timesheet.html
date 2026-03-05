@@ -33,7 +33,7 @@
   header h1 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 46px); font-weight: 600; color: var(--deep); line-height: 1.15; }
   header p { margin-top: 10px; color: var(--muted); font-size: 15px; font-weight: 300; }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto 48px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto 48px; }
 
   .person-card {
     background: var(--card-bg);
@@ -49,11 +49,12 @@
   .p2 .avatar { background: rgba(194,123,90,0.2); }
   .p3 .avatar { background: rgba(92,112,87,0.18); }
   .card-name { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 600; }
+
   .total-hours {
     text-align: center;
     padding: 16px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
   .p1 .total-hours { background: rgba(138,158,133,0.1); }
   .p2 .total-hours { background: rgba(194,123,90,0.08); }
@@ -61,12 +62,45 @@
   .total-hours .big-num { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 600; color: var(--deep); }
   .total-hours .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
 
-  .day-table { width: 100%; border-collapse: collapse; }
-  .day-table th { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 500; padding: 0 0 8px; text-align: left; }
-  .day-table th:last-child { text-align: right; }
-  .day-table td { font-size: 13px; padding: 7px 0; border-top: 1px solid rgba(0,0,0,0.05); color: var(--deep); }
-  .day-table td:last-child { text-align: right; font-weight: 500; }
-  .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 0; }
+  .table-section {
+  margin-bottom: 16px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+.table-label {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  color: var(--terracotta);
+  border-bottom: 1px solid rgba(194,123,90,0.2);
+}
+  .p2 .table-label { color: var(--sage-dark); border-color: rgba(138,158,133,0.3); }
+  .p3 .table-label { color: #6b7c68; border-color: rgba(107,124,104,0.25); }
+
+  .table-scroll {
+    max-height: 160px;
+    overflow-y: auto;
+  }
+  .table-scroll::-webkit-scrollbar { width: 3px; }
+  .table-scroll::-webkit-scrollbar-track { background: transparent; }
+  .table-scroll::-webkit-scrollbar-thumb { background: var(--sage-light); border-radius: 4px; }
+
+  .data-table { width: 100%; border-collapse: collapse; }
+  .data-table th {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); font-weight: 500; padding: 0 0 8px;
+    text-align: left; position: sticky; top: 0;
+    background: rgba(255,255,255,0.95);
+  }
+  .data-table th:last-child { text-align: right; }
+  .data-table td { font-size: 13px; padding: 7px 0; border-top: 1px solid rgba(0,0,0,0.05); color: var(--deep); }
+  .data-table td:last-child { text-align: right; font-weight: 500; }
+  .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 16px 0; }
 
   /* HAMBURGER & DRAWER */
   .hamburger { position: fixed; top: 16px; left: 16px; z-index: 1000; width: 36px; height: 36px; border-radius: 8px; background: rgba(245,240,232,0.7); border: 1px solid rgba(138,158,133,0.15); backdrop-filter: blur(8px); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: background 0.2s, opacity 0.3s ease; }
@@ -125,7 +159,7 @@
 <header>
   <div class="eyebrow">Maracuya Team</div>
   <h1>Timesheet</h1>
-  <p>Total hours logged per person per day</p>
+  <p>Time logged per person</p>
 </header>
 
 <div class="grid" id="grid">
@@ -142,7 +176,7 @@ const people = [
   { id: 'p3', name: 'Ian',       emoji: '📦' }
 ];
 
-function formatHours(seconds) {
+function formatTime(seconds) {
   const h = Math.floor(seconds / 3600);
   const m = Math.floor((seconds % 3600) / 60);
   const s = seconds % 60;
@@ -154,6 +188,29 @@ function formatHours(seconds) {
 function formatDate(dateStr) {
   const d = new Date(dateStr + 'T00:00:00');
   return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function getWeekKey(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  const monday = new Date(d);
+  monday.setDate(diff);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const fmt = dt => dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return {
+    key: monday.toISOString().split('T')[0],
+    label: `${fmt(monday)} – ${fmt(sunday)}`
+  };
+}
+
+function getMonthKey(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return {
+    key: dateStr.substring(0, 7),
+    label: d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  };
 }
 
 async function loadData() {
@@ -169,47 +226,96 @@ async function loadData() {
 }
 
 function buildGrid(sessions) {
-  // Group by person then by date
   const byPerson = {};
-  people.forEach(p => { byPerson[p.name] = {}; });
+  people.forEach(p => {
+    byPerson[p.name] = { days: {}, weeks: {}, weekLabels: {}, months: {}, monthLabels: {} };
+  });
+
   sessions.forEach(s => {
     if (!byPerson[s.person]) return;
-    if (!byPerson[s.person][s.date]) byPerson[s.person][s.date] = 0;
-    byPerson[s.person][s.date] += s.duration_seconds;
+    const p = byPerson[s.person];
+
+    // Daily
+    if (!p.days[s.date]) p.days[s.date] = 0;
+    p.days[s.date] += s.duration_seconds;
+
+    // Weekly
+    const { key: wk, label: wl } = getWeekKey(s.date);
+    if (!p.weeks[wk]) p.weeks[wk] = 0;
+    p.weeks[wk] += s.duration_seconds;
+    p.weekLabels[wk] = wl;
+
+    // Monthly
+    const { key: mk, label: ml } = getMonthKey(s.date);
+    if (!p.months[mk]) p.months[mk] = 0;
+    p.months[mk] += s.duration_seconds;
+    p.monthLabels[mk] = ml;
   });
 
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
 
   people.forEach(person => {
-    const days = byPerson[person.name];
-    const sortedDates = Object.keys(days).sort((a, b) => b.localeCompare(a));
-    const totalSeconds = Object.values(days).reduce((a, b) => a + b, 0);
+    const p = byPerson[person.name];
+    const totalSeconds = Object.values(p.days).reduce((a, b) => a + b, 0);
+
+    const sortedDays   = Object.keys(p.days).sort((a, b) => b.localeCompare(a));
+    const sortedWeeks  = Object.keys(p.weeks).sort((a, b) => b.localeCompare(a));
+    const sortedMonths = Object.keys(p.months).sort((a, b) => b.localeCompare(a));
+
+    const empty = `<tr><td colspan="2" class="empty-state">No sessions yet</td></tr>`;
+
+    const dayRows = sortedDays.length === 0 ? empty :
+      sortedDays.map(d => `<tr><td>${formatDate(d)}</td><td>${formatTime(p.days[d])}</td></tr>`).join('');
+
+    const weekRows = sortedWeeks.length === 0 ? empty :
+      sortedWeeks.map(w => `<tr><td>${p.weekLabels[w]}</td><td>${formatTime(p.weeks[w])}</td></tr>`).join('');
+
+    const monthRows = sortedMonths.length === 0 ? empty :
+      sortedMonths.map(m => `<tr><td>${p.monthLabels[m]}</td><td>${formatTime(p.months[m])}</td></tr>`).join('');
 
     const card = document.createElement('div');
     card.className = `person-card ${person.id}`;
-
-    const rowsHtml = sortedDates.length === 0
-      ? `<tr><td colspan="2" class="empty-state">No sessions logged yet</td></tr>`
-      : sortedDates.map(date => `
-          <tr>
-            <td>${formatDate(date)}</td>
-            <td>${formatHours(days[date])}</td>
-          </tr>`).join('');
-
     card.innerHTML = `
       <div class="card-header">
         <div class="avatar">${person.emoji}</div>
         <div class="card-name">${person.name}</div>
       </div>
+
       <div class="total-hours">
-        <div class="big-num">${formatHours(totalSeconds)}</div>
+        <div class="big-num">${formatTime(totalSeconds)}</div>
         <div class="label">Total logged</div>
       </div>
-      <table class="day-table">
-        <thead><tr><th>Date</th><th>Hours</th></tr></thead>
-        <tbody>${rowsHtml}</tbody>
-      </table>
+
+      <div class="table-section">
+        <div class="table-label">By Day</div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead><tr><th>Date</th><th>Time</th></tr></thead>
+            <tbody>${dayRows}</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <div class="table-label">By Week</div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead><tr><th>Week</th><th>Time</th></tr></thead>
+            <tbody>${weekRows}</tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-section">
+        <div class="table-label">By Month</div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead><tr><th>Month</th><th>Time</th></tr></thead>
+            <tbody>${monthRows}</tbody>
+          </table>
+        </div>
+      </div>
     `;
     grid.appendChild(card);
   });
