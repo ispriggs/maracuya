@@ -32,400 +32,174 @@
     color: var(--deep);
   }
 
-  header {
-    text-align: center;
-    margin-bottom: 52px;
-  }
+  header { text-align: center; margin-bottom: 52px; }
+  header .eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--terracotta); font-weight: 500; margin-bottom: 10px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 46px); font-weight: 600; color: var(--deep); line-height: 1.15; }
+  header p { margin-top: 10px; color: var(--muted); font-size: 15px; font-weight: 300; }
 
-  header .eyebrow {
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--terracotta);
-    font-weight: 500;
-    margin-bottom: 10px;
-  }
+  .progress-bar-wrap { width: 220px; height: 4px; background: var(--sage-light); border-radius: 10px; margin: 18px auto 0; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--sage-dark), var(--terracotta)); border-radius: 10px; transition: width 0.5s ease; }
+  .progress-label { font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: 1px; }
 
-  header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(28px, 5vw, 46px);
-    font-weight: 600;
-    color: var(--deep);
-    line-height: 1.15;
-  }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; max-width: 1200px; margin: 0 auto; }
 
-  header p {
-    margin-top: 10px;
-    color: var(--muted);
-    font-size: 15px;
-    font-weight: 300;
-  }
+  .person-card { background: var(--card-bg); border-radius: 20px; padding: 32px 28px 28px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.9); box-shadow: 0 4px 24px rgba(92,112,87,0.08), 0 1px 4px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .person-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(92,112,87,0.13), 0 2px 8px rgba(0,0,0,0.06); }
 
-  .progress-bar-wrap {
-    width: 220px;
-    height: 4px;
-    background: var(--sage-light);
-    border-radius: 10px;
-    margin: 18px auto 0;
-    overflow: hidden;
-  }
-  .progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--sage-dark), var(--terracotta));
-    border-radius: 10px;
-    transition: width 0.5s ease;
-  }
-  .progress-label {
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 8px;
-    letter-spacing: 1px;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 28px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .person-card {
-    background: var(--card-bg);
-    border-radius: 20px;
-    padding: 32px 28px 28px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.9);
-    box-shadow: 0 4px 24px rgba(92,112,87,0.08), 0 1px 4px rgba(0,0,0,0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-
-  .person-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(92,112,87,0.13), 0 2px 8px rgba(0,0,0,0.06);
-  }
-
-  .person-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    margin-bottom: 6px;
-  }
-
-  .avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
+  .person-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 6px; }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; margin-top: 2px; }
   .p1 .avatar { background: rgba(138,158,133,0.25); }
   .p2 .avatar { background: rgba(194,123,90,0.2); }
   .p3 .avatar { background: rgba(92,112,87,0.18); }
 
-  .person-meta h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 600;
-    line-height: 1.2;
-  }
+  .person-meta h2 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; line-height: 1.2; }
+  .person-meta .role { font-size: 11.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 3px; font-weight: 500; }
 
-  .person-meta .role {
-    font-size: 11.5px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-top: 3px;
-    font-weight: 500;
-  }
-
-  .person-progress {
-    margin: 16px 0 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .mini-bar {
-    flex: 1;
-    height: 5px;
-    background: #e8e2d8;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .mini-fill {
-    height: 100%;
-    border-radius: 10px;
-    transition: width 0.4s ease;
-  }
+  .person-progress { margin: 16px 0 20px; display: flex; align-items: center; gap: 10px; }
+  .mini-bar { flex: 1; height: 5px; background: #e8e2d8; border-radius: 10px; overflow: hidden; }
+  .mini-fill { height: 100%; border-radius: 10px; transition: width 0.4s ease; }
   .p1 .mini-fill { background: linear-gradient(90deg, var(--sage), var(--sage-dark)); }
   .p2 .mini-fill { background: linear-gradient(90deg, var(--terracotta-light), var(--terracotta)); }
   .p3 .mini-fill { background: linear-gradient(90deg, #a2b59e, var(--sage-dark)); }
+  .mini-pct { font-size: 12px; font-weight: 500; color: var(--muted); min-width: 36px; text-align: right; }
 
-  .mini-pct {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--muted);
-    min-width: 36px;
-    text-align: right;
-  }
-
-  .section {
-    margin-bottom: 22px;
-  }
-
-  .section-title {
-    font-size: 10.5px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    color: var(--terracotta);
-    font-weight: 500;
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid rgba(194,123,90,0.2);
-  }
-
+  .section { margin-bottom: 22px; }
+  .section-title { font-size: 10.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--terracotta); font-weight: 500; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid rgba(194,123,90,0.2); }
   .p2 .section-title { color: var(--sage-dark); border-color: rgba(138,158,133,0.3); }
   .p3 .section-title { color: #6b7c68; border-color: rgba(107,124,104,0.25); }
 
-  .task-group {
-    margin-bottom: 14px;
-  }
-
-  .task-group-name {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--deep);
-    margin-bottom: 7px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .task-group-name::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--sage-light);
-    flex-shrink: 0;
-  }
-
+  .task-group { margin-bottom: 14px; }
+  .task-group-name { font-size: 13px; font-weight: 500; color: var(--deep); margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
+  .task-group-name::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--sage-light); flex-shrink: 0; }
   .p2 .task-group-name::before { background: var(--terracotta-light); }
   .p3 .task-group-name::before { background: #b5c8b2; }
 
-  .task-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 7px 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.15s ease;
-    margin-bottom: 3px;
-    user-select: none;
-  }
-
+  .task-item { display: flex; align-items: flex-start; gap: 10px; padding: 7px 10px; border-radius: 10px; cursor: default; transition: background 0.15s ease; margin-bottom: 3px; user-select: none; }
   .task-item:hover { background: rgba(138,158,133,0.08); }
-
   .task-item input[type="checkbox"] { display: none; }
-
-  .custom-check {
-    width: 18px;
-    height: 18px;
-    border: 1.5px solid var(--sage-light);
-    border-radius: 5px;
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    background: white;
-  }
-
+  .custom-check { width: 18px; height: 18px; border: 1.5px solid var(--sage-light); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; background: white; cursor: pointer; }
   .p2 .custom-check { border-color: var(--terracotta-light); }
   .p3 .custom-check { border-color: #b5c8b2; }
+  .task-item.done .custom-check { background: var(--sage); border-color: var(--sage); }
+  .p2 .task-item.done .custom-check { background: var(--terracotta); border-color: var(--terracotta); }
+  .p3 .task-item.done .custom-check { background: var(--sage-dark); border-color: var(--sage-dark); }
+  .custom-check svg { opacity: 0; transform: scale(0.5); transition: all 0.18s ease; }
+  .task-item.done .custom-check svg { opacity: 1; transform: scale(1); }
+  .task-label { font-size: 13.5px; line-height: 1.45; color: var(--deep); transition: color 0.2s, text-decoration 0.2s; }
+  .task-item.done .task-label { color: var(--muted); text-decoration: line-through; }
 
-  .task-item.done .custom-check {
-    background: var(--sage);
-    border-color: var(--sage);
-  }
-  .p2 .task-item.done .custom-check {
-    background: var(--terracotta);
-    border-color: var(--terracotta);
-  }
-  .p3 .task-item.done .custom-check {
-    background: var(--sage-dark);
-    border-color: var(--sage-dark);
-  }
-
-  .custom-check svg {
-    opacity: 0;
-    transform: scale(0.5);
-    transition: all 0.18s ease;
-  }
-  .task-item.done .custom-check svg {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  .task-label {
-    font-size: 13.5px;
-    line-height: 1.45;
-    color: var(--deep);
-    transition: color 0.2s, text-decoration 0.2s;
-  }
-
-  .task-item.done .task-label {
-    color: var(--muted);
-    text-decoration: line-through;
-  }
-
-  .deliverables-section {
-    background: rgba(138,158,133,0.07);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-top: 6px;
-  }
-
+  .deliverables-section { background: rgba(138,158,133,0.07); border-radius: 12px; padding: 14px 16px; margin-top: 6px; }
   .p2 .deliverables-section { background: rgba(194,123,90,0.06); }
   .p3 .deliverables-section { background: rgba(92,112,87,0.07); }
 
-  .reset-btn {
-    display: block;
-    margin: 10px auto 0;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    background: none;
-    border: 1px solid #d8d2c8;
-    border-radius: 20px;
-    padding: 6px 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+  .reset-btn { display: block; margin: 10px auto 0; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); background: none; border: 1px solid #d8d2c8; border-radius: 20px; padding: 6px 16px; cursor: pointer; transition: all 0.2s; }
   .reset-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
 
+  /* ── TIMER ── */
+  .timer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgba(138,158,133,0.08);
+    border: 1px solid rgba(138,158,133,0.15);
+  }
+  .p2 .timer-bar { background: rgba(194,123,90,0.07); border-color: rgba(194,123,90,0.15); }
+  .p3 .timer-bar { background: rgba(92,112,87,0.08); border-color: rgba(92,112,87,0.15); }
+  .timer-display { font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: 1px; color: var(--deep); }
+  .timer-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 20px;
+    padding: 6px 14px;
+    cursor: pointer;
+    border: 1px solid rgba(138,158,133,0.4);
+    background: white;
+    color: var(--sage-dark);
+    transition: all 0.2s;
+  }
+  .timer-btn:hover { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
+  .timer-btn.running { background: var(--terracotta); color: white; border-color: var(--terracotta); }
+  .timer-btn.running:hover { background: #a8633d; border-color: #a8633d; }
 
   /* ── HAMBURGER & DRAWER ── */
- .hamburger {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 1000;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: rgba(245,240,232,0.7);
-  border: 1px solid rgba(138,158,133,0.15);
-  backdrop-filter: blur(8px);
-  cursor: pointer;
-  display: flex;
-  transition: background 0.2s, opacity 0.3s ease;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  transition: background 0.2s;
-}
-.hamburger:hover { background: rgba(245,240,232,0.95); }
-.hamburger span {
-  display: block;
-  width: 15px;
-  height: 1.5px;
-  background: var(--deep);
-  border-radius: 2px;
-  transition: all 0.3s ease;
-  transform-origin: center;
-}
-.hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
-
-.back-to-top {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  width: 42px;
-  height:42px;
-  border-radius: 8px;
-  background: rgba(245,240,232,0.7);
-  border: 1px solid rgba(138,158,133,0.15);
-  backdrop-filter: blur(8px);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, background 0.2s;
-}
-.back-to-top.visible { opacity: 1; pointer-events: all; }
-.back-to-top:hover { background: rgba(245,240,232,0.95); }
-.back-to-top svg { width: 14px; height: 14px; stroke: var(--deep); }
-
-  .drawer-overlay {
+  .hamburger {
     position: fixed;
-    inset: 0;
-    background: rgba(44,44,44,0.3);
-    backdrop-filter: blur(3px);
-    z-index: 900;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .drawer-overlay.open { opacity: 1; pointer-events: all; }
-
-  .drawer {
-    position: fixed;
-    top: 0; left: 0;
-    height: 100%;
-    width: 280px;
-    background: white;
-    z-index: 950;
-    padding: 80px 32px 40px;
-    transform: translateX(-100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 4px 0 40px rgba(0,0,0,0.1);
+    top: 16px;
+    left: 16px;
+    z-index: 1000;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(245,240,232,0.7);
+    border: 1px solid rgba(138,158,133,0.15);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: background 0.2s, opacity 0.3s ease;
   }
+  .hamburger:hover { background: rgba(245,240,232,0.95); }
+  .hamburger span { display: block; width: 15px; height: 1.5px; background: var(--deep); border-radius: 2px; transition: all 0.3s ease; transform-origin: center; }
+  .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+  .back-to-top {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: rgba(245,240,232,0.7);
+    border: 1px solid rgba(138,158,133,0.15);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background 0.2s;
+  }
+  .back-to-top.visible { opacity: 1; pointer-events: all; }
+  .back-to-top:hover { background: rgba(245,240,232,0.95); }
+  .back-to-top svg { width: 14px; height: 14px; stroke: var(--deep); }
+
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(44,44,44,0.3); backdrop-filter: blur(3px); z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .drawer-overlay.open { opacity: 1; pointer-events: all; }
+  .drawer { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: white; z-index: 950; padding: 80px 32px 40px; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
   .drawer.open { transform: translateX(0); }
   .drawer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--deep); margin-bottom: 6px; }
   .drawer-tagline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
   .drawer-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sage); font-weight: 500; margin-bottom: 14px; }
   .drawer-nav { display: flex; flex-direction: column; gap: 8px; }
-  .drawer-link {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 16px; border-radius: 12px;
-    text-decoration: none; color: var(--deep);
-    transition: background 0.15s, transform 0.15s;
-    border: 1px solid transparent;
-  }
+  .drawer-link { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; text-decoration: none; color: var(--deep); transition: background 0.15s, transform 0.15s; border: 1px solid transparent; }
   .drawer-link:hover { background: var(--sand); border-color: rgba(138,158,133,0.2); transform: translateX(3px); }
   .drawer-link.active { background: rgba(138,158,133,0.12); border-color: rgba(138,158,133,0.3); }
   .drawer-link-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
   .link-eshop .drawer-link-icon { background: rgba(138,158,133,0.15); }
   .link-vivi .drawer-link-icon { background: rgba(194,123,90,0.12); }
+  .link-time .drawer-link-icon { background: rgba(92,112,87,0.12); }
   .drawer-link-text { font-size: 14px; font-weight: 500; }
   .drawer-link-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
   .drawer-footer { margin-top: auto; font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
-
 </style>
 </head>
 <body>
 
-  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
   <svg viewBox="0 0 14 14" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
     <path d="M2 9.5L7 4.5L12 9.5"/>
   </svg>
@@ -454,10 +228,16 @@
         <div class="drawer-link-sub">Coming soon</div>
       </div>
     </a>
+    <a href="timesheet.html" class="drawer-link link-time">
+      <div class="drawer-link-icon">&#9200;</div>
+      <div>
+        <div class="drawer-link-text">Timesheet</div>
+        <div class="drawer-link-sub">Hours per person</div>
+      </div>
+    </a>
   </nav>
   <div class="drawer-footer">Maracuya Team &copy; 2026</div>
 </div>
-
 
 <header>
   <div class="eyebrow">Project Tracker</div>
@@ -466,208 +246,186 @@
   <div class="progress-bar-wrap">
     <div class="progress-bar-fill" id="globalFill" style="width:0%"></div>
   </div>
-  <div class="progress-label" id="globalLabel">0 of 0 tasks complete</div>
+  <div class="progress-label" id="globalLabel">Loading…</div>
 </header>
 
 <div class="grid" id="grid"></div>
 
 <script>
+const SUPABASE_URL = 'https://uewamqxapuoqcwedgkdt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVld2FtcXhhcHVvcWN3ZWRna2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2Njg2MjEsImV4cCI6MjA4ODI0NDYyMX0.r9Do0jX5aDbS62wyddwfW0XUHbv7WzeSYdOW014U1hk';
+
 const people = [
   {
-    id: "p1",
-    emoji: "🌿",
-    name: "Chantelle",
-    role: "Product & Supplier Lead",
+    id: "p1", emoji: "🌿", name: "Chantelle", role: "Product & Supplier Lead",
     sections: [
-      {
-        title: "Core Tasks",
-        groups: [
-          { name: "1. Product Research", tasks: [
-            "Identify 5–8 high-potential products from the Jewelry & Energy section",
-            "Identify 5–8 high-potential products in Yoga & Wellness section",
-            "Identify 5–8 high-potential products in Sacrid Home & Rituals section",
-             "Identify 5–8 high-potential products in Nourish Body & Sole section",
-            "Analyze competitors' pricing and positioning",
-            "Identify product trends (eco, spiritual, minimalist, premium)"
-          ]},
-          { name: "2. Supplier Shortlisting", tasks: [
-            "Research 15–25 suppliers per category",
-            "Compare MOQ across suppliers",
-            "Compare pricing tiers (500 / 1000 units)",
-            "Compare custom branding options",
-            "Compare certifications and production timelines"
-          ]},
-          { name: "3. Supplier Outreach", tasks: [
-            "Send structured outreach emails",
-            "Request samples shipped to Costa Rica",
-            "Request bulk shipping quotes to Florida",
-            "Request private label capabilities",
-            "Request compliance documentation"
-          ]},
-          { name: "4. Sample Coordination", tasks: [
-            "Track sample orders",
-            "Log delivery timelines",
-            "Maintain supplier comparison sheet"
-          ]}
-        ]
-      },
-      {
-        title: "Weekly Deliverables",
-        groups: [
-          { name: "", tasks: [
-            "Updated supplier spreadsheet",
-            "Shortlist of best 2–3 suppliers per product",
-            "Sample tracking report"
-          ]}
-        ]
-      }
+      { title: "Core Tasks", groups: [
+        { name: "1. Product Research", tasks: [
+          "Identify 5–8 high-potential products from the Jewelry & Energy section",
+          "Identify 5–8 high-potential products in Yoga & Wellness section",
+          "Identify 5–8 high-potential products in Sacrid Home & Rituals section",
+          "Identify 5–8 high-potential products in Nourish Body & Sole section",
+          "Analyze competitors' pricing and positioning",
+          "Identify product trends (eco, spiritual, minimalist, premium)"
+        ]},
+        { name: "2. Supplier Shortlisting", tasks: [
+          "Research 15–25 suppliers per category",
+          "Compare MOQ across suppliers",
+          "Compare pricing tiers (500 / 1000 units)",
+          "Compare custom branding options",
+          "Compare certifications and production timelines"
+        ]},
+        { name: "3. Supplier Outreach", tasks: [
+          "Send structured outreach emails",
+          "Request samples shipped to Costa Rica",
+          "Request bulk shipping quotes to Florida",
+          "Request private label capabilities",
+          "Request compliance documentation"
+        ]},
+        { name: "4. Sample Coordination", tasks: [
+          "Track sample orders",
+          "Log delivery timelines",
+          "Maintain supplier comparison sheet"
+        ]}
+      ]},
+      { title: "Weekly Deliverables", groups: [
+        { name: "", tasks: [
+          "Updated supplier spreadsheet",
+          "Shortlist of best 2–3 suppliers per product",
+          "Sample tracking report"
+        ]}
+      ]}
     ]
   },
   {
-    id: "p2",
-    emoji: "✨",
-    name: "Jacquie",
-    role: "Branding, Positioning & Market Strategy",
+    id: "p2", emoji: "✨", name: "Jacquie", role: "Branding, Positioning & Market Strategy",
     sections: [
-      {
-        title: "Core Tasks",
-        groups: [
-          { name: "1. Brand Definition", tasks: [
-            "Define target customer profile",
-            "Define brand tone (premium, conscious lifestyle, spiritual-modern)",
-            "Define core brand values (eco, ethical, performance)",
-            "Draft brand story"
-          ]},
-          { name: "2. Pricing Strategy", tasks: [
-            "Define target margins (65–75% ideal)",
-            "Create landed cost estimate",
-            "Create retail price model",
-            "Create bundle pricing strategy",
-            "Identify optimal price bands for US & Canada"
-          ]},
-          { name: "3. Competitive Analysis", tasks: [
-            "Identify 10 competitors",
-            "Document competitor price ranges",
-            "Document best-selling items",
-            "Document shipping times",
-            "Document customer complaints (opportunity insights)"
-          ]},
-          { name: "4. Bundle Strategy", tasks: [
-            "Develop Yoga Starter Kit concept",
-            "Develop Chakra Balance Set concept",
-            "Develop Morning Ritual Bundle concept",
-            "Develop Mindfulness Gift Box concept",
-            "Develop 1–2 additional bundle concepts"
-          ]}
-        ]
-      },
-      {
-        title: "Weekly Deliverables",
-        groups: [
-          { name: "", tasks: [
-            "Brand positioning summary (1–2 pages)",
-            "Pricing model draft",
-            "Competitor comparison sheet",
-            "Bundle strategy outline"
-          ]}
-        ]
-      }
+      { title: "Core Tasks", groups: [
+        { name: "1. Brand Definition", tasks: [
+          "Define target customer profile",
+          "Define brand tone (premium, conscious lifestyle, spiritual-modern)",
+          "Define core brand values (eco, ethical, performance)",
+          "Draft brand story"
+        ]},
+        { name: "2. Pricing Strategy", tasks: [
+          "Define target margins (65–75% ideal)",
+          "Create landed cost estimate",
+          "Create retail price model",
+          "Create bundle pricing strategy",
+          "Identify optimal price bands for US & Canada"
+        ]},
+        { name: "3. Competitive Analysis", tasks: [
+          "Identify 10 competitors",
+          "Document competitor price ranges",
+          "Document best-selling items",
+          "Document shipping times",
+          "Document customer complaints (opportunity insights)"
+        ]},
+        { name: "4. Bundle Strategy", tasks: [
+          "Develop Yoga Starter Kit concept",
+          "Develop Chakra Balance Set concept",
+          "Develop Morning Ritual Bundle concept",
+          "Develop Mindfulness Gift Box concept",
+          "Develop 1–2 additional bundle concepts"
+        ]}
+      ]},
+      { title: "Weekly Deliverables", groups: [
+        { name: "", tasks: [
+          "Brand positioning summary (1–2 pages)",
+          "Pricing model draft",
+          "Competitor comparison sheet",
+          "Bundle strategy outline"
+        ]}
+      ]}
     ]
   },
   {
-    id: "p3",
-    emoji: "📦",
-    name: "Ian",
-    role: "Logistics & Operations Lead",
+    id: "p3", emoji: "📦", name: "Ian", role: "Logistics & Operations Lead",
     sections: [
-      {
-        title: "Core Tasks",
-        groups: [
-          { name: "1. Fulfillment Research", tasks: [
-            "Compare US-based 3PL providers",
-            "Analyze storage fees",
-            "Analyze pick & pack fees",
-            "Analyze shipping rates to US & Canada",
-            "Analyze return handling costs"
-          ]},
-          { name: "2. Shipping Model Comparison", tasks: [
-            "Evaluate direct-from-origin shipping",
-            "Evaluate bulk to Florida + 3PL fulfillment",
-            "Compare delivery time across models",
-            "Compare cost per unit across models",
-            "Compare customer experience & return logistics"
-          ]},
-          { name: "3. Compliance & Risk Review", tasks: [
-            "Research US product compliance (skin-contact items)",
-            "Research labeling requirements",
-            "Research import duties for jewellery & wellness goods",
-            "Research Canadian import considerations"
-          ]},
-          { name: "4. Landed Cost Modeling", tasks: [
-            "Calculate unit cost",
-            "Calculate freight costs",
-            "Calculate duties",
-            "Calculate fulfillment fees",
-            "Calculate total landed cost"
-          ]}
-        ]
-      },
-      {
-        title: "Weekly Deliverables",
-        groups: [
-          { name: "", tasks: [
-            "Fulfillment comparison summary",
-            "Shipping cost breakdown",
-            "Risk/compliance checklist",
-            "Landed cost calculator (draft)"
-          ]}
-        ]
-      }
+      { title: "Core Tasks", groups: [
+        { name: "1. Fulfillment Research", tasks: [
+          "Compare US-based 3PL providers",
+          "Analyze storage fees",
+          "Analyze pick & pack fees",
+          "Analyze shipping rates to US & Canada",
+          "Analyze return handling costs"
+        ]},
+        { name: "2. Shipping Model Comparison", tasks: [
+          "Evaluate direct-from-origin shipping",
+          "Evaluate bulk to Florida + 3PL fulfillment",
+          "Compare delivery time across models",
+          "Compare cost per unit across models",
+          "Compare customer experience & return logistics"
+        ]},
+        { name: "3. Compliance & Risk Review", tasks: [
+          "Research US product compliance (skin-contact items)",
+          "Research labeling requirements",
+          "Research import duties for jewellery & wellness goods",
+          "Research Canadian import considerations"
+        ]},
+        { name: "4. Landed Cost Modeling", tasks: [
+          "Calculate unit cost",
+          "Calculate freight costs",
+          "Calculate duties",
+          "Calculate fulfillment fees",
+          "Calculate total landed cost"
+        ]}
+      ]},
+      { title: "Weekly Deliverables", groups: [
+        { name: "", tasks: [
+          "Fulfillment comparison summary",
+          "Shipping cost breakdown",
+          "Risk/compliance checklist",
+          "Landed cost calculator (draft)"
+        ]}
+      ]}
     ]
   }
 ];
 
-// ── SUPABASE CONFIG ──────────────────────────────────────────
-const SUPABASE_URL = 'https://uewamqxapuoqcwedgkdt.supabase.co';       // e.g. https://xxxx.supabase.co
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVld2FtcXhhcHVvcWN3ZWRna2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2Njg2MjEsImV4cCI6MjA4ODI0NDYyMX0.r9Do0jX5aDbS62wyddwfW0XUHbv7WzeSYdOW014U1hk';
-// ─────────────────────────────────────────────────────────────
-
+// ── STATE ──
 let state = {};
 let allTaskIds = [];
 let saving = false;
+let timers = {};
 
+// ── SUPABASE ──
 async function loadFromSupabase() {
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/task_state?select=id,done`, {
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-      }
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
     });
     const rows = await res.json();
-    if (Array.isArray(rows)) {
-      rows.forEach(r => { state[r.id] = r.done; });
-    }
-  } catch (e) {
-    console.warn('Supabase load failed, using local state.', e);
-  }
+    if (Array.isArray(rows)) rows.forEach(r => { state[r.id] = r.done; });
+  } catch(e) { console.warn('Supabase load failed, using local state.', e); }
 }
 
 async function saveToSupabase(id, done) {
   try {
     await fetch(`${SUPABASE_URL}/rest/v1/task_state`, {
       method: 'POST',
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates'
-      },
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
       body: JSON.stringify({ id, done, updated_at: new Date().toISOString() })
     });
-  } catch (e) {
-    console.warn('Supabase save failed.', e);
-  }
+  } catch(e) { console.warn('Supabase save failed.', e); }
+}
+
+async function saveSessionToSupabase(person, startedAt, endedAt) {
+  const durationSeconds = Math.floor((endedAt - startedAt) / 1000);
+  if (durationSeconds < 5) return;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/time_sessions`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        person,
+        date: new Date(startedAt).toISOString().split('T')[0],
+        duration_seconds: durationSeconds,
+        started_at: new Date(startedAt).toISOString(),
+        ended_at: new Date(endedAt).toISOString()
+      })
+    });
+  } catch(e) { console.warn('Session save failed.', e); }
 }
 
 async function resetPersonInSupabase(personName) {
@@ -676,18 +434,61 @@ async function resetPersonInSupabase(personName) {
   await Promise.all(ids.map(id => saveToSupabase(id, false)));
 }
 
+// ── UTILS ──
 function slugify(text) {
-  return text.toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .substring(0, 60);
+  return text.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').substring(0, 60);
 }
-
 function taskId(personName, groupName, taskText) {
   return `${slugify(personName)}__${slugify(groupName || 'deliverable')}__${slugify(taskText)}`;
 }
+function formatTime(ms) {
+  const totalSecs = Math.floor(ms / 1000);
+  const h = Math.floor(totalSecs / 3600);
+  const m = Math.floor((totalSecs % 3600) / 60);
+  const s = totalSecs % 60;
+  return h > 0
+    ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+    : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
 
+// ── TIMER CONTROLS ──
+function toggleTimer(personName) {
+  if (!timers[personName]) timers[personName] = { running: false, startTime: null, elapsed: 0 };
+  const t = timers[personName];
+  if (!t.running) {
+    t.running = true;
+    t.startTime = Date.now();
+    t.interval = setInterval(() => {
+      const el = document.getElementById(`timer-display-${slugify(personName)}`);
+      if (el) el.textContent = formatTime(t.elapsed + (Date.now() - t.startTime));
+    }, 1000);
+    updateTimerBtn(personName);
+  } else {
+    clearInterval(t.interval);
+    const endedAt = Date.now();
+    const startedAt = t.startTime;
+    t.elapsed += endedAt - startedAt;
+    t.running = false;
+    t.startTime = null;
+    updateTimerBtn(personName);
+    saveSessionToSupabase(personName, startedAt, endedAt);
+  }
+}
+
+function updateTimerBtn(personName) {
+  const btn = document.getElementById(`timer-btn-${slugify(personName)}`);
+  const t = timers[personName];
+  if (!btn) return;
+  if (t && t.running) {
+    btn.textContent = 'Stop Timer';
+    btn.classList.add('running');
+  } else {
+    btn.textContent = 'Start Timer';
+    btn.classList.remove('running');
+  }
+}
+
+// ── RENDER ──
 function renderAll() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
@@ -718,28 +519,29 @@ function renderAll() {
     <span class="task-label">${task}</span>
   </div>`;
         });
-
-        const groupNameHtml = group.name
-          ? `<div class="task-group-name">${group.name}</div>`
-          : '';
-
+        const groupNameHtml = group.name ? `<div class="task-group-name">${group.name}</div>` : '';
         groupsHtml += `<div class="task-group">${groupNameHtml}${tasksHtml}</div>`;
       });
-
       const isDeliverable = section.title.toLowerCase().includes('deliverable');
-      const wrapClass = isDeliverable ? 'deliverables-section' : '';
-
       sectionHtml += `
         <div class="section">
           <div class="section-title">${section.title}</div>
-          <div class="${wrapClass}">${groupsHtml}</div>
+          <div class="${isDeliverable ? 'deliverables-section' : ''}">${groupsHtml}</div>
         </div>`;
     });
 
     const doneCount = personTaskIds.filter(id => state[id]).length;
     const pct = personTaskIds.length ? Math.round(doneCount / personTaskIds.length * 100) : 0;
+    const slug = slugify(person.name);
+    const t = timers[person.name];
+    const currentElapsed = t ? (t.running ? t.elapsed + (Date.now() - t.startTime) : t.elapsed) : 0;
+    const isRunning = t && t.running;
 
     card.innerHTML = `
+      <div class="timer-bar">
+        <span class="timer-display" id="timer-display-${slug}">${formatTime(currentElapsed)}</span>
+        <button class="timer-btn ${isRunning ? 'running' : ''}" id="timer-btn-${slug}" onclick="toggleTimer('${person.name}')">${isRunning ? 'Stop Timer' : 'Start Timer'}</button>
+      </div>
       <div class="person-header">
         <div class="avatar">${person.emoji}</div>
         <div class="person-meta">
@@ -754,7 +556,6 @@ function renderAll() {
       ${sectionHtml}
       <button class="reset-btn" data-person="${person.name}">Reset</button>
     `;
-
     grid.appendChild(card);
   });
 
@@ -791,20 +592,10 @@ function attachListeners() {
   });
 }
 
-// Init — load from Supabase then render
-(async () => {
-  document.getElementById('globalLabel').textContent = 'Loading…';
-  await loadFromSupabase();
-  renderAll();
-})();
-
 function toggleDrawer() {
-  const hamburger = document.getElementById('hamburger');
-  const drawer = document.getElementById('drawer');
-  const overlay = document.getElementById('drawerOverlay');
-  hamburger.classList.toggle('open');
-  drawer.classList.toggle('open');
-  overlay.classList.toggle('open');
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('drawer').classList.toggle('open');
+  document.getElementById('drawerOverlay').classList.toggle('open');
 }
 
 window.addEventListener('scroll', function() {
@@ -820,7 +611,12 @@ window.addEventListener('scroll', function() {
     burger.style.pointerEvents = 'all';
   }
 });
-  
+
+(async () => {
+  document.getElementById('globalLabel').textContent = 'Loading…';
+  await loadFromSupabase();
+  renderAll();
+})();
 </script>
 </body>
 </html>
