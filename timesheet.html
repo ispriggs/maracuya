@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timesheet — Maracuya</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #8a9e85;
+    --sage-light: #c5d4c2;
+    --sage-dark: #5c7057;
+    --terracotta: #c27b5a;
+    --terracotta-light: #e8c4ae;
+    --sand: #f5f0e8;
+    --deep: #2c2c2c;
+    --muted: #7a7a7a;
+    --card-bg: rgba(255,255,255,0.75);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(138,158,133,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(194,123,90,0.12) 0%, transparent 50%);
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    color: var(--deep);
+  }
+  header { text-align: center; margin-bottom: 52px; }
+  header .eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--terracotta); font-weight: 500; margin-bottom: 10px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 46px); font-weight: 600; color: var(--deep); line-height: 1.15; }
+  header p { margin-top: 10px; color: var(--muted); font-size: 15px; font-weight: 300; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1100px; margin: 0 auto 48px; }
+
+  .person-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 28px 24px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.9);
+    box-shadow: 0 4px 24px rgba(92,112,87,0.08);
+  }
+  .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .p1 .avatar { background: rgba(138,158,133,0.25); }
+  .p2 .avatar { background: rgba(194,123,90,0.2); }
+  .p3 .avatar { background: rgba(92,112,87,0.18); }
+  .card-name { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 600; }
+  .total-hours {
+    text-align: center;
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  .p1 .total-hours { background: rgba(138,158,133,0.1); }
+  .p2 .total-hours { background: rgba(194,123,90,0.08); }
+  .p3 .total-hours { background: rgba(92,112,87,0.08); }
+  .total-hours .big-num { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 600; color: var(--deep); }
+  .total-hours .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+  .day-table { width: 100%; border-collapse: collapse; }
+  .day-table th { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-weight: 500; padding: 0 0 8px; text-align: left; }
+  .day-table th:last-child { text-align: right; }
+  .day-table td { font-size: 13px; padding: 7px 0; border-top: 1px solid rgba(0,0,0,0.05); color: var(--deep); }
+  .day-table td:last-child { text-align: right; font-weight: 500; }
+  .empty-state { text-align: center; color: var(--muted); font-size: 13px; padding: 20px 0; }
+
+  /* HAMBURGER & DRAWER */
+  .hamburger { position: fixed; top: 16px; left: 16px; z-index: 1000; width: 36px; height: 36px; border-radius: 8px; background: rgba(245,240,232,0.7); border: 1px solid rgba(138,158,133,0.15); backdrop-filter: blur(8px); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: background 0.2s, opacity 0.3s ease; }
+  .hamburger:hover { background: rgba(245,240,232,0.95); }
+  .hamburger span { display: block; width: 15px; height: 1.5px; background: var(--deep); border-radius: 2px; transition: all 0.3s ease; transform-origin: center; }
+  .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(44,44,44,0.3); backdrop-filter: blur(3px); z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .drawer-overlay.open { opacity: 1; pointer-events: all; }
+  .drawer { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: white; z-index: 950; padding: 80px 32px 40px; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); box-shadow: 4px 0 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+  .drawer.open { transform: translateX(0); }
+  .drawer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--deep); margin-bottom: 6px; }
+  .drawer-tagline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
+  .drawer-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sage); font-weight: 500; margin-bottom: 14px; }
+  .drawer-nav { display: flex; flex-direction: column; gap: 8px; }
+  .drawer-link { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; text-decoration: none; color: var(--deep); transition: background 0.15s, transform 0.15s; border: 1px solid transparent; }
+  .drawer-link:hover { background: var(--sand); border-color: rgba(138,158,133,0.2); transform: translateX(3px); }
+  .drawer-link.active { background: rgba(92,112,87,0.1); border-color: rgba(92,112,87,0.25); }
+  .drawer-link-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .link-eshop .drawer-link-icon { background: rgba(138,158,133,0.15); }
+  .link-vivi .drawer-link-icon { background: rgba(194,123,90,0.12); }
+  .link-time .drawer-link-icon { background: rgba(92,112,87,0.12); }
+  .drawer-link-text { font-size: 14px; font-weight: 500; }
+  .drawer-link-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .drawer-footer { margin-top: auto; font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-logo">Maracuya</div>
+  <div class="drawer-tagline">Team Workspace</div>
+  <div class="drawer-label">Projects</div>
+  <nav class="drawer-nav">
+    <a href="index.html" class="drawer-link link-eshop">
+      <div class="drawer-link-icon">&#128717;</div>
+      <div><div class="drawer-link-text">E-Shop</div><div class="drawer-link-sub">Product &amp; Launch Tracker</div></div>
+    </a>
+    <a href="vivi.html" class="drawer-link link-vivi">
+      <div class="drawer-link-icon">&#10024;</div>
+      <div><div class="drawer-link-text">ViviApp</div><div class="drawer-link-sub">Coming soon</div></div>
+    </a>
+    <a href="timesheet.html" class="drawer-link link-time active">
+      <div class="drawer-link-icon">&#9200;</div>
+      <div><div class="drawer-link-text">Timesheet</div><div class="drawer-link-sub">Hours per person</div></div>
+    </a>
+  </nav>
+  <div class="drawer-footer">Maracuya Team &copy; 2026</div>
+</div>
+
+<header>
+  <div class="eyebrow">Maracuya Team</div>
+  <h1>Timesheet</h1>
+  <p>Total hours logged per person per day</p>
+</header>
+
+<div class="grid" id="grid">
+  <div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:40px">Loading…</div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://uewamqxapuoqcwedgkdt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVld2FtcXhhcHVvcWN3ZWRna2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2Njg2MjEsImV4cCI6MjA4ODI0NDYyMX0.r9Do0jX5aDbS62wyddwfW0XUHbv7WzeSYdOW014U1hk';
+
+const people = [
+  { id: 'p1', name: 'Chantelle', emoji: '🌿' },
+  { id: 'p2', name: 'Jacquie',   emoji: '✨' },
+  { id: 'p3', name: 'Ian',       emoji: '📦' }
+];
+
+function formatHours(seconds) {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  if (h === 0) return `${m}m`;
+  return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/time_sessions?select=person,date,duration_seconds&order=date.desc`, {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+    });
+    return await res.json();
+  } catch(e) {
+    console.warn('Failed to load sessions', e);
+    return [];
+  }
+}
+
+function buildGrid(sessions) {
+  // Group by person then by date
+  const byPerson = {};
+  people.forEach(p => { byPerson[p.name] = {}; });
+  sessions.forEach(s => {
+    if (!byPerson[s.person]) return;
+    if (!byPerson[s.person][s.date]) byPerson[s.person][s.date] = 0;
+    byPerson[s.person][s.date] += s.duration_seconds;
+  });
+
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  people.forEach(person => {
+    const days = byPerson[person.name];
+    const sortedDates = Object.keys(days).sort((a, b) => b.localeCompare(a));
+    const totalSeconds = Object.values(days).reduce((a, b) => a + b, 0);
+
+    const card = document.createElement('div');
+    card.className = `person-card ${person.id}`;
+
+    const rowsHtml = sortedDates.length === 0
+      ? `<tr><td colspan="2" class="empty-state">No sessions logged yet</td></tr>`
+      : sortedDates.map(date => `
+          <tr>
+            <td>${formatDate(date)}</td>
+            <td>${formatHours(days[date])}</td>
+          </tr>`).join('');
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="avatar">${person.emoji}</div>
+        <div class="card-name">${person.name}</div>
+      </div>
+      <div class="total-hours">
+        <div class="big-num">${formatHours(totalSeconds)}</div>
+        <div class="label">Total logged</div>
+      </div>
+      <table class="day-table">
+        <thead><tr><th>Date</th><th>Hours</th></tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function toggleDrawer() {
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('drawer').classList.toggle('open');
+  document.getElementById('drawerOverlay').classList.toggle('open');
+}
+
+(async () => {
+  const sessions = await loadData();
+  buildGrid(sessions);
+})();
+</script>
+</body>
+</html>
