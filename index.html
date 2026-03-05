@@ -452,10 +452,13 @@ function formatTime(ms) {
 }
 
 // ── TIMER CONTROLS ──
+// ── TIMER CONTROLS ──
 function toggleTimer(personName) {
   if (!timers[personName]) timers[personName] = { running: false, startTime: null, elapsed: 0 };
   const t = timers[personName];
+
   if (!t.running) {
+    // START
     t.running = true;
     t.startTime = Date.now();
     saveTimerState();
@@ -463,20 +466,21 @@ function toggleTimer(personName) {
       const el = document.getElementById(`timer-display-${slugify(personName)}`);
       if (el) el.textContent = formatTime(t.elapsed + (Date.now() - t.startTime));
     }, 1000);
-    updateTimerBtn(personName);
+    allTaskIds = [];
+    renderAll();
   } else {
+    // STOP
     clearInterval(t.interval);
     const endedAt = Date.now();
-    const startedAt = t.startTime;
-    const totalElapsed = t.elapsed + (endedAt - startedAt);
+    const totalElapsed = t.elapsed + (endedAt - t.startTime);
+    const sessionStart = endedAt - totalElapsed;
     t.elapsed = 0;
     t.running = false;
     t.startTime = null;
     saveTimerState();
-    updateTimerBtn(personName);
-    // Save total elapsed as one session
-    const sessionStart = endedAt - totalElapsed;
     saveSessionToSupabase(personName, sessionStart, endedAt);
+    allTaskIds = [];
+    renderAll();
   }
 }
 
