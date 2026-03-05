@@ -97,81 +97,69 @@
 
   /* ── HAMBURGER & DRAWER ── */
   .hamburger {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  z-index: 1000;
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: rgba(245,240,232,0.7);
-  border: 1px solid rgba(138,158,133,0.15);
-  backdrop-filter: blur(8px);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  transition: background 0.2s;
-}
-.hamburger:hover { background: rgba(245,240,232,0.95); }
-.hamburger span {
-  display: block;
-  width: 15px;
-  height: 1.5px;
-  background: var(--deep);
-  border-radius: 2px;
-  transition: all 0.3s ease;
-  transform-origin: center;
-}
-.hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
-
-  .drawer-overlay {
     position: fixed;
-    inset: 0;
-    background: rgba(44,44,44,0.3);
-    backdrop-filter: blur(3px);
-    z-index: 900;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .drawer-overlay.open { opacity: 1; pointer-events: all; }
-
-  .drawer {
-    position: fixed;
-    top: 0; left: 0;
-    height: 100%;
-    width: 280px;
-    background: white;
-    z-index: 950;
-    padding: 80px 32px 40px;
-    transform: translateX(-100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 4px 0 40px rgba(0,0,0,0.1);
+    top: 16px;
+    left: 16px;
+    z-index: 1000;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(245,240,232,0.7);
+    border: 1px solid rgba(138,158,133,0.15);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: background 0.2s, opacity 0.3s ease;
   }
+  .hamburger:hover { background: rgba(245,240,232,0.95); }
+  .hamburger span { display: block; width: 15px; height: 1.5px; background: var(--deep); border-radius: 2px; transition: all 0.3s ease; transform-origin: center; }
+  .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+  .back-to-top {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background: rgba(245,240,232,0.7);
+    border: 1px solid rgba(138,158,133,0.15);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, background 0.2s;
+  }
+  .back-to-top.visible { opacity: 1; pointer-events: all; }
+  .back-to-top:hover { background: rgba(245,240,232,0.95); }
+  .back-to-top svg { width: 14px; height: 14px; stroke: var(--deep); }
+
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(44,44,44,0.3); backdrop-filter: blur(3px); z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+  .drawer-overlay.open { opacity: 1; pointer-events: all; }
+  .drawer { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: white; z-index: 950; padding: 80px 32px 40px; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
   .drawer.open { transform: translateX(0); }
   .drawer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--deep); margin-bottom: 6px; }
   .drawer-tagline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
   .drawer-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sage); font-weight: 500; margin-bottom: 14px; }
   .drawer-nav { display: flex; flex-direction: column; gap: 8px; }
-  .drawer-link {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 16px; border-radius: 12px;
-    text-decoration: none; color: var(--deep);
-    transition: background 0.15s, transform 0.15s;
-    border: 1px solid transparent;
-  }
+  .drawer-link { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; text-decoration: none; color: var(--deep); transition: background 0.15s, transform 0.15s; border: 1px solid transparent; }
   .drawer-link:hover { background: var(--sand); border-color: rgba(138,158,133,0.2); transform: translateX(3px); }
-  .drawer-link.active { background: rgba(194,123,90,0.08); border-color: rgba(194,123,90,0.25); }
+  .drawer-link.active { background: rgba(138,158,133,0.12); border-color: rgba(138,158,133,0.3); }
   .drawer-link-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
   .link-eshop .drawer-link-icon { background: rgba(138,158,133,0.15); }
   .link-vivi .drawer-link-icon { background: rgba(194,123,90,0.12); }
+  .link-time .drawer-link-icon { background: rgba(92,112,87,0.12); }
   .drawer-link-text { font-size: 14px; font-weight: 500; }
   .drawer-link-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
   .drawer-footer { margin-top: auto; font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
@@ -202,6 +190,13 @@
       <div>
         <div class="drawer-link-text">ViviApp</div>
         <div class="drawer-link-sub">Coming soon</div>
+      </div>
+    </a>
+    <a href="timesheet.html" class="drawer-link link-time">
+      <div class="drawer-link-icon">&#9200;</div>
+      <div>
+        <div class="drawer-link-text">Timesheet</div>
+        <div class="drawer-link-sub">Hours per person</div>
       </div>
     </a>
   </nav>
