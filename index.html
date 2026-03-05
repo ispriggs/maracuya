@@ -349,6 +349,29 @@
 .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
 
+.back-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 1000;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(245,240,232,0.7);
+  border: 1px solid rgba(138,158,133,0.15);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, background 0.2s;
+}
+.back-to-top.visible { opacity: 1; pointer-events: all; }
+.back-to-top:hover { background: rgba(245,240,232,0.95); }
+.back-to-top svg { width: 14px; height: 14px; stroke: var(--deep); }
+
   .drawer-overlay {
     position: fixed;
     inset: 0;
@@ -399,6 +422,12 @@
 </style>
 </head>
 <body>
+
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  <svg viewBox="0 0 14 14" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 9.5L7 4.5L12 9.5"/>
+  </svg>
+</button>
 
 <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
   <span></span><span></span><span></span>
@@ -776,6 +805,10 @@ function toggleDrawer() {
   overlay.classList.toggle('open');
 }
 
+  window.addEventListener('scroll', () => {
+  document.getElementById('backToTop').classList.toggle('visible', window.scrollY > 300);
+});
+  
 </script>
 </body>
 </html>
