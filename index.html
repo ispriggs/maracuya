@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>E-Shop Task Tracker</title>
+<title>Team Task Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -320,7 +320,7 @@
 
 <header>
   <div class="eyebrow">Project Tracker</div>
-  <h1>E-Shop Task Dashboard</h1>
+  <h1>Team Task Dashboard</h1>
   <p>Click any task to mark it complete</p>
   <div class="progress-bar-wrap">
     <div class="progress-bar-fill" id="globalFill" style="width:0%"></div>
@@ -335,7 +335,7 @@ const people = [
   {
     id: "p1",
     emoji: "🌿",
-    name: "Chantelle",
+    name: "Person 1",
     role: "Product & Supplier Lead",
     sections: [
       {
@@ -384,7 +384,7 @@ const people = [
   {
     id: "p2",
     emoji: "✨",
-    name: "Jacquie",
+    name: "Person 2",
     role: "Branding, Positioning & Market Strategy",
     sections: [
       {
@@ -435,7 +435,7 @@ const people = [
   {
     id: "p3",
     emoji: "📦",
-    name: "Ian",
+    name: "Person 3",
     role: "Logistics & Operations Lead",
     sections: [
       {
@@ -485,8 +485,53 @@ const people = [
   }
 ];
 
+// ── SUPABASE CONFIG ──────────────────────────────────────────
+const SUPABASE_URL = 'https://uewamqxapuoqcwedgkdt.supabase.co';       // e.g. https://xxxx.supabase.co
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVld2FtcXhhcHVvcWN3ZWRna2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2Njg2MjEsImV4cCI6MjA4ODI0NDYyMX0.r9Do0jX5aDbS62wyddwfW0XUHbv7WzeSYdOW014U1hk';
+// ─────────────────────────────────────────────────────────────
+
 let state = {};
 let allTaskIds = [];
+let saving = false;
+
+async function loadFromSupabase() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/task_state?select=id,done`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    const rows = await res.json();
+    if (Array.isArray(rows)) {
+      rows.forEach(r => { state[r.id] = r.done; });
+    }
+  } catch (e) {
+    console.warn('Supabase load failed, using local state.', e);
+  }
+}
+
+async function saveToSupabase(id, done) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/task_state`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ id, done, updated_at: new Date().toISOString() })
+    });
+  } catch (e) {
+    console.warn('Supabase save failed.', e);
+  }
+}
+
+async function resetPersonInSupabase(personId) {
+  const ids = Object.keys(state).filter(k => k.startsWith(personId));
+  await Promise.all(ids.map(id => saveToSupabase(id, false)));
+}
 
 function taskId(personId, sectionIdx, groupIdx, taskIdx) {
   return `${personId}-s${sectionIdx}-g${groupIdx}-t${taskIdx}`;
@@ -574,17 +619,19 @@ function updateGlobal() {
   document.getElementById('globalLabel').textContent = `${done} of ${total} tasks complete`;
 }
 
-function toggleTask(id) {
+async function toggleTask(id) {
   state[id] = !state[id];
   allTaskIds = [];
   renderAll();
+  await saveToSupabase(id, state[id]);
 }
 
 function attachListeners() {
   document.querySelectorAll('.reset-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
+    btn.addEventListener('click', async e => {
       e.stopPropagation();
       const personId = btn.dataset.person;
+      await resetPersonInSupabase(personId);
       Object.keys(state).forEach(k => { if (k.startsWith(personId)) delete state[k]; });
       allTaskIds = [];
       renderAll();
@@ -592,7 +639,12 @@ function attachListeners() {
   });
 }
 
-renderAll();
+// Init — load from Supabase then render
+(async () => {
+  document.getElementById('globalLabel').textContent = 'Loading…';
+  await loadFromSupabase();
+  renderAll();
+})();
 </script>
 </body>
 </html>
