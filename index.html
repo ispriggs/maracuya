@@ -468,12 +468,15 @@ function toggleTimer(personName) {
     clearInterval(t.interval);
     const endedAt = Date.now();
     const startedAt = t.startTime;
-    t.elapsed += endedAt - startedAt;
+    const totalElapsed = t.elapsed + (endedAt - startedAt);
+    t.elapsed = 0;
     t.running = false;
     t.startTime = null;
     saveTimerState();
     updateTimerBtn(personName);
-    saveSessionToSupabase(personName, startedAt, endedAt);
+    // Save total elapsed as one session
+    const sessionStart = endedAt - totalElapsed;
+    saveSessionToSupabase(personName, sessionStart, endedAt);
   }
 }
 
