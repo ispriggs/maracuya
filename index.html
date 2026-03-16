@@ -28,7 +28,7 @@
       radial-gradient(ellipse at 20% 10%, rgba(138,158,133,0.18) 0%, transparent 55%),
       radial-gradient(ellipse at 80% 90%, rgba(194,123,90,0.12) 0%, transparent 50%);
     min-height: 100vh;
-    padding: 40px 20px 80px;
+    padding: 30px 16px 80px;
     color: var(--deep);
   }
 
@@ -581,6 +581,14 @@ function updateGlobal() {
 }
 
 async function toggleTask(id) {
+  const currentlyDone = !!state[id];
+
+  // Ask confirmation only when unchecking
+  if (currentlyDone) {
+    const confirmUndo = confirm("Are you sure you want to mark this task as incomplete?");
+    if (!confirmUndo) return;
+  }
+
   state[id] = !state[id];
   allTaskIds = [];
   renderAll();
