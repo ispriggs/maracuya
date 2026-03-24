@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fulfillment Cost Calculator — Pura Maracuya</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f0e8;
+    --surface: #fffdf8;
+    --surface2: #f0ebe0;
+    --ink: #1a1611;
+    --ink2: #5a5248;
+    --ink3: #9a9088;
+    --accent: #c4451a;
+    --accent-light: #fae8e2;
+    --accent2: #2a6b4a;
+    --accent2-light: #e0f0e8;
+    --border: #ddd5c5;
+    --border-strong: #bfb5a5;
+    --gold: #b8943a;
+    --gold-light: #f5eddb;
+    --shadow: 0 2px 16px rgba(26,22,17,0.08);
+    --shadow-lg: 0 8px 40px rgba(26,22,17,0.12);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(196,69,26,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(42,107,74,0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; }
+
+  /* Header */
+  header { text-align: center; margin-bottom: 2.5rem; }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+  header p {
+    font-size: 15px;
+    color: var(--ink2);
+    font-weight: 300;
+  }
+
+  /* Tier badge */
+  .tier-banner {
+    background: var(--gold-light);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tier-banner .label { font-size: 13px; color: var(--gold); font-weight: 500; }
+  .tier-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    background: var(--gold);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Two-column layout */
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
+  @media (max-width: 640px) { .layout { grid-template-columns: 1fr; } }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.4rem;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-title span {
+    display: inline-block;
+    background: var(--surface2);
+    border-radius: 4px;
+    padding: 2px 8px;
+    color: var(--ink2);
+  }
+
+  /* Form rows */
+  .field { margin-bottom: 1rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    color: var(--ink2);
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  .field .hint {
+    font-size: 11px;
+    color: var(--ink3);
+    margin-top: 3px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* Number inputs */
+  input[type=number] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface2);
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    -moz-appearance: textfield;
+  }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { opacity: 1; }
+  input[type=number]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(196,69,26,0.12);
+  }
+
+  /* Select */
+  select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface2);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9088' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+  select:focus { border-color: var(--accent); }
+
+  /* Toggle rows */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-row .tinfo { flex: 1; }
+  .toggle-row .tname { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .toggle-row .tprice { font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; }
+
+  .toggle {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute;
+    inset: 0;
+    background: var(--border-strong);
+    border-radius: 11px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 3px;
+    top: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle input:checked + .slider { background: var(--accent2); }
+  .toggle input:checked + .slider::before { transform: translateX(18px); }
+
+  /* Stepper for qty */
+  .stepper { display: flex; align-items: center; gap: 6px; }
+  .stepper button {
+    width: 28px; height: 28px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--surface2);
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--ink2);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.1s, border-color 0.1s;
+    line-height: 1;
+    font-weight: 500;
+  }
+  .stepper button:hover { background: var(--border); border-color: var(--border-strong); }
+  .stepper .count {
+    font-family: 'DM Mono', monospace;
+    font-size: 15px;
+    font-weight: 500;
+    min-width: 28px;
+    text-align: center;
+    color: var(--ink);
+  }
+
+  /* Results panel */
+  .results-panel {
+    background: var(--ink);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 1.4rem 1.5rem;
+    box-shadow: var(--shadow-lg);
+    margin-top: 1.25rem;
+    position: sticky;
+    top: 1rem;
+  }
+  .results-panel .r-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .line-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 5px 0;
+    font-size: 13px;
+  }
+  .line-item .li-label { color: rgba(255,255,255,0.6); flex: 1; }
+  .line-item .li-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+  }
+  .line-item.zero .li-label,
+  .line-item.zero .li-val { color: rgba(255,255,255,0.25); text-decoration: line-through; }
+
+  .r-divider { border: none; border-top: 1px solid rgba(255,255,255,0.12); margin: 12px 0; }
+
+  .r-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 4px;
+  }
+  .r-total .label {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+  }
+  .r-total .amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .r-total .currency {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    margin-right: 2px;
+  }
+
+  .margin-calc {
+    margin-top: 1rem;
+    background: rgba(255,255,255,0.06);
+    border-radius: var(--radius-sm);
+    padding: 0.9rem 1rem;
+  }
+  .margin-calc .mc-title {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .margin-calc .mc-row {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+  }
+  .margin-calc label { font-size: 12px; color: rgba(255,255,255,0.5); white-space: nowrap; }
+  .margin-calc input[type=number] {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 14px;
+    padding: 6px 10px;
+    max-width: 110px;
+  }
+  .margin-calc input[type=number]:focus {
+    border-color: rgba(255,255,255,0.4);
+    box-shadow: none;
+  }
+  .margin-result {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  .margin-result .profit { font-weight: 600; }
+  .profit.positive { color: #6fcf97; }
+  .profit.negative { color: #f87171; }
+
+  /* Reset */
+  .btn-reset {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 9px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    color: rgba(255,255,255,0.5);
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .btn-reset:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+
+  .full-width { grid-column: 1 / -1; }
+
+  /* Section dividers in card */
+  .subsection {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 1rem 0 0.5rem;
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 2.5rem;
+    font-size: 11px;
+    color: var(--ink3);
+    font-family: 'DM Mono', monospace;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <p class="eyebrow">Pura Maracuya</p>
+    <h1>Fulfillment Cost Calculator</h1>
+    <p>Calculate the exact 3PL cost for any customer order</p>
+  </header>
+
+  <div class="tier-banner">
+    <span class="label">Current pricing tier based on monthly shipments</span>
+    <span class="tier-badge" id="tier-label">TIER 1 — 1–999 SHIPMENTS</span>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- Receiving -->
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-title"><span>📦 Receiving</span> — Stock arriving at warehouse</div>
+        <div class="field">
+          <label>How do your products arrive?</label>
+          <select id="recv-type" onchange="calc()">
+            <option value="carton_carrier">Box / Carton via carrier (UPS, FedEx) — $2.25 each</option>
+            <option value="carton_mixed">Mixed pallet — per carton — $1.95 each</option>
+            <option value="pallet_same">Pallet, same SKU — $13.75 each</option>
+            <option value="container_pallet">Container pallet, same SKU — $13.75 each</option>
+            <option value="container_floor">Container floor loaded — $49.50/hr</option>
+          </select>
+        </div>
+        <div class="field" id="recv-qty-field">
+          <label>Number of cartons / pallets this shipment</label>
+          <div class="stepper">
+            <button onclick="step('recv-qty',-1)">−</button>
+            <span class="count" id="recv-qty">10</span>
+            <button onclick="step('recv-qty',1)">+</button>
+          </div>
+          <div class="hint" id="recv-rate-hint">10 cartons × $2.25 = $22.50</div>
+        </div>
+        <div class="field" id="recv-hours-field" style="display:none">
+          <label>Hours of unloading</label>
+          <div class="stepper">
+            <button onclick="step('recv-hours',-1)">−</button>
+            <span class="count" id="recv-hours">2</span>
+            <button onclick="step('recv-hours',1)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monthly volume -->
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-title"><span>📊 Monthly Volume</span> — Affects pricing tier</div>
+        <div class="field">
+          <label>Total shipments per month</label>
+          <input type="number" id="monthly-shipments" value="50" min="1" max="9999" oninput="calc()">
+          <div class="hint">Tier 1: 1–999 | Tier 2: 1,000–2,500 | Tier 3: 2,501+</div>
+        </div>
+      </div>
+
+      <!-- Storage -->
+      <div class="card">
+        <div class="card-title"><span>🏗️ Storage</span> — Weekly, billed weekly</div>
+        <div class="field">
+          <label>Shelf spaces used</label>
+          <div class="stepper">
+            <button onclick="step('stor-shelf',-1)">−</button>
+            <span class="count" id="stor-shelf">5</span>
+            <button onclick="step('stor-shelf',1)">+</button>
+          </div>
+          <div class="hint" id="stor-shelf-hint"></div>
+        </div>
+        <div class="field">
+          <label>Bin spaces used</label>
+          <div class="stepper">
+            <button onclick="step('stor-bin',-1)">−</button>
+            <span class="count" id="stor-bin">3</span>
+            <button onclick="step('stor-bin',1)">+</button>
+          </div>
+          <div class="hint" id="stor-bin-hint"></div>
+        </div>
+        <div class="field">
+          <label>Pallets in storage</label>
+          <div class="stepper">
+            <button onclick="step('stor-pallet',-1)">−</button>
+            <span class="count" id="stor-pallet">0</span>
+            <button onclick="step('stor-pallet',1)">+</button>
+          </div>
+          <div class="hint" id="stor-pallet-hint"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+
+      <!-- Pick & Pack -->
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-title"><span>🛍️ This Order</span> — Pick &amp; Pack</div>
+
+        <div class="field">
+          <label>Number of items in this order</label>
+          <div class="stepper">
+            <button onclick="step('items',-1)">−</button>
+            <span class="count" id="items">1</span>
+            <button onclick="step('items',1)">+</button>
+          </div>
+          <div class="hint" id="pick-hint">First pick $2.15, additional picks $0.90 each</div>
+        </div>
+
+        <div class="subsection">Add-ons per order</div>
+
+        <div class="toggle-row">
+          <div class="tinfo">
+            <div class="tname">Insert (e.g. thank-you card)</div>
+            <div class="tprice">$0.05 per insert</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="add-insert" onchange="calc()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row" id="insert-qty-row" style="display:none; padding-left:12px; background:var(--accent2-light); border-radius:var(--radius-sm); margin-top:4px;">
+          <div class="tinfo"><div class="tname" style="font-size:12px">How many inserts?</div></div>
+          <div class="stepper">
+            <button onclick="step('insert-qty',-1)">−</button>
+            <span class="count" id="insert-qty">1</span>
+            <button onclick="step('insert-qty',1)">+</button>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="tinfo">
+            <div class="tname">Sticker / label on product</div>
+            <div class="tprice">$0.05 per sticker</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="add-sticker" onchange="calc()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row" id="sticker-qty-row" style="display:none; padding-left:12px; background:var(--accent2-light); border-radius:var(--radius-sm); margin-top:4px;">
+          <div class="tinfo"><div class="tname" style="font-size:12px">How many stickers?</div></div>
+          <div class="stepper">
+            <button onclick="step('sticker-qty',-1)">−</button>
+            <span class="count" id="sticker-qty">1</span>
+            <button onclick="step('sticker-qty',1)">+</button>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="tinfo">
+            <div class="tname">Dunnage (void fill / padding)</div>
+            <div class="tprice">$0.10 per order</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="add-dunnage" onchange="calc()"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <!-- Packaging Materials -->
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-title"><span>📬 Packaging Materials</span> — If 3PL supplies</div>
+
+        <div class="toggle-row">
+          <div class="tinfo">
+            <div class="tname">Polybag</div>
+            <div class="tprice">$0.15 – $0.50 each</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="pkg-polybag" onchange="calc()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row" id="polybag-select-row" style="display:none; padding-left:12px;">
+          <div class="tinfo"><div class="tname" style="font-size:12px">Polybag cost</div></div>
+          <select id="polybag-cost" onchange="calc()" style="max-width:160px; padding:5px 28px 5px 8px; font-size:12px;">
+            <option value="0.15">$0.15 (small)</option>
+            <option value="0.30">$0.30 (medium)</option>
+            <option value="0.50">$0.50 (large)</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <div class="tinfo">
+            <div class="tname">Protective materials</div>
+            <div class="tprice">$0.10 – $0.50 per unit</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="pkg-protective" onchange="calc()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row" id="protective-select-row" style="display:none; padding-left:12px;">
+          <div class="tinfo"><div class="tname" style="font-size:12px">Protective cost</div></div>
+          <select id="protective-cost" onchange="calc()" style="max-width:160px; padding:5px 28px 5px 8px; font-size:12px;">
+            <option value="0.10">$0.10 (light)</option>
+            <option value="0.30">$0.30 (medium)</option>
+            <option value="0.50">$0.50 (heavy)</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <div class="tinfo">
+            <div class="tname">Outer carton / box</div>
+            <div class="tprice">$1.00 – $4.00 each</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="pkg-carton" onchange="calc()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row" id="carton-select-row" style="display:none; padding-left:12px;">
+          <div class="tinfo"><div class="tname" style="font-size:12px">Carton size</div></div>
+          <select id="carton-cost" onchange="calc()" style="max-width:160px; padding:5px 28px 5px 8px; font-size:12px;">
+            <option value="1.00">$1.00 (small)</option>
+            <option value="2.00">$2.00 (medium)</option>
+            <option value="3.00">$3.00 (large)</option>
+            <option value="4.00">$4.00 (XL)</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <div class="tinfo">
+            <div class="tname">Bubble wrap</div>
+            <div class="tprice">$0.60 – $1.75 per unit</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="pkg-bubble" onchange="calc()"><span class="slider"></span></label>
+        </div>
+        <div class="toggle-row" id="bubble-select-row" style="display:none; padding-left:12px;">
+          <div class="tinfo"><div class="tname" style="font-size:12px">Bubble wrap</div></div>
+          <select id="bubble-cost" onchange="calc()" style="max-width:160px; padding:5px 28px 5px 8px; font-size:12px;">
+            <option value="0.60">$0.60 (light)</option>
+            <option value="1.10">$1.10 (medium)</option>
+            <option value="1.75">$1.75 (heavy)</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <div class="tinfo">
+            <div class="tname">Shrink wrap (per unit)</div>
+            <div class="tprice">$0.75 per unit</div>
+          </div>
+          <label class="toggle"><input type="checkbox" id="pkg-shrink" onchange="calc()"><span class="slider"></span></label>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="results-panel">
+        <div class="r-title">Order Cost Summary</div>
+
+        <div class="line-item" id="li-recv">
+          <span class="li-label">Receiving (per order share)</span>
+          <span class="li-val" id="v-recv">$0.00</span>
+        </div>
+        <div class="line-item" id="li-storage">
+          <span class="li-label">Storage (monthly, per order)</span>
+          <span class="li-val" id="v-storage">$0.00</span>
+        </div>
+        <div class="line-item" id="li-pick">
+          <span class="li-label">Pick & Pack</span>
+          <span class="li-val" id="v-pick">$0.00</span>
+        </div>
+        <div class="line-item" id="li-addons">
+          <span class="li-label">Inserts / Stickers / Dunnage</span>
+          <span class="li-val" id="v-addons">$0.00</span>
+        </div>
+        <div class="line-item" id="li-pkg">
+          <span class="li-label">Packaging materials</span>
+          <span class="li-val" id="v-pkg">$0.00</span>
+        </div>
+
+        <hr class="r-divider">
+
+        <div class="r-total">
+          <span class="label">Total cost per order</span>
+          <span class="amount"><span class="currency">$</span><span id="v-total">0.00</span></span>
+        </div>
+
+        <div class="margin-calc">
+          <div class="mc-title">Profit check</div>
+          <div class="mc-row">
+            <label>Sell price</label>
+            <input type="number" id="sell-price" value="25.00" min="0" step="0.01" oninput="calc()">
+          </div>
+          <div class="mc-row">
+            <label>Product cost (COGS)</label>
+            <input type="number" id="cogs" value="5.00" min="0" step="0.01" oninput="calc()">
+          </div>
+          <div class="margin-result" id="margin-result"></div>
+        </div>
+
+        <button class="btn-reset" onclick="resetAll()">↺ Reset all values</button>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>Rates from Pura Maracuya Fulfillment Pricing Proposal &nbsp;•&nbsp; Storage billed weekly (×4.33 for monthly) &nbsp;•&nbsp; Receiving spread across monthly shipments</footer>
+</div>
+
+<script>
+  // State
+  const counters = {
+    'recv-qty': 10,
+    'recv-hours': 2,
+    'items': 1,
+    'insert-qty': 1,
+    'sticker-qty': 1,
+    'stor-shelf': 5,
+    'stor-bin': 3,
+    'stor-pallet': 0,
+  };
+
+  function step(id, delta) {
+    counters[id] = Math.max(0, (counters[id] || 0) + delta);
+    document.getElementById(id).textContent = counters[id];
+    calc();
+  }
+
+  function g(id) { return document.getElementById(id); }
+  function gv(id) { return parseFloat(g(id).value) || 0; }
+  function gc(id) { return counters[id] || 0; }
+  function checked(id) { return g(id).checked; }
+
+  function fmt(n) { return n.toFixed(2); }
+
+  function tier(monthly) {
+    if (monthly >= 2501) return 3;
+    if (monthly >= 1000) return 2;
+    return 1;
+  }
+
+  const rates = {
+    orderFee:   [null, 2.15, 1.95, 1.65],
+    addPick:    [null, 0.90, 0.75, 0.50],
+    shelfWeek:  [null, 1.26, 1.00, 0.85],
+    binWeek:    [null, 0.40, 0.30, 0.25],
+    palletWeek: [null, 6.00, 5.00, 4.00],
+  };
+
+  function calc() {
+    const monthly = Math.max(1, parseInt(g('monthly-shipments').value) || 1);
+    const t = tier(monthly);
+
+    // Update tier banner
+    const labels = ['','TIER 1 — 1–999 SHIPMENTS','TIER 2 — 1,000–2,500 SHIPMENTS','TIER 3 — 2,501+ SHIPMENTS'];
+    g('tier-label').textContent = labels[t];
+
+    // Receiving
+    const recvType = g('recv-type').value;
+    const isHours = recvType === 'container_floor';
+    g('recv-qty-field').style.display = isHours ? 'none' : '';
+    g('recv-hours-field').style.display = isHours ? '' : 'none';
+
+    let recvTotal = 0;
+    const recvRates = { carton_carrier:2.25, carton_mixed:1.95, pallet_same:13.75, container_pallet:13.75 };
+    if (isHours) {
+      recvTotal = gc('recv-hours') * 49.50;
+    } else {
+      recvTotal = gc('recv-qty') * recvRates[recvType];
+      const rateLabel = recvRates[recvType];
+      const unit = recvType.includes('pallet') ? 'pallets' : 'cartons';
+      g('recv-rate-hint').textContent = `${gc('recv-qty')} ${unit} × $${rateLabel.toFixed(2)} = $${fmt(recvTotal)}`;
+    }
+    const recvPerOrder = recvTotal / monthly;
+
+    // Storage monthly
+    const shelfRate = rates.shelfWeek[t];
+    const binRate   = rates.binWeek[t];
+    const palletRate = rates.palletWeek[t];
+    const storWeekly = gc('stor-shelf') * shelfRate + gc('stor-bin') * binRate + gc('stor-pallet') * palletRate;
+    const storMonthly = storWeekly * 4.33;
+    const storPerOrder = storMonthly / monthly;
+    g('stor-shelf-hint').textContent = `${gc('stor-shelf')} shelves × $${shelfRate}/wk`;
+    g('stor-bin-hint').textContent   = `${gc('stor-bin')} bins × $${binRate}/wk`;
+    g('stor-pallet-hint').textContent = `${gc('stor-pallet')} pallets × $${palletRate}/wk`;
+
+    // Pick & Pack
+    const items = Math.max(1, gc('items'));
+    const orderFee = rates.orderFee[t];
+    const addPick  = rates.addPick[t];
+    const pickTotal = orderFee + (items - 1) * addPick;
+    g('pick-hint').textContent = items === 1
+      ? `First pick $${orderFee.toFixed(2)} (Tier ${t})`
+      : `$${orderFee.toFixed(2)} + ${items-1} × $${addPick.toFixed(2)} = $${fmt(pickTotal)} (Tier ${t})`;
+
+    // Add-ons
+    const showInsert = checked('add-insert');
+    const showSticker = checked('add-sticker');
+    g('insert-qty-row').style.display  = showInsert ? '' : 'none';
+    g('sticker-qty-row').style.display = showSticker ? '' : 'none';
+
+    const insertCost  = showInsert  ? gc('insert-qty')  * 0.05 : 0;
+    const stickerCost = showSticker ? gc('sticker-qty') * 0.05 : 0;
+    const dunnageCost = checked('add-dunnage') ? 0.10 : 0;
+    const addonsTotal = insertCost + stickerCost + dunnageCost;
+
+    // Packaging
+    function togglePkg(checkId, rowId, selectId) {
+      const on = checked(checkId);
+      g(rowId).style.display = on ? '' : 'none';
+      return on ? parseFloat(g(selectId).value) || 0 : 0;
+    }
+    const polybagCost    = togglePkg('pkg-polybag', 'polybag-select-row', 'polybag-cost');
+    const protectiveCost = togglePkg('pkg-protective', 'protective-select-row', 'protective-cost');
+    const cartonCost     = togglePkg('pkg-carton', 'carton-select-row', 'carton-cost');
+    const bubbleCost     = togglePkg('pkg-bubble', 'bubble-select-row', 'bubble-cost');
+    const shrinkCost     = checked('pkg-shrink') ? 0.75 : 0;
+    const pkgTotal = polybagCost + protectiveCost + cartonCost + bubbleCost + shrinkCost;
+
+    // Total
+    const total = recvPerOrder + storPerOrder + pickTotal + addonsTotal + pkgTotal;
+
+    // Update display
+    function setLine(li, v, val) {
+      const isZero = val === 0;
+      g(li).className = 'line-item' + (isZero ? ' zero' : '');
+      g(v).textContent = '$' + fmt(val);
+    }
+    setLine('li-recv',    'v-recv',    recvPerOrder);
+    setLine('li-storage', 'v-storage', storPerOrder);
+    setLine('li-pick',    'v-pick',    pickTotal);
+    setLine('li-addons',  'v-addons',  addonsTotal);
+    setLine('li-pkg',     'v-pkg',     pkgTotal);
+    g('v-total').textContent = fmt(total);
+
+    // Margin
+    const sell = gv('sell-price');
+    const cogs = gv('cogs');
+    const profit = sell - cogs - total;
+    const margin = sell > 0 ? (profit / sell * 100) : 0;
+    const cls = profit >= 0 ? 'positive' : 'negative';
+    const sign = profit >= 0 ? '+' : '';
+    g('margin-result').innerHTML =
+      `Sell $${fmt(sell)} − COGS $${fmt(cogs)} − fulfillment $${fmt(total)}<br>` +
+      `Profit: <span class="profit ${cls}">${sign}$${fmt(profit)} (${sign}${margin.toFixed(1)}% margin)</span>`;
+  }
+
+  function resetAll() {
+    const defaults = { 'recv-qty':10,'recv-hours':2,'items':1,'insert-qty':1,'sticker-qty':1,'stor-shelf':5,'stor-bin':3,'stor-pallet':0 };
+    Object.assign(counters, defaults);
+    Object.keys(defaults).forEach(id => { const el = document.getElementById(id); if(el) el.textContent = defaults[id]; });
+    ['add-insert','add-sticker','add-dunnage','pkg-polybag','pkg-protective','pkg-carton','pkg-bubble','pkg-shrink'].forEach(id => g(id).checked = false);
+    g('recv-type').value = 'carton_carrier';
+    g('monthly-shipments').value = 50;
+    g('sell-price').value = 25.00;
+    g('cogs').value = 5.00;
+    calc();
+  }
+
+  calc();
+</script>
+</body>
+</html>
