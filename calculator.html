@@ -1,814 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fulfillment Cost Calculator — Pura Maracuya</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #f5f0e8;
-      --surface: #fffdf8;
-      --surface2: #f0ebe0;
-      --ink: #1a1611;
-      --ink2: #5a5248;
-      --ink3: #9a9088;
-      --accent: #c4451a;
-      --accent-light: #fae8e2;
-      --accent2: #2a6b4a;
-      --accent2-light: #e0f0e8;
-      --border: #ddd5c5;
-      --border-strong: #bfb5a5;
-      --gold: #b8943a;
-      --gold-light: #f5eddb;
-      --shadow: 0 2px 16px rgba(26,22,17,0.08);
-      --shadow-lg: 0 8px 40px rgba(26,22,17,0.12);
-      --radius: 12px;
-      --radius-sm: 8px;
-
-      /* drawer vars */
-      --deep: #1a1611;
-      --muted: #7a7268;
-      --sage: #8a9e85;
-      --sand: #f3eee5;
-    }
-
-    body {
-      font-family: 'Outfit', sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      min-height: 100vh;
-      padding: 2rem 1rem 4rem;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        radial-gradient(ellipse at 20% 10%, rgba(196,69,26,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 90%, rgba(42,107,74,0.06) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .page {
-      position: relative;
-      z-index: 1;
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-
-    header h1 {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(28px, 5vw, 42px);
-      color: var(--ink);
-      line-height: 1.15;
-      margin-bottom: 0.5rem;
-    }
-
-    header p {
-      font-size: 15px;
-      color: var(--ink2);
-      font-weight: 300;
-    }
-
-    .tier-banner {
-      background: var(--gold-light);
-      border: 1px solid var(--gold);
-      border-radius: var(--radius-sm);
-      padding: 0.65rem 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tier-banner .label {
-      font-size: 13px;
-      color: var(--gold);
-      font-weight: 500;
-    }
-
-    .tier-badge {
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      background: var(--gold);
-      color: #fff;
-      padding: 3px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.05em;
-    }
-
-    /* hamburger + drawer */
-    .hamburger {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      z-index: 1000;
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      background: rgba(245,240,232,0.7);
-      border: 1px solid rgba(138,158,133,0.15);
-      backdrop-filter: blur(8px);
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      transition: background 0.2s, opacity 0.3s ease;
-    }
-
-    .hamburger:hover {
-      background: rgba(245,240,232,0.95);
-    }
-
-    .hamburger span {
-      display: block;
-      width: 15px;
-      height: 1.5px;
-      background: var(--deep);
-      border-radius: 2px;
-      transition: all 0.3s ease;
-      transform-origin: center;
-    }
-
-    .hamburger.open span:nth-child(1) {
-      transform: translateY(5.5px) rotate(45deg);
-    }
-
-    .hamburger.open span:nth-child(2) {
-      opacity: 0;
-      transform: scaleX(0);
-    }
-
-    .hamburger.open span:nth-child(3) {
-      transform: translateY(-5.5px) rotate(-45deg);
-    }
-
-    .back-to-top {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      width: 42px;
-      height: 42px;
-      border-radius: 8px;
-      background: rgba(245,240,232,0.7);
-      border: 1px solid rgba(138,158,133,0.15);
-      backdrop-filter: blur(8px);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease, background 0.2s;
-    }
-
-    .back-to-top.visible {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .back-to-top:hover {
-      background: rgba(245,240,232,0.95);
-    }
-
-    .back-to-top svg {
-      width: 14px;
-      height: 14px;
-      stroke: var(--deep);
-    }
-
-    .drawer-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(44,44,44,0.3);
-      backdrop-filter: blur(3px);
-      z-index: 900;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .drawer-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .drawer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 280px;
-      background: white;
-      z-index: 950;
-      padding: 80px 32px 40px;
-      transform: translateX(-100%);
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 4px 0 40px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .drawer.open {
-      transform: translateX(0);
-    }
-
-    .drawer-logo {
-      font-family: 'DM Serif Display', serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: var(--deep);
-      margin-bottom: 6px;
-    }
-
-    .drawer-tagline {
-      font-size: 11px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 40px;
-    }
-
-    .drawer-label {
-      font-size: 10px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--sage);
-      font-weight: 500;
-      margin-bottom: 14px;
-    }
-
-    .drawer-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .drawer-link {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 16px;
-      border-radius: 12px;
-      text-decoration: none;
-      color: var(--deep);
-      transition: background 0.15s, transform 0.15s;
-      border: 1px solid transparent;
-    }
-
-    .drawer-link:hover {
-      background: var(--sand);
-      border-color: rgba(138,158,133,0.2);
-      transform: translateX(3px);
-    }
-
-    .drawer-link.active {
-      background: rgba(138,158,133,0.12);
-      border-color: rgba(138,158,133,0.3);
-    }
-
-    .drawer-link-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .link-eshop .drawer-link-icon,
-    .link-calculator .drawer-link-icon {
-      background: rgba(138,158,133,0.15);
-    }
-
-    .link-vivi .drawer-link-icon {
-      background: rgba(194,123,90,0.12);
-    }
-
-    .link-time .drawer-link-icon {
-      background: rgba(92,112,87,0.12);
-    }
-
-    .drawer-link-text {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .drawer-link-sub {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 1px;
-    }
-
-    .drawer-footer {
-      margin-top: auto;
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.5px;
-    }
-
-    /* layout */
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      align-items: start;
-    }
-
-    @media (max-width: 640px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.4rem;
-      box-shadow: var(--shadow);
-    }
-
-    .card-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--ink3);
-      margin-bottom: 1.1rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .card-title span {
-      display: inline-block;
-      background: var(--surface2);
-      border-radius: 4px;
-      padding: 2px 8px;
-      color: var(--ink2);
-    }
-
-    .field { margin-bottom: 1rem; }
-    .field:last-child { margin-bottom: 0; }
-
-    .field label {
-      display: block;
-      font-size: 13px;
-      color: var(--ink2);
-      margin-bottom: 5px;
-      font-weight: 500;
-    }
-
-    .field .hint {
-      font-size: 11px;
-      color: var(--ink3);
-      margin-top: 3px;
-      font-family: 'DM Mono', monospace;
-    }
-
-    input[type=number] {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--surface2);
-      font-family: 'DM Mono', monospace;
-      font-size: 15px;
-      color: var(--ink);
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      -moz-appearance: textfield;
-    }
-
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-      opacity: 1;
-    }
-
-    input[type=number]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(196,69,26,0.12);
-    }
-
-    select {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--surface2);
-      font-family: 'Outfit', sans-serif;
-      font-size: 14px;
-      color: var(--ink);
-      outline: none;
-      cursor: pointer;
-      transition: border-color 0.15s;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9088' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 32px;
-    }
-
-    select:focus {
-      border-color: var(--accent);
-    }
-
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 9px 0;
-      border-bottom: 1px solid var(--border);
-      gap: 8px;
-    }
-
-    .toggle-row:last-child {
-      border-bottom: none;
-    }
-
-    .toggle-row .tinfo { flex: 1; }
-    .toggle-row .tname {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink);
-    }
-
-    .toggle-row .tprice {
-      font-size: 11px;
-      color: var(--ink3);
-      font-family: 'DM Mono', monospace;
-    }
-
-    .toggle {
-      position: relative;
-      width: 40px;
-      height: 22px;
-      flex-shrink: 0;
-    }
-
-    .toggle input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      inset: 0;
-      background: var(--border-strong);
-      border-radius: 11px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .slider::before {
-      content: '';
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      left: 3px;
-      top: 3px;
-      background: #fff;
-      border-radius: 50%;
-      transition: 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-
-    .toggle input:checked + .slider {
-      background: var(--accent2);
-    }
-
-    .toggle input:checked + .slider::before {
-      transform: translateX(18px);
-    }
-
-    .stepper {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .stepper button {
-      width: 28px;
-      height: 28px;
-      border: 1px solid var(--border-strong);
-      border-radius: 6px;
-      background: var(--surface2);
-      font-size: 16px;
-      cursor: pointer;
-      color: var(--ink2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.1s, border-color 0.1s;
-      line-height: 1;
-      font-weight: 500;
-    }
-
-    .stepper button:hover {
-      background: var(--border);
-      border-color: var(--border-strong);
-    }
-
-    .stepper .count {
-      font-family: 'DM Mono', monospace;
-      font-size: 15px;
-      font-weight: 500;
-      min-width: 28px;
-      text-align: center;
-      color: var(--ink);
-    }
-
-    .results-panel {
-      background: var(--ink);
-      color: #fff;
-      border-radius: var(--radius);
-      padding: 1.4rem 1.5rem;
-      box-shadow: var(--shadow-lg);
-      margin-top: 1.25rem;
-      position: sticky;
-      top: 1rem;
-    }
-
-    .results-panel .r-title {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
-      margin-bottom: 1.25rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .line-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding: 5px 0;
-      font-size: 13px;
-    }
-
-    .line-item .li-label {
-      color: rgba(255,255,255,0.6);
-      flex: 1;
-    }
-
-    .line-item .li-val {
-      font-family: 'DM Mono', monospace;
-      font-size: 13px;
-      color: rgba(255,255,255,0.9);
-      font-weight: 500;
-    }
-
-    .line-item.zero .li-label,
-    .line-item.zero .li-val {
-      color: rgba(255,255,255,0.25);
-      text-decoration: line-through;
-    }
-
-    .r-divider {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.12);
-      margin: 12px 0;
-    }
-
-    .r-total {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-top: 4px;
-    }
-
-    .r-total .label {
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(255,255,255,0.7);
-    }
-
-    .r-total .amount {
-      font-family: 'DM Serif Display', serif;
-      font-size: 36px;
-      color: #fff;
-      letter-spacing: -0.5px;
-    }
-
-    .r-total .currency {
-      font-family: 'DM Mono', monospace;
-      font-size: 14px;
-      color: rgba(255,255,255,0.5);
-      margin-right: 2px;
-    }
-
-    .margin-calc {
-      margin-top: 1rem;
-      background: rgba(255,255,255,0.06);
-      border-radius: var(--radius-sm);
-      padding: 0.9rem 1rem;
-    }
-
-    .margin-calc .mc-title {
-      font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .margin-calc .mc-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-
-    .margin-calc label {
-      font-size: 12px;
-      color: rgba(255,255,255,0.5);
-      white-space: nowrap;
-    }
-
-    .margin-calc input[type=number] {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: #fff;
-      font-size: 14px;
-      padding: 6px 10px;
-      max-width: 110px;
-    }
-
-    .margin-calc input[type=number]:focus {
-      border-color: rgba(255,255,255,0.4);
-      box-shadow: none;
-    }
-
-    .margin-result {
-      font-size: 13px;
-      color: rgba(255,255,255,0.55);
-      margin-top: 6px;
-      line-height: 1.5;
-    }
-
-    .margin-result .profit {
-      font-weight: 600;
-    }
-
-    .profit.positive { color: #6fcf97; }
-    .profit.negative { color: #f87171; }
-
-    .btn-reset {
-      width: 100%;
-      margin-top: 1rem;
-      padding: 9px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: var(--radius-sm);
-      color: rgba(255,255,255,0.5);
-      font-family: 'Outfit', sans-serif;
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      letter-spacing: 0.02em;
-    }
-
-    .btn-reset:hover {
-      background: rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.8);
-    }
-
-    .subsection {
-      font-size: 11px;
-      font-family: 'DM Mono', monospace;
-      color: var(--ink3);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin: 1rem 0 0.5rem;
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 2.5rem;
-      font-size: 11px;
-      color: var(--ink3);
-      font-family: 'DM Mono', monospace;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fulfillment Cost Calculator — Pura Maracuya</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f5f0e8;
+    --surface: #fffdf8;
+    --surface2: #f0ebe0;
+    --ink: #1a1611;
+    --ink2: #5a5248;
+    --ink3: #9a9088;
+    --accent: #c4451a;
+    --accent2: #2a6b4a;
+    --accent2-light: #e2f0e8;
+    --border: #ddd5c5;
+    --border-strong: #bfb5a5;
+    --gold: #b8943a;
+    --gold-light: #f5eddb;
+    --shadow: 0 2px 16px rgba(26,22,17,0.08);
+    --shadow-lg: 0 8px 40px rgba(26,22,17,0.12);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; padding: 2rem 1rem 4rem; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: radial-gradient(ellipse at 20% 10%, rgba(196,69,26,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 90%, rgba(42,107,74,0.06) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+  .page { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 1.75rem; }
+  .eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
+  header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 5vw, 38px); color: var(--ink); margin-bottom: 0.35rem; }
+  header p { font-size: 14px; color: var(--ink2); font-weight: 300; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; background: var(--surface2); border-radius: var(--radius); padding: 5px; border: 1px solid var(--border); }
+  .tab { flex: 1; padding: 9px 12px; border-radius: var(--radius-sm); border: none; background: transparent; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink3); cursor: pointer; transition: all 0.15s; }
+  .tab.active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .tier-banner { background: var(--gold-light); border: 1px solid var(--gold); border-radius: var(--radius-sm); padding: 0.6rem 1.1rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 8px; }
+  .tier-banner .label { font-size: 12px; color: var(--gold); font-weight: 500; }
+  .tier-badge { font-family: 'DM Mono', monospace; font-size: 11px; background: var(--gold); color: #fff; padding: 3px 10px; border-radius: 20px; }
+
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
+  @media (max-width: 680px) { .layout { grid-template-columns: 1fr; } }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.3rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+  .card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink3); margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--border); }
+  .card-title span { display: inline-block; background: var(--surface2); border-radius: 4px; padding: 2px 8px; color: var(--ink2); }
+
+  .field { margin-bottom: 0.85rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 13px; color: var(--ink2); margin-bottom: 5px; font-weight: 500; }
+  .hint { font-size: 11px; color: var(--ink3); margin-top: 3px; font-family: 'DM Mono', monospace; line-height: 1.5; }
+
+  input[type=number] { width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2); font-family: 'DM Mono', monospace; font-size: 14px; color: var(--ink); outline: none; transition: border-color 0.15s, box-shadow 0.15s; -moz-appearance: textfield; }
+  input[type=number]::-webkit-inner-spin-button { opacity: 1; }
+  input[type=number]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(196,69,26,0.1); }
+
+  select { width: 100%; padding: 8px 32px 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface2); font-family: 'Outfit', sans-serif; font-size: 13px; color: var(--ink); outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9088' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; transition: border-color 0.15s; }
+  select:focus { border-color: var(--accent); }
+
+  .stepper { display: flex; align-items: center; gap: 6px; }
+  .stepper button { width: 30px; height: 30px; border: 1px solid var(--border-strong); border-radius: 6px; background: var(--surface2); font-size: 16px; cursor: pointer; color: var(--ink2); display: flex; align-items: center; justify-content: center; transition: background 0.1s; font-weight: 500; flex-shrink: 0; }
+  .stepper button:hover { background: var(--border); }
+  .stepper .count { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; min-width: 32px; text-align: center; }
+
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); gap: 8px; }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-row .tinfo { flex: 1; }
+  .toggle-row .tname { font-size: 13px; font-weight: 500; }
+  .toggle-row .tprice { font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; }
+  .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; inset: 0; background: var(--border-strong); border-radius: 11px; cursor: pointer; transition: 0.2s; }
+  .slider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+  .toggle input:checked + .slider { background: var(--accent2); }
+  .toggle input:checked + .slider::before { transform: translateX(18px); }
+
+  .sub-row { display: none; padding: 5px 0 5px 12px; align-items: center; gap: 10px; }
+  .sub-row.open { display: flex; }
+  .sub-row label { font-size: 12px; color: var(--ink2); white-space: nowrap; }
+
+  .subsection { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.1em; margin: 1rem 0 0.5rem; }
+
+  /* Results */
+  .results-panel { background: var(--ink); color: #fff; border-radius: var(--radius); padding: 1.3rem 1.4rem; box-shadow: var(--shadow-lg); position: sticky; top: 1rem; }
+  .r-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .line-item { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; }
+  .line-item .li-label { font-size: 13px; color: rgba(255,255,255,0.55); flex: 1; }
+  .line-item .li-val { font-family: 'DM Mono', monospace; font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 500; }
+  .line-item.zero .li-label, .line-item.zero .li-val { color: rgba(255,255,255,0.2); }
+  .r-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0; }
+  .r-total { display: flex; justify-content: space-between; align-items: baseline; }
+  .r-total .label { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.65); }
+  .r-total .amount { font-family: 'DM Serif Display', serif; font-size: 32px; color: #fff; }
+  .r-total .currency { font-family: 'DM Mono', monospace; font-size: 13px; color: rgba(255,255,255,0.4); margin-right: 1px; }
+
+  .margin-calc { margin-top: 1rem; background: rgba(255,255,255,0.06); border-radius: var(--radius-sm); padding: 0.85rem 1rem; }
+  .margin-calc .mc-title { font-size: 10px; font-family: 'DM Mono', monospace; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+  .mc-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .mc-row:last-child { margin-bottom: 0; }
+  .mc-row label { font-size: 12px; color: rgba(255,255,255,0.45); white-space: nowrap; }
+  .mc-row input[type=number] { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; font-size: 13px; padding: 6px 10px; max-width: 120px; }
+  .mc-row input[type=number]:focus { border-color: rgba(255,255,255,0.4); box-shadow: none; }
+  .margin-result { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 8px; line-height: 1.65; }
+  .profit.pos { color: #6fcf97; font-weight: 600; }
+  .profit.neg { color: #f87171; font-weight: 600; }
+
+  .btn-reset { width: 100%; margin-top: 1rem; padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-sm); color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 12px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+  .btn-reset:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+
+  /* Monthly tab */
+  .metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 1.25rem; }
+  @media (max-width: 500px) { .metric-grid { grid-template-columns: 1fr 1fr; } }
+  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.85rem 1rem; box-shadow: var(--shadow); }
+  .metric .mlabel { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3); margin-bottom: 4px; }
+  .metric .mval { font-size: 20px; font-weight: 600; color: var(--ink); font-family: 'DM Serif Display', serif; }
+  .metric .msub { font-size: 10px; color: var(--ink3); margin-top: 2px; font-family: 'DM Mono', monospace; }
+  .metric.hi { background: var(--accent); border-color: var(--accent); }
+  .metric.hi .mlabel, .metric.hi .msub { color: rgba(255,255,255,0.6); }
+  .metric.hi .mval { color: #fff; }
+
+  .breakdown-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.3rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+  .bc-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink3); margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--border); }
+  .bc-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .bc-row:last-child { border-bottom: none; }
+  .bc-label { font-size: 13px; color: var(--ink2); }
+  .bc-sub { font-size: 11px; color: var(--ink3); margin-top: 2px; font-family: 'DM Mono', monospace; }
+  .bc-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--ink); }
+  .bc-total { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0 0; margin-top: 8px; border-top: 2px solid var(--ink); }
+  .bc-total .tl { font-size: 14px; font-weight: 600; }
+  .bc-total .tv { font-family: 'DM Serif Display', serif; font-size: 28px; }
+
+  .stock-callout { background: var(--accent2-light); border: 1px solid var(--accent2); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 0.85rem; font-size: 13px; color: var(--accent2); line-height: 1.6; }
+  .profit-block { font-size: 13px; color: var(--ink2); line-height: 2; margin-top: 4px; }
+
+  footer { text-align: center; margin-top: 2.5rem; font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; }
+</style>
 </head>
 <body>
+<div class="page">
 
-  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
-    <svg viewBox="0 0 14 14" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M2 9.5L7 4.5L12 9.5"></path>
-    </svg>
-  </button>
+  <header>
+    <p class="eyebrow">Pura Maracuya</p>
+    <h1>Fulfillment Cost Calculator</h1>
+    <p>Per-order costs &amp; full monthly warehouse bill — all from one proposal</p>
+  </header>
 
-  <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-
-  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
-
-  <div class="drawer" id="drawer">
-    <div class="drawer-logo">Maracuya</div>
-    <div class="drawer-tagline">Team Workspace</div>
-    <div class="drawer-label">Projects</div>
-    <nav class="drawer-nav">
-      <a href="index.html" class="drawer-link link-eshop">
-        <div class="drawer-link-icon">&#128717;</div>
-        <div>
-          <div class="drawer-link-text">E-Shop</div>
-          <div class="drawer-link-sub">Product &amp; Launch Tracker</div>
-        </div>
-      </a>
-      <a href="vivi.html" class="drawer-link link-vivi">
-        <div class="drawer-link-icon">&#10024;</div>
-        <div>
-          <div class="drawer-link-text">ViviApp</div>
-          <div class="drawer-link-sub">Coming soon</div>
-        </div>
-      </a>
-      <a href="timesheet.html" class="drawer-link link-time">
-        <div class="drawer-link-icon">&#9200;</div>
-        <div>
-          <div class="drawer-link-text">Timesheet</div>
-          <div class="drawer-link-sub">Hours per person</div>
-        </div>
-      </a>
-      <a href="calculator.html" class="drawer-link link-calculator active">
-        <div class="drawer-link-icon">&#10024;</div>
-        <div>
-          <div class="drawer-link-text">Calculator</div>
-          <div class="drawer-link-sub">Fulfillment &amp; per order fee</div>
-        </div>
-      </a>
-    </nav>
-    <div class="drawer-footer">Maracuya Team &copy; 2026</div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('order')">🛍️ Per Order Cost</button>
+    <button class="tab" onclick="showTab('monthly')">📅 Monthly Warehouse Bill</button>
   </div>
 
-  <div class="page">
-    <header>
-      <p class="eyebrow">Pura Maracuya</p>
-      <h1>Fulfillment Cost Calculator</h1>
-      <p>Calculate the exact 3PL cost for any customer order</p>
-    </header>
-
+  <!-- TAB 1: PER ORDER -->
+  <div class="tab-panel active" id="tab-order">
     <div class="tier-banner">
-      <span class="label">Current pricing tier based on monthly shipments</span>
-      <span class="tier-badge" id="tier-label">TIER 1 — 1–999 SHIPMENTS</span>
+      <span class="label">Pricing tier is set by your total monthly shipments</span>
+      <span class="tier-badge" id="tier-label-order">TIER 1 — 1–999/mo</span>
     </div>
 
     <div class="layout">
       <div>
-        <div class="card" style="margin-bottom:1.25rem;">
-          <div class="card-title"><span>📦 Receiving</span> — Stock arriving at warehouse</div>
+        <div class="card">
+          <div class="card-title"><span>📊 Monthly Volume</span> — Sets your tier</div>
           <div class="field">
-            <label>How do your products arrive?</label>
-            <select id="recv-type" onchange="calc()">
-              <option value="carton_carrier">Box / Carton via carrier (UPS, FedEx) — $2.25 each</option>
-              <option value="carton_mixed">Mixed pallet — per carton — $1.95 each</option>
-              <option value="pallet_same">Pallet, same SKU — $13.75 each</option>
-              <option value="container_pallet">Container pallet, same SKU — $13.75 each</option>
-              <option value="container_floor">Container floor loaded — $49.50/hr</option>
+            <label>Total orders shipped per month</label>
+            <input type="number" id="monthly-shipments" value="50" min="1" oninput="calc()">
+            <div class="hint">Tier 1: 1–999 &nbsp;|&nbsp; Tier 2: 1,000–2,500 &nbsp;|&nbsp; Tier 3: 2,501+</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>🛍️ This Customer's Order</span></div>
+          <div class="field">
+            <label>Number of items in this order</label>
+            <div class="stepper">
+              <button onclick="step('items',-1)">−</button>
+              <span class="count" id="items">1</span>
+              <button onclick="step('items',1)">+</button>
+            </div>
+            <div class="hint" id="pick-hint"></div>
+          </div>
+
+          <div class="subsection">Add-ons per order</div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Insert (e.g. thank-you card)</div><div class="tprice">$0.05 per insert</div></div>
+            <label class="toggle"><input type="checkbox" id="add-insert" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-insert">
+            <label>Qty:</label>
+            <div class="stepper">
+              <button onclick="step('insert-qty',-1)">−</button>
+              <span class="count" id="insert-qty">1</span>
+              <button onclick="step('insert-qty',1)">+</button>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Sticker on product</div><div class="tprice">$0.05 per sticker</div></div>
+            <label class="toggle"><input type="checkbox" id="add-sticker" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-sticker">
+            <label>Qty:</label>
+            <div class="stepper">
+              <button onclick="step('sticker-qty',-1)">−</button>
+              <span class="count" id="sticker-qty">1</span>
+              <button onclick="step('sticker-qty',1)">+</button>
+            </div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Dunnage (void fill / padding)</div><div class="tprice">$0.10 per order</div></div>
+            <label class="toggle"><input type="checkbox" id="add-dunnage" onchange="calc()"><span class="slider"></span></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>📬 Packaging</span> — If 3PL supplies</div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Polybag</div><div class="tprice">$0.15–$0.50</div></div>
+            <label class="toggle"><input type="checkbox" id="pkg-polybag" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-polybag">
+            <label>Size:</label>
+            <select id="polybag-cost" onchange="calc()">
+              <option value="0.15">$0.15 small</option><option value="0.30">$0.30 medium</option><option value="0.50">$0.50 large</option>
             </select>
           </div>
-          <div class="field" id="recv-qty-field">
-            <label>Number of cartons / pallets this shipment</label>
-            <div class="stepper">
-              <button onclick="step('recv-qty',-1)">−</button>
-              <span class="count" id="recv-qty">10</span>
-              <button onclick="step('recv-qty',1)">+</button>
-            </div>
-            <div class="hint" id="recv-rate-hint">10 cartons × $2.25 = $22.50</div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Protective materials</div><div class="tprice">$0.10–$0.50</div></div>
+            <label class="toggle"><input type="checkbox" id="pkg-protective" onchange="calc()"><span class="slider"></span></label>
           </div>
-          <div class="field" id="recv-hours-field" style="display:none">
+          <div class="sub-row" id="sr-protective">
+            <label>Amount:</label>
+            <select id="protective-cost" onchange="calc()">
+              <option value="0.10">$0.10 light</option><option value="0.30">$0.30 medium</option><option value="0.50">$0.50 heavy</option>
+            </select>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Outer carton / box</div><div class="tprice">$1.00–$4.00</div></div>
+            <label class="toggle"><input type="checkbox" id="pkg-carton" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-carton">
+            <label>Size:</label>
+            <select id="carton-cost" onchange="calc()">
+              <option value="1.00">$1.00 small</option><option value="2.00">$2.00 medium</option><option value="3.00">$3.00 large</option><option value="4.00">$4.00 XL</option>
+            </select>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Bubble wrap</div><div class="tprice">$0.60–$1.75</div></div>
+            <label class="toggle"><input type="checkbox" id="pkg-bubble" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-bubble">
+            <label>Amount:</label>
+            <select id="bubble-cost" onchange="calc()">
+              <option value="0.60">$0.60 light</option><option value="1.10">$1.10 medium</option><option value="1.75">$1.75 heavy</option>
+            </select>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Shrink wrap (per unit)</div><div class="tprice">$0.75</div></div>
+            <label class="toggle"><input type="checkbox" id="pkg-shrink" onchange="calc()"><span class="slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: order results -->
+      <div>
+        <div class="results-panel">
+          <div class="r-title">Cost for this order</div>
+          <div class="line-item" id="li-pick"><span class="li-label">Pick &amp; Pack</span><span class="li-val" id="v-pick">$0.00</span></div>
+          <div class="line-item" id="li-addons"><span class="li-label">Inserts / Stickers / Dunnage</span><span class="li-val" id="v-addons">$0.00</span></div>
+          <div class="line-item" id="li-pkg"><span class="li-label">Packaging materials</span><span class="li-val" id="v-pkg">$0.00</span></div>
+          <hr class="r-divider">
+          <div class="r-total">
+            <span class="label">Total per order</span>
+            <span class="amount"><span class="currency">$</span><span id="v-total">0.00</span></span>
+          </div>
+          <div style="margin-top:10px; font-size:12px; color:rgba(255,255,255,0.3); line-height:1.5;">Receiving &amp; storage are shared costs — see the Monthly Bill tab.</div>
+
+          <div class="margin-calc">
+            <div class="mc-title">Profit check per order</div>
+            <div class="mc-row"><label>Sell price ($)</label><input type="number" id="sell-price" value="25.00" min="0" step="0.01" oninput="calc()"></div>
+            <div class="mc-row"><label>Product cost ($)</label><input type="number" id="cogs" value="5.00" min="0" step="0.01" oninput="calc()"></div>
+            <div class="margin-result" id="margin-result"></div>
+          </div>
+          <button class="btn-reset" onclick="resetAll()">↺ Reset all values</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: MONTHLY BILL -->
+  <div class="tab-panel" id="tab-monthly">
+    <div class="tier-banner">
+      <span class="label">Pricing tier based on your monthly shipments</span>
+      <span class="tier-badge" id="tier-label-monthly">TIER 1 — 1–999/mo</span>
+    </div>
+
+    <div class="layout">
+      <div>
+
+        <!-- Receiving -->
+        <div class="card">
+          <div class="card-title"><span>📦 Stock Received This Month</span></div>
+          <div class="field">
+            <label>How does your stock arrive?</label>
+            <select id="recv-type" onchange="calc()">
+              <option value="carton_carrier">Boxes via carrier (UPS/FedEx) — $2.25/box</option>
+              <option value="carton_mixed">Mixed pallet, per carton — $1.95/carton</option>
+              <option value="pallet_same">Same-SKU pallet — $13.75/pallet</option>
+              <option value="container_floor">Container, floor loaded — $49.50/hour</option>
+            </select>
+          </div>
+
+          <div class="field" id="f-recv-units">
+            <label id="recv-units-label">Boxes received this month</label>
+            <div class="stepper">
+              <button onclick="step('recv-units',-1)">−</button>
+              <span class="count" id="recv-units">10</span>
+              <button onclick="step('recv-units',1)">+</button>
+            </div>
+          </div>
+
+          <div class="field" id="f-recv-hours" style="display:none">
             <label>Hours of unloading</label>
             <div class="stepper">
               <button onclick="step('recv-hours',-1)">−</button>
@@ -816,19 +340,23 @@
               <button onclick="step('recv-hours',1)">+</button>
             </div>
           </div>
-        </div>
 
-        <div class="card" style="margin-bottom:1.25rem;">
-          <div class="card-title"><span>📊 Monthly Volume</span> — Affects pricing tier</div>
-          <div class="field">
-            <label>Total shipments per month</label>
-            <input type="number" id="monthly-shipments" value="50" min="1" max="9999" oninput="calc()">
-            <div class="hint">Tier 1: 1–999 | Tier 2: 1,000–2,500 | Tier 3: 2,501+</div>
+          <div class="field" id="f-items-per-box">
+            <label>Items inside each box</label>
+            <div class="stepper">
+              <button onclick="step('items-per-box',-1)">−</button>
+              <span class="count" id="items-per-box">10</span>
+              <button onclick="step('items-per-box',1)">+</button>
+            </div>
+            <div class="hint">The 3PL charges per <strong>box</strong>, not per item inside it. This just shows you your total stock received.</div>
           </div>
+
+          <div class="stock-callout" id="stock-callout"></div>
         </div>
 
+        <!-- Storage -->
         <div class="card">
-          <div class="card-title"><span>🏗️ Storage</span> — Weekly, billed weekly</div>
+          <div class="card-title"><span>🏗️ Storage</span> — Billed weekly</div>
           <div class="field">
             <label>Shelf spaces used</label>
             <div class="stepper">
@@ -857,393 +385,265 @@
             <div class="hint" id="stor-pallet-hint"></div>
           </div>
         </div>
+
+        <!-- Monthly order averages -->
+        <div class="card">
+          <div class="card-title"><span>📊 Monthly Orders</span> — Averages across all orders</div>
+          <div class="hint" style="margin-bottom:12px;">These are used to calculate your total pick &amp; pack bill for the month. Total orders comes from the Per Order tab.</div>
+          <div class="field">
+            <label>Avg items per order</label>
+            <input type="number" id="avg-items" value="1" min="1" step="1" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>% of orders that include an insert</label>
+            <input type="number" id="pct-insert" value="0" min="0" max="100" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>% of orders that include a sticker</label>
+            <input type="number" id="pct-sticker" value="0" min="0" max="100" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>% of orders with dunnage</label>
+            <input type="number" id="pct-dunnage" value="0" min="0" max="100" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Avg packaging cost per order ($)</label>
+            <input type="number" id="avg-pkg" value="0" min="0" step="0.01" oninput="calc()">
+            <div class="hint">Total of polybag + protective + carton etc. if 3PL supplies them</div>
+          </div>
+        </div>
+
       </div>
 
+      <!-- RIGHT: monthly summary -->
       <div>
-        <div class="card" style="margin-bottom:1.25rem;">
-          <div class="card-title"><span>🛍️ This Order</span> — Pick &amp; Pack</div>
+        <div class="metric-grid" id="metric-grid"></div>
 
+        <div class="breakdown-card">
+          <div class="bc-title">Full monthly warehouse bill</div>
+          <div id="bc-lines"></div>
+          <div class="bc-total">
+            <span class="tl">Monthly total</span>
+            <span class="tv" id="bc-total-val">$0.00</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>📈 Monthly profitability</span></div>
           <div class="field">
-            <label>Number of items in this order</label>
-            <div class="stepper">
-              <button onclick="step('items',-1)">−</button>
-              <span class="count" id="items">1</span>
-              <button onclick="step('items',1)">+</button>
-            </div>
-            <div class="hint" id="pick-hint">First pick $2.15, additional picks $0.90 each</div>
+            <label>Average sell price per order ($)</label>
+            <input type="number" id="avg-sell" value="25.00" min="0" step="0.01" oninput="calc()">
           </div>
-
-          <div class="subsection">Add-ons per order</div>
-
-          <div class="toggle-row">
-            <div class="tinfo">
-              <div class="tname">Insert (e.g. thank-you card)</div>
-              <div class="tprice">$0.05 per insert</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="add-insert" onchange="calc()"><span class="slider"></span></label>
+          <div class="field">
+            <label>Average product cost per order ($)</label>
+            <input type="number" id="avg-cogs" value="5.00" min="0" step="0.01" oninput="calc()">
           </div>
-          <div class="toggle-row" id="insert-qty-row" style="display:none; padding-left:12px; background:var(--accent2-light); border-radius:var(--radius-sm); margin-top:4px;">
-            <div class="tinfo"><div class="tname" style="font-size:12px">How many inserts?</div></div>
-            <div class="stepper">
-              <button onclick="step('insert-qty',-1)">−</button>
-              <span class="count" id="insert-qty">1</span>
-              <button onclick="step('insert-qty',1)">+</button>
-            </div>
-          </div>
-
-          <div class="toggle-row">
-            <div class="tinfo">
-              <div class="tname">Sticker / label on product</div>
-              <div class="tprice">$0.05 per sticker</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="add-sticker" onchange="calc()"><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row" id="sticker-qty-row" style="display:none; padding-left:12px; background:var(--accent2-light); border-radius:var(--radius-sm); margin-top:4px;">
-            <div class="tinfo"><div class="tname" style="font-size:12px">How many stickers?</div></div>
-            <div class="stepper">
-              <button onclick="step('sticker-qty',-1)">−</button>
-              <span class="count" id="sticker-qty">1</span>
-              <button onclick="step('sticker-qty',1)">+</button>
-            </div>
-          </div>
-
-          <div class="toggle-row">
-            <div class="tinfo">
-              <div class="tname">Dunnage (void fill / padding)</div>
-              <div class="tprice">$0.10 per order</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="add-dunnage" onchange="calc()"><span class="slider"></span></label>
-          </div>
-        </div>
-
-        <div class="card" style="margin-bottom:1.25rem;">
-          <div class="card-title"><span>📬 Packaging Materials</span> — If 3PL supplies</div>
-
-          <div class="toggle-row">
-            <div class="tinfo">
-              <div class="tname">Polybag</div>
-              <div class="tprice">$0.15 – $0.50 each</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="pkg-polybag" onchange="calc()"><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row" id="polybag-select-row" style="display:none; padding-left:12px;">
-            <div class="tinfo"><div class="tname" style="font-size:12px">Polybag cost</div></div>
-            <select id="polybag-cost" onchange="calc()" style="max-width:160px; padding:5px 28px 5px 8px; font-size:12px;">
-              <option value="0.15">$0.15 (small)</option>
-              <option value="0.30">$0.30 (medium)</option>
-              <option value="0.50">$0.50 (large)</option>
-            </select>
-          </div>
-
-          <div class="toggle-row">
-            <div class="tinfo">
-              <div class="tname">Protective materials</div>
-              <div class="tprice">$0.10 – $0.50 per unit</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="pkg-protective" onchange="calc()"><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row" id="protective-select-row" style="display:none; padding-left:12px;">
-            <div class="tinfo"><div class="tname" style="font-size:12px">Protective cost</div></div>
-            <select id="protective-cost" onchange="calc()" style="max-width:160px; padding:5px 28px 5px 8px; font-size:12px;">
-              <option value="0.10">$0.10 (light)</option>
-              <option value="0.30">$0.30 (medium)</option>
-              <option value="0.50">$0.50 (heavy)</option>
-            </select>
-          </div>
-
-          <div class="toggle-row">
-            <div class="tinfo">
-              <div class="tname">Outer carton / box</div>
-              <div class="tprice">$1.00 – $4.00 each</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="pkg-carton" onchange="calc()"><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row" id="carton-select-row" style="display:none; padding-left:12px;">
-            <div class="tinfo"><div class="tname" style="font-size:12px">Carton size</div></div>
-            <select id="carton-cost" onchange="calc()" style="max-width:160px; padding:5px 28px 5px 8px; font-size:12px;">
-              <option value="1.00">$1.00 (small)</option>
-              <option value="2.00">$2.00 (medium)</option>
-              <option value="3.00">$3.00 (large)</option>
-              <option value="4.00">$4.00 (XL)</option>
-            </select>
-          </div>
-
-          <div class="toggle-row">
-            <div class="tinfo">
-              <div class="tname">Bubble wrap</div>
-              <div class="tprice">$0.60 – $1.75 per unit</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="pkg-bubble" onchange="calc()"><span class="slider"></span></label>
-          </div>
-          <div class="toggle-row" id="bubble-select-row" style="display:none; padding-left:12px;">
-            <div class="tinfo"><div class="tname" style="font-size:12px">Bubble wrap</div></div>
-            <select id="bubble-cost" onchange="calc()" style="max-width:160px; padding:5px 28px 5px 8px; font-size:12px;">
-              <option value="0.60">$0.60 (light)</option>
-              <option value="1.10">$1.10 (medium)</option>
-              <option value="1.75">$1.75 (heavy)</option>
-            </select>
-          </div>
-
-          <div class="toggle-row">
-            <div class="tinfo">
-              <div class="tname">Shrink wrap (per unit)</div>
-              <div class="tprice">$0.75 per unit</div>
-            </div>
-            <label class="toggle"><input type="checkbox" id="pkg-shrink" onchange="calc()"><span class="slider"></span></label>
-          </div>
-        </div>
-
-        <div class="results-panel">
-          <div class="r-title">Order Cost Summary</div>
-
-          <div class="line-item" id="li-recv">
-            <span class="li-label">Receiving (per order share)</span>
-            <span class="li-val" id="v-recv">$0.00</span>
-          </div>
-          <div class="line-item" id="li-storage">
-            <span class="li-label">Storage (monthly, per order)</span>
-            <span class="li-val" id="v-storage">$0.00</span>
-          </div>
-          <div class="line-item" id="li-pick">
-            <span class="li-label">Pick & Pack</span>
-            <span class="li-val" id="v-pick">$0.00</span>
-          </div>
-          <div class="line-item" id="li-addons">
-            <span class="li-label">Inserts / Stickers / Dunnage</span>
-            <span class="li-val" id="v-addons">$0.00</span>
-          </div>
-          <div class="line-item" id="li-pkg">
-            <span class="li-label">Packaging materials</span>
-            <span class="li-val" id="v-pkg">$0.00</span>
-          </div>
-
-          <hr class="r-divider">
-
-          <div class="r-total">
-            <span class="label">Total cost per order</span>
-            <span class="amount"><span class="currency">$</span><span id="v-total">0.00</span></span>
-          </div>
-
-          <div class="margin-calc">
-            <div class="mc-title">Profit check</div>
-            <div class="mc-row">
-              <label>Sell price</label>
-              <input type="number" id="sell-price" value="25.00" min="0" step="0.01" oninput="calc()">
-            </div>
-            <div class="mc-row">
-              <label>Product cost (COGS)</label>
-              <input type="number" id="cogs" value="5.00" min="0" step="0.01" oninput="calc()">
-            </div>
-            <div class="margin-result" id="margin-result"></div>
-          </div>
-
-          <button class="btn-reset" onclick="resetAll()">↺ Reset all values</button>
+          <div id="monthly-profit-block" class="profit-block"></div>
         </div>
       </div>
     </div>
-
-    <footer>Rates from Pura Maracuya Fulfillment Pricing Proposal &nbsp;•&nbsp; Storage billed weekly (×4.33 for monthly) &nbsp;•&nbsp; Receiving spread across monthly shipments</footer>
   </div>
 
-  <script>
-    const counters = {
-      'recv-qty': 10,
-      'recv-hours': 2,
-      'items': 1,
-      'insert-qty': 1,
-      'sticker-qty': 1,
-      'stor-shelf': 5,
-      'stor-bin': 3,
-      'stor-pallet': 0,
-    };
+  <footer>Rates from Pura Maracuya Fulfillment Pricing Proposal &nbsp;•&nbsp; Storage billed weekly (×4.33 for monthly estimate) &nbsp;•&nbsp; Excludes outbound carrier shipping costs</footer>
+</div>
 
-    function g(id) { return document.getElementById(id); }
-    function gv(id) { return parseFloat(g(id).value) || 0; }
-    function gc(id) { return counters[id] || 0; }
-    function checked(id) { return g(id).checked; }
-    function fmt(n) { return n.toFixed(2); }
+<script>
+  const counters = {
+    'items': 1, 'insert-qty': 1, 'sticker-qty': 1,
+    'recv-units': 10, 'recv-hours': 2, 'items-per-box': 10,
+    'stor-shelf': 5, 'stor-bin': 3, 'stor-pallet': 0,
+  };
 
-    function toggleDrawer() {
-      g('drawer').classList.toggle('open');
-      g('drawerOverlay').classList.toggle('open');
-      g('hamburger').classList.toggle('open');
-    }
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && g('drawer').classList.contains('open')) {
-        toggleDrawer();
-      }
-    });
-
-    window.addEventListener('scroll', function() {
-      g('backToTop').classList.toggle('visible', window.scrollY > 300);
-    });
-
-    function step(id, delta) {
-      counters[id] = Math.max(0, (counters[id] || 0) + delta);
-      g(id).textContent = counters[id];
-      calc();
-    }
-
-    function tier(monthly) {
-      if (monthly >= 2501) return 3;
-      if (monthly >= 1000) return 2;
-      return 1;
-    }
-
-    const rates = {
-      orderFee:   [null, 2.15, 1.95, 1.65],
-      addPick:    [null, 0.90, 0.75, 0.50],
-      shelfWeek:  [null, 1.26, 1.00, 0.85],
-      binWeek:    [null, 0.40, 0.30, 0.25],
-      palletWeek: [null, 6.00, 5.00, 4.00],
-    };
-
-    function calc() {
-      const monthly = Math.max(1, parseInt(g('monthly-shipments').value) || 1);
-      const t = tier(monthly);
-
-      const labels = [
-        '',
-        'TIER 1 — 1–999 SHIPMENTS',
-        'TIER 2 — 1,000–2,500 SHIPMENTS',
-        'TIER 3 — 2,501+ SHIPMENTS'
-      ];
-      g('tier-label').textContent = labels[t];
-
-      const recvType = g('recv-type').value;
-      const isHours = recvType === 'container_floor';
-      g('recv-qty-field').style.display = isHours ? 'none' : '';
-      g('recv-hours-field').style.display = isHours ? '' : 'none';
-
-      let recvTotal = 0;
-      const recvRates = {
-        carton_carrier: 2.25,
-        carton_mixed: 1.95,
-        pallet_same: 13.75,
-        container_pallet: 13.75
-      };
-
-      if (isHours) {
-        recvTotal = gc('recv-hours') * 49.50;
-      } else {
-        recvTotal = gc('recv-qty') * recvRates[recvType];
-        const rateLabel = recvRates[recvType];
-        const unit = recvType.includes('pallet') ? 'pallets' : 'cartons';
-        g('recv-rate-hint').textContent = `${gc('recv-qty')} ${unit} × $${rateLabel.toFixed(2)} = $${fmt(recvTotal)}`;
-      }
-
-      const recvPerOrder = recvTotal / monthly;
-
-      const shelfRate = rates.shelfWeek[t];
-      const binRate = rates.binWeek[t];
-      const palletRate = rates.palletWeek[t];
-      const storWeekly = gc('stor-shelf') * shelfRate + gc('stor-bin') * binRate + gc('stor-pallet') * palletRate;
-      const storMonthly = storWeekly * 4.33;
-      const storPerOrder = storMonthly / monthly;
-
-      g('stor-shelf-hint').textContent = `${gc('stor-shelf')} shelves × $${shelfRate}/wk`;
-      g('stor-bin-hint').textContent = `${gc('stor-bin')} bins × $${binRate}/wk`;
-      g('stor-pallet-hint').textContent = `${gc('stor-pallet')} pallets × $${palletRate}/wk`;
-
-      const items = Math.max(1, gc('items'));
-      const orderFee = rates.orderFee[t];
-      const addPick = rates.addPick[t];
-      const pickTotal = orderFee + (items - 1) * addPick;
-
-      g('pick-hint').textContent = items === 1
-        ? `First pick $${orderFee.toFixed(2)} (Tier ${t})`
-        : `$${orderFee.toFixed(2)} + ${items - 1} × $${addPick.toFixed(2)} = $${fmt(pickTotal)} (Tier ${t})`;
-
-      const showInsert = checked('add-insert');
-      const showSticker = checked('add-sticker');
-      g('insert-qty-row').style.display = showInsert ? '' : 'none';
-      g('sticker-qty-row').style.display = showSticker ? '' : 'none';
-
-      const insertCost = showInsert ? gc('insert-qty') * 0.05 : 0;
-      const stickerCost = showSticker ? gc('sticker-qty') * 0.05 : 0;
-      const dunnageCost = checked('add-dunnage') ? 0.10 : 0;
-      const addonsTotal = insertCost + stickerCost + dunnageCost;
-
-      function togglePkg(checkId, rowId, selectId) {
-        const on = checked(checkId);
-        g(rowId).style.display = on ? '' : 'none';
-        return on ? parseFloat(g(selectId).value) || 0 : 0;
-      }
-
-      const polybagCost = togglePkg('pkg-polybag', 'polybag-select-row', 'polybag-cost');
-      const protectiveCost = togglePkg('pkg-protective', 'protective-select-row', 'protective-cost');
-      const cartonCost = togglePkg('pkg-carton', 'carton-select-row', 'carton-cost');
-      const bubbleCost = togglePkg('pkg-bubble', 'bubble-select-row', 'bubble-cost');
-      const shrinkCost = checked('pkg-shrink') ? 0.75 : 0;
-      const pkgTotal = polybagCost + protectiveCost + cartonCost + bubbleCost + shrinkCost;
-
-      const total = recvPerOrder + storPerOrder + pickTotal + addonsTotal + pkgTotal;
-
-      function setLine(li, v, val) {
-        const isZero = val === 0;
-        g(li).className = 'line-item' + (isZero ? ' zero' : '');
-        g(v).textContent = '$' + fmt(val);
-      }
-
-      setLine('li-recv', 'v-recv', recvPerOrder);
-      setLine('li-storage', 'v-storage', storPerOrder);
-      setLine('li-pick', 'v-pick', pickTotal);
-      setLine('li-addons', 'v-addons', addonsTotal);
-      setLine('li-pkg', 'v-pkg', pkgTotal);
-      g('v-total').textContent = fmt(total);
-
-      const sell = gv('sell-price');
-      const cogs = gv('cogs');
-      const profit = sell - cogs - total;
-      const margin = sell > 0 ? (profit / sell * 100) : 0;
-      const cls = profit >= 0 ? 'positive' : 'negative';
-      const sign = profit >= 0 ? '+' : '';
-
-      g('margin-result').innerHTML =
-        `Sell $${fmt(sell)} − COGS $${fmt(cogs)} − fulfillment $${fmt(total)}<br>` +
-        `Profit: <span class="profit ${cls}">${sign}$${fmt(profit)} (${sign}${margin.toFixed(1)}% margin)</span>`;
-    }
-
-    function resetAll() {
-      const defaults = {
-        'recv-qty': 10,
-        'recv-hours': 2,
-        'items': 1,
-        'insert-qty': 1,
-        'sticker-qty': 1,
-        'stor-shelf': 5,
-        'stor-bin': 3,
-        'stor-pallet': 0
-      };
-
-      Object.assign(counters, defaults);
-
-      Object.keys(defaults).forEach(id => {
-        const el = g(id);
-        if (el) el.textContent = defaults[id];
-      });
-
-      [
-        'add-insert',
-        'add-sticker',
-        'add-dunnage',
-        'pkg-polybag',
-        'pkg-protective',
-        'pkg-carton',
-        'pkg-bubble',
-        'pkg-shrink'
-      ].forEach(id => g(id).checked = false);
-
-      g('recv-type').value = 'carton_carrier';
-      g('monthly-shipments').value = 50;
-      g('sell-price').value = 25.00;
-      g('cogs').value = 5.00;
-
-      calc();
-    }
-
+  function step(id, delta) {
+    const min = ['items','items-per-box'].includes(id) ? 1 : 0;
+    counters[id] = Math.max(min, (counters[id] || 0) + delta);
+    document.getElementById(id).textContent = counters[id];
     calc();
-  </script>
+  }
+
+  const g = id => document.getElementById(id);
+  const gv = id => parseFloat(g(id).value) || 0;
+  const gc = id => counters[id] || 0;
+  const fmt = n => n.toFixed(2);
+  const fmtDollar = n => '$' + fmt(n);
+
+  function tier(m) { return m >= 2501 ? 3 : m >= 1000 ? 2 : 1; }
+
+  const R = {
+    orderFee:   [null, 2.15, 1.95, 1.65],
+    addPick:    [null, 0.90, 0.75, 0.50],
+    shelfWeek:  [null, 1.26, 1.00, 0.85],
+    binWeek:    [null, 0.40, 0.30, 0.25],
+    palletWeek: [null, 6.00, 5.00, 4.00],
+  };
+
+  function showTab(name) {
+    document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', ['order','monthly'][i] === name));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    g('tab-' + name).classList.add('active');
+  }
+
+  function setLine(liId, valId, val) {
+    if (!g(liId)) return;
+    g(liId).className = 'line-item' + (Math.abs(val) < 0.001 ? ' zero' : '');
+    g(valId).textContent = fmtDollar(val);
+  }
+
+  function toggleSub(ckId, rowId) {
+    const on = g(ckId).checked;
+    g(rowId).className = 'sub-row' + (on ? ' open' : '');
+    return on;
+  }
+
+  function calc() {
+    const monthly = Math.max(1, parseInt(g('monthly-shipments').value) || 1);
+    const t = tier(monthly);
+    const tLabels = ['','TIER 1 — 1–999/mo','TIER 2 — 1,000–2,500/mo','TIER 3 — 2,501+/mo'];
+    g('tier-label-order').textContent = tLabels[t];
+    if (g('tier-label-monthly')) g('tier-label-monthly').textContent = tLabels[t];
+
+    // ===== PER ORDER =====
+    const items = gc('items');
+    const orderFee = R.orderFee[t];
+    const addPick  = R.addPick[t];
+    const pickCost = orderFee + (items - 1) * addPick;
+    g('pick-hint').textContent = items === 1
+      ? `$${fmt(orderFee)} base (Tier ${t})`
+      : `$${fmt(orderFee)} + ${items-1} × $${fmt(addPick)} = ${fmtDollar(pickCost)} (Tier ${t})`;
+
+    toggleSub('add-insert',  'sr-insert');
+    toggleSub('add-sticker', 'sr-sticker');
+    ['polybag','protective','carton','bubble'].forEach(k => toggleSub('pkg-'+k, 'sr-'+k));
+
+    const insertCost  = g('add-insert').checked  ? gc('insert-qty')  * 0.05 : 0;
+    const stickerCost = g('add-sticker').checked ? gc('sticker-qty') * 0.05 : 0;
+    const dunnageCost = g('add-dunnage').checked ? 0.10 : 0;
+    const addonsCost  = insertCost + stickerCost + dunnageCost;
+
+    const polybagCost    = g('pkg-polybag').checked    ? parseFloat(g('polybag-cost').value)    : 0;
+    const protectiveCost = g('pkg-protective').checked ? parseFloat(g('protective-cost').value) : 0;
+    const cartonCost     = g('pkg-carton').checked     ? parseFloat(g('carton-cost').value)     : 0;
+    const bubbleCost     = g('pkg-bubble').checked     ? parseFloat(g('bubble-cost').value)     : 0;
+    const shrinkCost     = g('pkg-shrink').checked     ? 0.75                                   : 0;
+    const pkgCost = polybagCost + protectiveCost + cartonCost + bubbleCost + shrinkCost;
+
+    const orderTotal = pickCost + addonsCost + pkgCost;
+    setLine('li-pick',   'v-pick',   pickCost);
+    setLine('li-addons', 'v-addons', addonsCost);
+    setLine('li-pkg',    'v-pkg',    pkgCost);
+    g('v-total').textContent = fmt(orderTotal);
+
+    const sell = gv('sell-price'), cogs = gv('cogs');
+    const profit = sell - cogs - orderTotal;
+    const margin = sell > 0 ? profit / sell * 100 : 0;
+    const s = profit >= 0 ? '+' : '';
+    g('margin-result').innerHTML =
+      `${fmtDollar(sell)} sell &minus; ${fmtDollar(cogs)} cost &minus; ${fmtDollar(orderTotal)} fulfillment<br>` +
+      `Profit: <span class="profit ${profit>=0?'pos':'neg'}">${s}${fmtDollar(profit)} &nbsp;(${s}${margin.toFixed(1)}%)</span>`;
+
+    // ===== MONTHLY =====
+    const recvType = g('recv-type').value;
+    const isHours = recvType === 'container_floor';
+    const isPallet = recvType === 'pallet_same';
+
+    g('f-recv-units').style.display = isHours ? 'none' : 'block';
+    g('f-recv-hours').style.display = isHours ? 'block' : 'none';
+    g('f-items-per-box').style.display = (isHours || isPallet) ? 'none' : 'block';
+    g('recv-units-label').textContent = isPallet ? 'Pallets received this month' : 'Boxes / cartons received this month';
+
+    const recvRateMap = { carton_carrier: 2.25, carton_mixed: 1.95, pallet_same: 13.75 };
+    let recvCost = 0, stockUnits = 0, recvDesc = '';
+    if (isHours) {
+      recvCost = gc('recv-hours') * 49.50;
+      recvDesc = `${gc('recv-hours')} hrs × $49.50`;
+    } else {
+      const rate = recvRateMap[recvType];
+      const units = gc('recv-units');
+      recvCost = units * rate;
+      if (isPallet) {
+        recvDesc = `${units} pallets × $${fmt(rate)}`;
+      } else {
+        const ipb = gc('items-per-box');
+        stockUnits = units * ipb;
+        recvDesc = `${units} boxes × $${fmt(rate)}`;
+      }
+    }
+
+    const calloutEl = g('stock-callout');
+    if (isHours) {
+      calloutEl.innerHTML = `<strong>Container floor-loaded:</strong> ${gc('recv-hours')} hours × $49.50 = <strong>${fmtDollar(recvCost)}</strong>`;
+    } else if (isPallet) {
+      calloutEl.innerHTML = `<strong>${gc('recv-units')} pallets received</strong> — charged at $13.75 per pallet<br>Receiving cost: <strong>${fmtDollar(recvCost)}</strong>`;
+    } else {
+      const ipb = gc('items-per-box');
+      calloutEl.innerHTML = `<strong>${gc('recv-units')} boxes × ${ipb} items = ${stockUnits} units received</strong><br>3PL charges per box, not per item inside it.<br>Receiving cost: <strong>${fmtDollar(recvCost)}</strong> (${fmtDollar(recvCost / Math.max(1,stockUnits))} per unit received)`;
+    }
+
+    const shR = R.shelfWeek[t], biR = R.binWeek[t], paR = R.palletWeek[t];
+    const storWeekly  = gc('stor-shelf') * shR + gc('stor-bin') * biR + gc('stor-pallet') * paR;
+    const storMonthly = storWeekly * 4.33;
+    g('stor-shelf-hint').textContent  = `${gc('stor-shelf')} × $${shR}/wk = ${fmtDollar(gc('stor-shelf')*shR)}/wk`;
+    g('stor-bin-hint').textContent    = `${gc('stor-bin')} × $${biR}/wk = ${fmtDollar(gc('stor-bin')*biR)}/wk`;
+    g('stor-pallet-hint').textContent = `${gc('stor-pallet')} × $${paR}/wk = ${fmtDollar(gc('stor-pallet')*paR)}/wk`;
+
+    const avgItems   = Math.max(1, gv('avg-items'));
+    const avgPick    = R.orderFee[t] + (avgItems - 1) * R.addPick[t];
+    const pI = Math.min(100, gv('pct-insert'))  / 100;
+    const pS = Math.min(100, gv('pct-sticker')) / 100;
+    const pD = Math.min(100, gv('pct-dunnage')) / 100;
+    const avgPkg     = gv('avg-pkg');
+    const avgOrder   = avgPick + pI * 0.05 + pS * 0.05 + pD * 0.10 + avgPkg;
+    const monthlyPP  = avgOrder * monthly;
+    const monthlyTotal = recvCost + storMonthly + monthlyPP;
+
+    // Metrics
+    g('metric-grid').innerHTML = `
+      <div class="metric"><div class="mlabel">Orders/mo</div><div class="mval">${monthly}</div><div class="msub">${tLabels[t]}</div></div>
+      <div class="metric"><div class="mlabel">Receiving</div><div class="mval">${fmtDollar(recvCost)}</div><div class="msub">${recvDesc}</div></div>
+      <div class="metric"><div class="mlabel">Storage/mo</div><div class="mval">${fmtDollar(storMonthly)}</div><div class="msub">${fmtDollar(storWeekly)}/wk × 4.33</div></div>
+      <div class="metric"><div class="mlabel">Pick &amp; Pack</div><div class="mval">${fmtDollar(monthlyPP)}</div><div class="msub">${monthly} × ${fmtDollar(avgOrder)} avg</div></div>
+      <div class="metric"><div class="mlabel">Cost per unit</div><div class="mval">${stockUnits > 0 ? fmtDollar(recvCost/stockUnits) : '—'}</div><div class="msub">receiving only</div></div>
+      <div class="metric hi"><div class="mlabel">Monthly total</div><div class="mval">${fmtDollar(monthlyTotal)}</div><div class="msub">all warehouse fees</div></div>
+    `;
+
+    // Breakdown lines
+    const palletLine = gc('stor-pallet') > 0
+      ? `<div class="bc-row"><div><div class="bc-label">Storage — pallets</div><div class="bc-sub">${gc('stor-pallet')} × $${paR}/wk × 4.33</div></div><span class="bc-val">${fmtDollar(gc('stor-pallet')*paR*4.33)}</span></div>` : '';
+
+    g('bc-lines').innerHTML = `
+      <div class="bc-row"><div><div class="bc-label">Receiving</div><div class="bc-sub">${recvDesc}</div></div><span class="bc-val">${fmtDollar(recvCost)}</span></div>
+      <div class="bc-row"><div><div class="bc-label">Storage — shelves</div><div class="bc-sub">${gc('stor-shelf')} × $${shR}/wk × 4.33</div></div><span class="bc-val">${fmtDollar(gc('stor-shelf')*shR*4.33)}</span></div>
+      <div class="bc-row"><div><div class="bc-label">Storage — bins</div><div class="bc-sub">${gc('stor-bin')} × $${biR}/wk × 4.33</div></div><span class="bc-val">${fmtDollar(gc('stor-bin')*biR*4.33)}</span></div>
+      ${palletLine}
+      <div class="bc-row"><div><div class="bc-label">Pick &amp; Pack (${monthly} orders)</div><div class="bc-sub">avg ${avgItems} item/order, ${fmtDollar(avgPick)} base + add-ons</div></div><span class="bc-val">${fmtDollar(monthlyPP)}</span></div>
+    `;
+    g('bc-total-val').textContent = fmtDollar(monthlyTotal);
+
+    // Monthly profit
+    const avgSell2 = gv('avg-sell'), avgCogs2 = gv('avg-cogs');
+    const rev = avgSell2 * monthly;
+    const cogsTotal = avgCogs2 * monthly;
+    const mProfit = rev - cogsTotal - monthlyTotal;
+    const mMargin = rev > 0 ? mProfit / rev * 100 : 0;
+    const ms = mProfit >= 0 ? '+' : '';
+    g('monthly-profit-block').innerHTML =
+      `Revenue: <strong>${fmtDollar(rev)}</strong> (${monthly} × ${fmtDollar(avgSell2)})<br>` +
+      `Product costs: <strong>−${fmtDollar(cogsTotal)}</strong><br>` +
+      `Warehouse fees: <strong>−${fmtDollar(monthlyTotal)}</strong><br>` +
+      `<span class="profit ${mProfit>=0?'pos':'neg'}" style="font-size:16px;">${ms}${fmtDollar(mProfit)} monthly profit &nbsp;(${ms}${mMargin.toFixed(1)}%)</span>`;
+  }
+
+  function resetAll() {
+    Object.assign(counters, { 'items':1,'insert-qty':1,'sticker-qty':1,'recv-units':10,'recv-hours':2,'items-per-box':10,'stor-shelf':5,'stor-bin':3,'stor-pallet':0 });
+    Object.keys(counters).forEach(id => { const el = g(id); if(el) el.textContent = counters[id]; });
+    ['add-insert','add-sticker','add-dunnage','pkg-polybag','pkg-protective','pkg-carton','pkg-bubble','pkg-shrink'].forEach(id => { if(g(id)) g(id).checked = false; });
+    ['monthly-shipments','sell-price','cogs','avg-sell','avg-cogs'].forEach((id,i) => { if(g(id)) g(id).value = [50,25,5,25,5][i]; });
+    ['avg-items','pct-insert','pct-sticker','pct-dunnage','avg-pkg'].forEach((id,i) => { if(g(id)) g(id).value = [1,0,0,0,0][i]; });
+    if(g('recv-type')) g('recv-type').value = 'carton_carrier';
+    calc();
+  }
+
+  calc();
+</script>
 </body>
 </html>
