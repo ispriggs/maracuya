@@ -797,6 +797,34 @@
     `;
     g('bc-total-val').textContent = fmtDollar(monthlyTotal);
 
+ 
+
+    // Monthly profit
+    const avgSell2 = gv('avg-sell'), avgCogs2 = gv('avg-cogs');
+    const rev = avgSell2 * monthly;
+    const cogsTotal = avgCogs2 * monthly;
+    const mProfit = rev - cogsTotal - monthlyTotal;
+    const mMargin = rev > 0 ? mProfit / rev * 100 : 0;
+    const ms = mProfit >= 0 ? '+' : '';
+    g('monthly-profit-block').innerHTML =
+      `Revenue: <strong>${fmtDollar(rev)}</strong> (${monthly} × ${fmtDollar(avgSell2)})<br>` +
+      `Product costs: <strong>−${fmtDollar(cogsTotal)}</strong><br>` +
+      `Warehouse fees: <strong>−${fmtDollar(monthlyTotal)}</strong><br>` +
+      `<span class="profit ${mProfit>=0?'pos':'neg'}" style="font-size:16px;">${ms}${fmtDollar(mProfit)} monthly profit &nbsp;(${ms}${mMargin.toFixed(1)}%)</span>`;
+  }
+
+  function resetAll() {
+    Object.assign(counters, { 'items':1,'insert-qty':1,'sticker-qty':1,'recv-units':10,'recv-hours':2,'items-per-box':10,'stor-shelf':5,'stor-bin':3,'stor-pallet':0 });
+    Object.keys(counters).forEach(id => { const el = g(id); if(el) el.textContent = counters[id]; });
+    ['add-insert','add-sticker','add-dunnage','pkg-polybag','pkg-protective','pkg-carton','pkg-bubble','pkg-shrink'].forEach(id => { if(g(id)) g(id).checked = false; });
+    ['monthly-shipments','sell-price','cogs','avg-sell','avg-cogs'].forEach((id,i) => { if(g(id)) g(id).value = [50,25,5,25,5][i]; });
+    ['avg-items','pct-insert','pct-sticker','pct-dunnage','avg-pkg'].forEach((id,i) => { if(g(id)) g(id).value = [1,0,0,0,0][i]; });
+    if(g('recv-type')) g('recv-type').value = 'carton_carrier';
+    calc();
+  }
+
+  calc();
+
    // ============================================================
 // HAMBURGER & DRAWER — JS
 // Copy this toggleDrawer() function and the scroll listener
@@ -827,32 +855,6 @@ window.addEventListener('scroll', function() {
 // ============================================================
 // END HAMBURGER & DRAWER — JS
 // ============================================================
-
-    // Monthly profit
-    const avgSell2 = gv('avg-sell'), avgCogs2 = gv('avg-cogs');
-    const rev = avgSell2 * monthly;
-    const cogsTotal = avgCogs2 * monthly;
-    const mProfit = rev - cogsTotal - monthlyTotal;
-    const mMargin = rev > 0 ? mProfit / rev * 100 : 0;
-    const ms = mProfit >= 0 ? '+' : '';
-    g('monthly-profit-block').innerHTML =
-      `Revenue: <strong>${fmtDollar(rev)}</strong> (${monthly} × ${fmtDollar(avgSell2)})<br>` +
-      `Product costs: <strong>−${fmtDollar(cogsTotal)}</strong><br>` +
-      `Warehouse fees: <strong>−${fmtDollar(monthlyTotal)}</strong><br>` +
-      `<span class="profit ${mProfit>=0?'pos':'neg'}" style="font-size:16px;">${ms}${fmtDollar(mProfit)} monthly profit &nbsp;(${ms}${mMargin.toFixed(1)}%)</span>`;
-  }
-
-  function resetAll() {
-    Object.assign(counters, { 'items':1,'insert-qty':1,'sticker-qty':1,'recv-units':10,'recv-hours':2,'items-per-box':10,'stor-shelf':5,'stor-bin':3,'stor-pallet':0 });
-    Object.keys(counters).forEach(id => { const el = g(id); if(el) el.textContent = counters[id]; });
-    ['add-insert','add-sticker','add-dunnage','pkg-polybag','pkg-protective','pkg-carton','pkg-bubble','pkg-shrink'].forEach(id => { if(g(id)) g(id).checked = false; });
-    ['monthly-shipments','sell-price','cogs','avg-sell','avg-cogs'].forEach((id,i) => { if(g(id)) g(id).value = [50,25,5,25,5][i]; });
-    ['avg-items','pct-insert','pct-sticker','pct-dunnage','avg-pkg'].forEach((id,i) => { if(g(id)) g(id).value = [1,0,0,0,0][i]; });
-    if(g('recv-type')) g('recv-type').value = 'carton_carrier';
-    calc();
-  }
-
-  calc();
 </script>
 </body>
 </html>
