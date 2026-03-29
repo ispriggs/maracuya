@@ -139,11 +139,189 @@
   .stock-callout { background: var(--accent2-light); border: 1px solid var(--accent2); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 0.85rem; font-size: 13px; color: var(--accent2); line-height: 1.6; }
   .profit-block { font-size: 13px; color: var(--ink2); line-height: 2; margin-top: 4px; }
 
+  /* ============================================================
+     HAMBURGER & DRAWER NAVIGATION
+     ============================================================
+     Copy this entire block (CSS + HTML + JS) into any new page.
+ 
+     WHAT TO CHANGE PER PAGE:
+       - In the HTML: set class="drawer-link active" on the
+         link that matches the current page.
+       - That's it. Everything else stays the same.
+     ============================================================ */
+ 
+  /* -- Fixed hamburger button (top-left corner) -- */
+  .hamburger {
+    position: fixed;
+    top: 16px; left: 16px;
+    z-index: 1000;
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(245,240,232,0.7);
+    border: 1px solid rgba(138,158,133,0.15);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px;
+    transition: background 0.2s, opacity 0.3s ease;
+  }
+  .hamburger:hover { background: rgba(245,240,232,0.95); }
+  .hamburger span {
+    display: block; width: 15px; height: 1.5px;
+    background: var(--deep); border-radius: 2px;
+    transition: all 0.3s ease; transform-origin: center;
+  }
+  /* Animate the 3 lines into an X when open */
+  .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+ 
+  /* -- Back-to-top button (bottom center, appears on scroll) -- */
+  .back-to-top {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    width: 42px; height: 42px;
+    border-radius: 8px;
+    background: rgba(245,240,232,0.7);
+    border: 1px solid rgba(138,158,133,0.15);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease, background 0.2s;
+  }
+  .back-to-top.visible { opacity: 1; pointer-events: all; }
+  .back-to-top:hover { background: rgba(245,240,232,0.95); }
+  .back-to-top svg { width: 14px; height: 14px; stroke: var(--deep); }
+ 
+  /* -- Dark overlay behind the open drawer -- */
+  .drawer-overlay {
+    position: fixed; inset: 0;
+    background: rgba(44,44,44,0.3);
+    backdrop-filter: blur(3px);
+    z-index: 900;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .drawer-overlay.open { opacity: 1; pointer-events: all; }
+ 
+  /* -- Slide-in drawer panel -- */
+  .drawer {
+    position: fixed; top: 0; left: 0;
+    height: 100%; width: 280px;
+    background: white; z-index: 950;
+    padding: 80px 32px 40px;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 40px rgba(0,0,0,0.1);
+    display: flex; flex-direction: column;
+  }
+  .drawer.open { transform: translateX(0); }
+ 
+  /* -- Drawer internals -- */
+  .drawer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--deep); margin-bottom: 6px; }
+  .drawer-tagline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
+  .drawer-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sage); font-weight: 500; margin-bottom: 14px; }
+  .drawer-nav { display: flex; flex-direction: column; gap: 8px; }
+  .drawer-link {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; border-radius: 12px;
+    text-decoration: none; color: var(--deep);
+    transition: background 0.15s, transform 0.15s;
+    border: 1px solid transparent;
+  }
+  .drawer-link:hover { background: var(--sand); border-color: rgba(138,158,133,0.2); transform: translateX(3px); }
+  .drawer-link.active { background: rgba(138,158,133,0.12); border-color: rgba(138,158,133,0.3); }
+  .drawer-link-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .link-eshop .drawer-link-icon    { background: rgba(138,158,133,0.15); }
+  .link-calculator .drawer-link-icon { background: rgba(138,158,133,0.15); }
+  .link-vivi .drawer-link-icon     { background: rgba(194,123,90,0.12); }
+  .link-time .drawer-link-icon     { background: rgba(92,112,87,0.12); }
+  .drawer-link-text { font-size: 14px; font-weight: 500; }
+  .drawer-link-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .drawer-footer { margin-top: auto; font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
+ 
+  /* ============================================================
+     END HAMBURGER & DRAWER NAVIGATION
+     ============================================================ */
+
   footer { text-align: center; margin-top: 2.5rem; font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; }
 </style>
 </head>
 <body>
 <div class="page">
+
+ <!-- ============================================================
+       HAMBURGER & DRAWER — HTML
+       Copy from here to the END MARKER below into any new page.
+       Remember: set class="drawer-link active" on the current page's link.
+       ============================================================ -->
+ 
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+    <svg viewBox="0 0 14 14" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 9.5L7 4.5L12 9.5"/>
+    </svg>
+  </button>
+ 
+  <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+ 
+  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+ 
+  <div class="drawer" id="drawer">
+    <div class="drawer-logo">Maracuya</div>
+    <div class="drawer-tagline">Team Workspace</div>
+    <div class="drawer-label">Projects</div>
+    <nav class="drawer-nav">
+ 
+      <!-- Set class="drawer-link link-eshop active" on this page's link -->
+      <a href="index.html" class="drawer-link link-eshop active">
+        <div class="drawer-link-icon">&#128717;</div>
+        <div>
+          <div class="drawer-link-text">E-Shop</div>
+          <div class="drawer-link-sub">Product &amp; Launch Tracker</div>
+        </div>
+      </a>
+ 
+      <a href="vivi.html" class="drawer-link link-vivi">
+        <div class="drawer-link-icon">&#10024;</div>
+        <div>
+          <div class="drawer-link-text">ViviApp</div>
+          <div class="drawer-link-sub">Coming soon</div>
+        </div>
+      </a>
+ 
+      <a href="timesheet.html" class="drawer-link link-time">
+        <div class="drawer-link-icon">&#9200;</div>
+        <div>
+          <div class="drawer-link-text">Timesheet</div>
+          <div class="drawer-link-sub">Hours per person</div>
+        </div>
+      </a>
+ 
+      <a href="calculator.html" class="drawer-link link-calculator">
+        <div class="drawer-link-icon">&#128171;</div>
+        <div>
+          <div class="drawer-link-text">Calculator</div>
+          <div class="drawer-link-sub">Fulfillment &amp; per order fee</div>
+        </div>
+      </a>
+ 
+    </nav>
+    <div class="drawer-footer">Maracuya Team &copy; 2026</div>
+  </div>
+ 
+  <!-- ============================================================
+       END HAMBURGER & DRAWER — HTML
+       ============================================================ -->
 
   <header>
     <p class="eyebrow">Pura Maracuya</p>
@@ -618,6 +796,37 @@
       <div class="bc-row"><div><div class="bc-label">Pick &amp; Pack (${monthly} orders)</div><div class="bc-sub">avg ${avgItems} item/order, ${fmtDollar(avgPick)} base + add-ons</div></div><span class="bc-val">${fmtDollar(monthlyPP)}</span></div>
     `;
     g('bc-total-val').textContent = fmtDollar(monthlyTotal);
+
+   // ============================================================
+// HAMBURGER & DRAWER — JS
+// Copy this toggleDrawer() function and the scroll listener
+// into any new page alongside the CSS and HTML blocks above.
+// ============================================================
+ 
+function toggleDrawer() {
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('drawer').classList.toggle('open');
+  document.getElementById('drawerOverlay').classList.toggle('open');
+}
+ 
+// Hides hamburger on scroll (back-to-top button appears instead)
+window.addEventListener('scroll', function() {
+  const btn = document.getElementById('backToTop');
+  const burger = document.getElementById('hamburger');
+  if (window.scrollY > 300) {
+    btn.classList.add('visible');
+    burger.style.opacity = '0';
+    burger.style.pointerEvents = 'none';
+  } else {
+    btn.classList.remove('visible');
+    burger.style.opacity = '1';
+    burger.style.pointerEvents = 'all';
+  }
+});
+ 
+// ============================================================
+// END HAMBURGER & DRAWER — JS
+// ============================================================
 
     // Monthly profit
     const avgSell2 = gv('avg-sell'), avgCogs2 = gv('avg-cogs');
