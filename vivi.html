@@ -318,6 +318,37 @@ function scrollToWaitlist() {
 function joinWaitlist() {
   alert("You're on the list 🌿");
 }
+
+     // ============================================================
+// HAMBURGER & DRAWER — JS
+// Copy this toggleDrawer() function and the scroll listener
+// into any new page alongside the CSS and HTML blocks above.
+// ============================================================
+ 
+function toggleDrawer() {
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('drawer').classList.toggle('open');
+  document.getElementById('drawerOverlay').classList.toggle('open');
+}
+ 
+// Hides hamburger on scroll (back-to-top button appears instead)
+window.addEventListener('scroll', function() {
+  const btn = document.getElementById('backToTop');
+  const burger = document.getElementById('hamburger');
+  if (window.scrollY > 300) {
+    btn.classList.add('visible');
+    burger.style.opacity = '0';
+    burger.style.pointerEvents = 'none';
+  } else {
+    btn.classList.remove('visible');
+    burger.style.opacity = '1';
+    burger.style.pointerEvents = 'all';
+  }
+});
+ 
+// ============================================================
+// END HAMBURGER & DRAWER — JS
+// ============================================================
 </script>
 
 </body>
