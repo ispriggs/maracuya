@@ -259,7 +259,70 @@ footer {
 </head>
 
 <body>
-
+ <!-- ============================================================
+       HAMBURGER & DRAWER — HTML
+       Copy from here to the END MARKER below into any new page.
+       Remember: set class="drawer-link active" on the current page's link.
+       ============================================================ -->
+ 
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+    <svg viewBox="0 0 14 14" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 9.5L7 4.5L12 9.5"/>
+    </svg>
+  </button>
+ 
+  <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+ 
+  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+ 
+  <div class="drawer" id="drawer">
+    <div class="drawer-logo">Maracuya</div>
+    <div class="drawer-tagline">Team Workspace</div>
+    <div class="drawer-label">Projects</div>
+    <nav class="drawer-nav">
+ 
+      <!-- Set class="drawer-link link-eshop active" on this page's link -->
+      <a href="index.html" class="drawer-link link-eshop active">
+        <div class="drawer-link-icon">&#128717;</div>
+        <div>
+          <div class="drawer-link-text">E-Shop</div>
+          <div class="drawer-link-sub">Product &amp; Launch Tracker</div>
+        </div>
+      </a>
+ 
+      <a href="vivi.html" class="drawer-link link-vivi">
+        <div class="drawer-link-icon">&#10024;</div>
+        <div>
+          <div class="drawer-link-text">ViviApp</div>
+          <div class="drawer-link-sub">Coming soon</div>
+        </div>
+      </a>
+ 
+      <a href="timesheet.html" class="drawer-link link-time">
+        <div class="drawer-link-icon">&#9200;</div>
+        <div>
+          <div class="drawer-link-text">Timesheet</div>
+          <div class="drawer-link-sub">Hours per person</div>
+        </div>
+      </a>
+ 
+      <a href="calculator.html" class="drawer-link link-calculator">
+        <div class="drawer-link-icon">&#128171;</div>
+        <div>
+          <div class="drawer-link-text">Calculator</div>
+          <div class="drawer-link-sub">Fulfillment &amp; per order fee</div>
+        </div>
+      </a>
+ 
+    </nav>
+    <div class="drawer-footer">Maracuya Team &copy; 2026</div>
+  </div>
+ 
+  <!-- ============================================================
+       END HAMBURGER & DRAWER — HTML
+       ============================================================ -->
 <header>
   <div class="eyebrow">Launching Soon</div>
   <h1>ViviApp</h1>
