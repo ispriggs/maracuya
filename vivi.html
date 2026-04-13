@@ -3,403 +3,655 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ViviApp Launch</title>
+<title>E-Shop Task Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-
 <style>
-:root {
-  --sage: #8a9e85;
-  --sage-light: #c5d4c2;
-  --sage-dark: #5c7057;
-  --terracotta: #c27b5a;
-  --sand: #f5f0e8;
-  --deep: #2c2c2c;
-  --muted: #7a7a7a;
-  --white: #ffffff;
-  --ink: #1a1611;
-    --ink2: #5a5248;
-    --ink3: #9a9088;
-}
+  :root {
+    --sage: #8a9e85;
+    --sage-light: #c5d4c2;
+    --sage-dark: #5c7057;
+    --terracotta: #c27b5a;
+    --terracotta-light: #e8c4ae;
+    --sand: #f5f0e8;
+    --deep: #2c2c2c;
+    --muted: #7a7a7a;
+    --white: #ffffff;
+    --card-bg: rgba(255,255,255,0.75);
+  }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--sand);
-  padding: 30px 16px 80px;
-  color: var(--deep);
-}
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(138,158,133,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(194,123,90,0.12) 0%, transparent 50%);
+    min-height: 100vh;
+    padding: 30px 16px 80px;
+    color: var(--deep);
+  }
 
-/* HEADER */
-header {
-  text-align: center;
-  margin-bottom: 60px;
-}
-.eyebrow {
-  font-size: 11px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--terracotta);
-}
-h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(34px, 6vw, 52px);
-  margin: 12px 0;
-}
-.subtitle {
-  color: var(--muted);
-  font-size: 16px;
-  max-width: 520px;
-  margin: 0 auto;
-}
+  header { text-align: center; margin-bottom: 52px; }
+  header .eyebrow { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--terracotta); font-weight: 500; margin-bottom: 10px; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 46px); font-weight: 600; color: var(--deep); line-height: 1.15; }
+  header p { margin-top: 10px; color: var(--muted); font-size: 15px; font-weight: 300; }
 
-/* CTA */
-.cta {
-  margin-top: 28px;
-}
-.cta button {
-  background: var(--sage-dark);
-  color: white;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 30px;
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.cta button:hover {
-  background: var(--terracotta);
-}
+  .progress-bar-wrap { width: 220px; height: 4px; background: var(--sage-light); border-radius: 10px; margin: 18px auto 0; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--sage-dark), var(--terracotta)); border-radius: 10px; transition: width 0.5s ease; }
+  .progress-label { font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: 1px; }
 
-/* GRID */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
-  gap: 24px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; max-width: 1200px; margin: 0 auto; }
 
-/* CARDS */
-.card {
-  background: rgba(255,255,255,0.7);
-  border-radius: 20px;
-  padding: 28px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.8);
-}
+  .person-card { background: var(--card-bg); border-radius: 20px; padding: 32px 28px 28px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.9); box-shadow: 0 4px 24px rgba(92,112,87,0.08), 0 1px 4px rgba(0,0,0,0.04); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .person-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(92,112,87,0.13), 0 2px 8px rgba(0,0,0,0.06); }
 
-.card h3 {
-  font-family: 'Playfair Display', serif;
-  margin-bottom: 12px;
-}
+  .person-header { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 6px; }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .p1 .avatar { background: rgba(138,158,133,0.25); }
+  .p2 .avatar { background: rgba(194,123,90,0.2); }
+  .p3 .avatar { background: rgba(92,112,87,0.18); }
 
-.card p {
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.6;
-}
+  .person-meta h2 { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; line-height: 1.2; }
+  .person-meta .role { font-size: 11.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-top: 3px; font-weight: 500; }
 
-/* STATUS */
-.status {
-  margin-top: 12px;
-  font-size: 13px;
-  color: var(--sage-dark);
-}
+  .person-progress { margin: 16px 0 20px; display: flex; align-items: center; gap: 10px; }
+  .mini-bar { flex: 1; height: 5px; background: #e8e2d8; border-radius: 10px; overflow: hidden; }
+  .mini-fill { height: 100%; border-radius: 10px; transition: width 0.4s ease; }
+  .p1 .mini-fill { background: linear-gradient(90deg, var(--sage), var(--sage-dark)); }
+  .p2 .mini-fill { background: linear-gradient(90deg, var(--terracotta-light), var(--terracotta)); }
+  .p3 .mini-fill { background: linear-gradient(90deg, #a2b59e, var(--sage-dark)); }
+  .mini-pct { font-size: 12px; font-weight: 500; color: var(--muted); min-width: 36px; text-align: right; }
 
-/* TIMELINE */
-.timeline {
-  margin-top: 16px;
-}
-.timeline-item {
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-  font-size: 14px;
-}
+  .section { margin-bottom: 22px; }
+  .section-title { font-size: 10.5px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--terracotta); font-weight: 500; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid rgba(194,123,90,0.2); }
+  .p2 .section-title { color: var(--sage-dark); border-color: rgba(138,158,133,0.3); }
+  .p3 .section-title { color: #6b7c68; border-color: rgba(107,124,104,0.25); }
 
-/* WAITLIST */
-.waitlist {
-  margin-top: 40px;
-  text-align: center;
-}
-.waitlist input {
-  padding: 12px 14px;
-  border-radius: 20px;
-  border: 1px solid #ddd;
-  width: 240px;
-  margin-right: 8px;
-}
-.waitlist button {
-  padding: 12px 20px;
-  border-radius: 20px;
-  border: none;
-  background: var(--terracotta);
-  color: white;
-  cursor: pointer;
-}
+  .task-group { margin-bottom: 14px; }
+  .task-group-name { font-size: 13px; font-weight: 500; color: var(--deep); margin-bottom: 7px; display: flex; align-items: center; gap: 6px; }
+  .task-group-name::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--sage-light); flex-shrink: 0; }
+  .p2 .task-group-name::before { background: var(--terracotta-light); }
+  .p3 .task-group-name::before { background: #b5c8b2; }
 
-footer {
-  margin-top: 60px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-}
+  .task-item { display: flex; align-items: flex-start; gap: 10px; padding: 7px 10px; border-radius: 10px; cursor: default; transition: background 0.15s ease; margin-bottom: 3px; user-select: none; }
+  .task-item:hover { background: rgba(138,158,133,0.08); }
+  .task-item input[type="checkbox"] { display: none; }
+  .custom-check { width: 18px; height: 18px; border: 1.5px solid var(--sage-light); border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; background: white; cursor: pointer; }
+  .p2 .custom-check { border-color: var(--terracotta-light); }
+  .p3 .custom-check { border-color: #b5c8b2; }
+  .task-item.done .custom-check { background: var(--sage); border-color: var(--sage); }
+  .p2 .task-item.done .custom-check { background: var(--terracotta); border-color: var(--terracotta); }
+  .p3 .task-item.done .custom-check { background: var(--sage-dark); border-color: var(--sage-dark); }
+  .custom-check svg { opacity: 0; transform: scale(0.5); transition: all 0.18s ease; }
+  .task-item.done .custom-check svg { opacity: 1; transform: scale(1); }
+  .task-label { font-size: 13.5px; line-height: 1.45; color: var(--deep); transition: color 0.2s, text-decoration 0.2s; }
+  .task-item.done .task-label { color: var(--muted); text-decoration: line-through; }
 
-   /* ============================================================
-     HAMBURGER & DRAWER NAVIGATION
-     ============================================================
-     Copy this entire block (CSS + HTML + JS) into any new page.
- 
-     WHAT TO CHANGE PER PAGE:
-       - In the HTML: set class="drawer-link active" on the
-         link that matches the current page.
-       - That's it. Everything else stays the same.
-     ============================================================ */
- 
-  /* -- Fixed hamburger button (top-left corner) -- */
+  .deliverables-section { background: rgba(138,158,133,0.07); border-radius: 12px; padding: 14px 16px; margin-top: 6px; }
+  .p2 .deliverables-section { background: rgba(194,123,90,0.06); }
+  .p3 .deliverables-section { background: rgba(92,112,87,0.07); }
+
+
+  /* ── TIMER ── */
+  .timer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgba(138,158,133,0.08);
+    border: 1px solid rgba(138,158,133,0.15);
+  }
+  .p2 .timer-bar { background: rgba(194,123,90,0.07); border-color: rgba(194,123,90,0.15); }
+  .p3 .timer-bar { background: rgba(92,112,87,0.08); border-color: rgba(92,112,87,0.15); }
+  .timer-display { font-size: 15px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: 1px; color: var(--deep); }
+  .timer-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 20px;
+    padding: 6px 14px;
+    cursor: pointer;
+    border: 1px solid rgba(138,158,133,0.4);
+    background: white;
+    color: var(--sage-dark);
+    transition: all 0.2s;
+  }
+  .timer-btn:hover { background: var(--sage-dark); color: white; border-color: var(--sage-dark); }
+  .timer-btn.running { background: var(--terracotta); color: white; border-color: var(--terracotta); }
+  .timer-btn.running:hover { background: #a8633d; border-color: #a8633d; }
+
+  /* ── HAMBURGER & DRAWER ── */
   .hamburger {
     position: fixed;
-    top: 16px; left: 16px;
+    top: 16px;
+    left: 16px;
     z-index: 1000;
-    width: 36px; height: 36px;
+    width: 36px;
+    height: 36px;
     border-radius: 8px;
     background: rgba(245,240,232,0.7);
     border: 1px solid rgba(138,158,133,0.15);
     backdrop-filter: blur(8px);
     cursor: pointer;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: 4px;
     transition: background 0.2s, opacity 0.3s ease;
   }
   .hamburger:hover { background: rgba(245,240,232,0.95); }
-  .hamburger span {
-    display: block; width: 15px; height: 1.5px;
-    background: var(--ink); border-radius: 2px;
-    transition: all 0.3s ease; transform-origin: center;
-  }
-  /* Animate the 3 lines into an X when open */
+  .hamburger span { display: block; width: 15px; height: 1.5px; background: var(--deep); border-radius: 2px; transition: all 0.3s ease; transform-origin: center; }
   .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
   .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
   .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
 
-  
- 
-  /* -- Back-to-top button (bottom center, appears on scroll) -- */
   .back-to-top {
     position: fixed;
-    bottom: 24px; left: 50%;
+    bottom: 24px;
+    left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    width: 42px; height: 42px;
+    width: 42px;
+    height: 42px;
     border-radius: 8px;
     background: rgba(245,240,232,0.7);
     border: 1px solid rgba(138,158,133,0.15);
     backdrop-filter: blur(8px);
     cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
     transition: opacity 0.3s ease, background 0.2s;
   }
   .back-to-top.visible { opacity: 1; pointer-events: all; }
   .back-to-top:hover { background: rgba(245,240,232,0.95); }
-  .back-to-top svg { width: 14px; height: 14px; stroke: var(--ink); }
- 
-  /* -- Dark overlay behind the open drawer -- */
-  .drawer-overlay {
-    position: fixed; inset: 0;
-    background: rgba(44,44,44,0.3);
-    backdrop-filter: blur(3px);
-    z-index: 900;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
+  .back-to-top svg { width: 14px; height: 14px; stroke: var(--deep); }
+
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(44,44,44,0.3); backdrop-filter: blur(3px); z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
   .drawer-overlay.open { opacity: 1; pointer-events: all; }
- 
-  /* -- Slide-in drawer panel -- */
-  .drawer {
-    position: fixed; top: 0; left: 0;
-    height: 100%; width: 280px;
-    background: white; z-index: 950;
-    padding: 80px 32px 40px;
-    transform: translateX(-100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 4px 0 40px rgba(0,0,0,0.1);
-    display: flex; flex-direction: column;
-  }
+  .drawer { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: white; z-index: 950; padding: 80px 32px 40px; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
   .drawer.open { transform: translateX(0); }
- 
-  /* -- Drawer internals -- */
-  .drawer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
-  .drawer-tagline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink3); margin-bottom: 40px; }
+  .drawer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--deep); margin-bottom: 6px; }
+  .drawer-tagline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; }
   .drawer-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sage); font-weight: 500; margin-bottom: 14px; }
   .drawer-nav { display: flex; flex-direction: column; gap: 8px; }
-  .drawer-link {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 16px; border-radius: 12px;
-    text-decoration: none; color: var(--ink);
-    transition: background 0.15s, transform 0.15s;
-    border: 1px solid transparent;
-  }
+  .drawer-link { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; text-decoration: none; color: var(--deep); transition: background 0.15s, transform 0.15s; border: 1px solid transparent; }
   .drawer-link:hover { background: var(--sand); border-color: rgba(138,158,133,0.2); transform: translateX(3px); }
   .drawer-link.active { background: rgba(138,158,133,0.12); border-color: rgba(138,158,133,0.3); }
-  .drawer-link-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
-  }
-  .link-eshop .drawer-link-icon    { background: rgba(138,158,133,0.15); }
+  .drawer-link-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .link-eshop .drawer-link-icon { background: rgba(138,158,133,0.15); }
   .link-calculator .drawer-link-icon { background: rgba(138,158,133,0.15); }
-  .link-vivi .drawer-link-icon     { background: rgba(194,123,90,0.12); }
-  .link-time .drawer-link-icon     { background: rgba(92,112,87,0.12); }
+  .link-vivi .drawer-link-icon { background: rgba(194,123,90,0.12); }
+  .link-time .drawer-link-icon { background: rgba(92,112,87,0.12); }
   .drawer-link-text { font-size: 14px; font-weight: 500; }
-  .drawer-link-sub { font-size: 11px; color: var(--ink3); margin-top: 1px; }
-  .drawer-footer { margin-top: auto; font-size: 11px; color: var(--ink3); letter-spacing: 0.5px; }
- 
-  /* ============================================================
-     END HAMBURGER & DRAWER NAVIGATION
-     ============================================================ */
+  .drawer-link-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .drawer-footer { margin-top: auto; font-size: 11px; color: var(--muted); letter-spacing: 0.5px; }
 </style>
 </head>
-
 <body>
- <!-- ============================================================
-       HAMBURGER & DRAWER — HTML
-       Copy from here to the END MARKER below into any new page.
-       Remember: set class="drawer-link active" on the current page's link.
-       ============================================================ -->
- 
-  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
-    <svg viewBox="0 0 14 14" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M2 9.5L7 4.5L12 9.5"/>
-    </svg>
-  </button>
- 
-  <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
- 
-  <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
- 
-  <div class="drawer" id="drawer">
-    <div class="drawer-logo">Maracuya</div>
-    <div class="drawer-tagline">Team Workspace</div>
-    <div class="drawer-label">Projects</div>
-    <nav class="drawer-nav">
- 
-      <!-- Set class="drawer-link link-eshop active" on this page's link -->
-      <a href="index.html" class="drawer-link link-eshop active">
-        <div class="drawer-link-icon">&#128717;</div>
-        <div>
-          <div class="drawer-link-text">E-Shop</div>
-          <div class="drawer-link-sub">Product &amp; Launch Tracker</div>
-        </div>
-      </a>
- 
-      <a href="vivi.html" class="drawer-link link-vivi">
-        <div class="drawer-link-icon">&#10024;</div>
-        <div>
-          <div class="drawer-link-text">ViviApp</div>
-          <div class="drawer-link-sub">Coming soon</div>
-        </div>
-      </a>
- 
-      <a href="timesheet.html" class="drawer-link link-time">
-        <div class="drawer-link-icon">&#9200;</div>
-        <div>
-          <div class="drawer-link-text">Timesheet</div>
-          <div class="drawer-link-sub">Hours per person</div>
-        </div>
-      </a>
- 
-      <a href="calculator.html" class="drawer-link link-calculator">
-        <div class="drawer-link-icon">&#128171;</div>
-        <div>
-          <div class="drawer-link-text">Calculator</div>
-          <div class="drawer-link-sub">Fulfillment &amp; per order fee</div>
-        </div>
-      </a>
- 
-    </nav>
-    <div class="drawer-footer">Maracuya Team &copy; 2026</div>
-  </div>
- 
-  <!-- ============================================================
-       END HAMBURGER & DRAWER — HTML
-       ============================================================ -->
-<header>
-  <div class="eyebrow">Launching Soon</div>
-  <h1>ViviApp</h1>
-  <p class="subtitle">
-    A conscious living platform designed to connect rituals, wellness, and everyday intention into one seamless experience.
-  </p>
 
-</header>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+  <svg viewBox="0 0 14 14" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 9.5L7 4.5L12 9.5"/>
+  </svg>
+</button>
 
-<div class="grid">
-
-  <div class="card">
-    <h3>✨ What is Vivi</h3>
-    <p>
-      Vivi is your daily space for intentional living — combining wellness, rituals, and mindful products into one curated experience.
-    </p>
-    <div class="status">Status: In Development</div>
-  </div>
-
-  <div class="card">
-    <h3>🌿 Vision</h3>
-    <p>
-      To create a platform where people can reconnect with themselves through small daily practices — blending modern life with spiritual grounding.
-    </p>
-  </div>
-
-  <div class="card">
-    <h3>🚀 Launch Roadmap</h3>
-    <div class="timeline">
-      <div class="timeline-item">✔ Concept & Brand Direction</div>
-      <div class="timeline-item">✔ Product Ecosystem Design</div>
-      <div class="timeline-item">⏳ App Development</div>
-      <div class="timeline-item">⏳ Beta Community Launch</div>
-      <div class="timeline-item">🔒 Public Release</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h3>🌎 Community First</h3>
-    <p>
-      Vivi is being built with its community. Early users will shape features, rituals, and the overall experience.
-    </p>
-  </div>
-
+<button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-logo">Maracuya</div>
+  <div class="drawer-tagline">Team Workspace</div>
+  <div class="drawer-label">Projects</div>
+  <nav class="drawer-nav">
+    <a href="index.html" class="drawer-link link-eshop active">
+      <div class="drawer-link-icon">&#128717;</div>
+      <div>
+        <div class="drawer-link-text">E-Shop</div>
+        <div class="drawer-link-sub">Product &amp; Launch Tracker</div>
+      </div>
+    </a>
+    <a href="vivi.html" class="drawer-link link-vivi">
+      <div class="drawer-link-icon">&#10024;</div>
+      <div>
+        <div class="drawer-link-text">ViviApp</div>
+        <div class="drawer-link-sub">Coming soon</div>
+      </div>
+    </a>
+    <a href="timesheet.html" class="drawer-link link-time">
+      <div class="drawer-link-icon">&#9200;</div>
+      <div>
+        <div class="drawer-link-text">Timesheet</div>
+        <div class="drawer-link-sub">Hours per person</div>
+      </div>
+    </a>
+    <a href="calculator.html" class="drawer-link link-calculator">
+      <div class="drawer-link-icon">&#10024;</div>
+      <div>
+        <div class="drawer-link-text">Calculator</div>
+        <div class="drawer-link-sub">Fulfulmeant &amp; Per order fee</div>
+      </div>
+    </a>
+  </nav>
+  <div class="drawer-footer">Maracuya Team &copy; 2026</div>
 </div>
 
-<footer>
-  Maracuya Team © 2026
-</footer>
+<header>
+  <div class="eyebrow">Project Tracker</div>
+  <h1>E-Shop Task Dashboard</h1>
+  <p>Click any task to mark it complete</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="globalFill" style="width:0%"></div>
+  </div>
+  <div class="progress-label" id="globalLabel">Loading…</div>
+</header>
+
+<div class="grid" id="grid"></div>
 
 <script>
-function scrollToWaitlist() {
-  document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
+const SUPABASE_URL = 'https://uewamqxapuoqcwedgkdt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVld2FtcXhhcHVvcWN3ZWRna2R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2Njg2MjEsImV4cCI6MjA4ODI0NDYyMX0.r9Do0jX5aDbS62wyddwfW0XUHbv7WzeSYdOW014U1hk';
+
+const people = [
+  {
+    id: "p1", emoji: "📢", name: "Chantelle", role: "Marketing & Growth Lead",
+    sections: [
+      { title: "Testing & Pre-Launch", groups: [
+        { name: "Messaging & Setup", tasks: [
+          "Define core message (what Vivi is in one sentence)",
+          "Prepare launch announcement copy",
+          "Set up social media accounts (Instagram, TikTok)",
+          "Start teaser content before launch"
+        ]}
+      ]},
+      { title: "Beta Launch", groups: [
+        { name: "User Feedback", tasks: [
+          "Invite early users (friends, community)",
+          "Collect feedback via form or Notion",
+          "Talk directly to early users",
+          "Collect testimonials"
+        ]}
+      ]},
+      { title: "App Store Optimization", groups: [
+        { name: "ASO Content", tasks: [
+          "Write app description with keywords",
+          "Write short tagline",
+          "Research App Store keywords"
+        ]}
+      ]},
+      { title: "Launch", groups: [
+        { name: "Launch Execution", tasks: [
+          "Post on Instagram (feed + stories)",
+          "Post TikTok launch videos",
+          "Send email blast",
+          "Reach out to micro-influencers"
+        ]}
+      ]},
+      { title: "Growth", groups: [
+        { name: "Content Strategy", tasks: [
+          "Create daily TikTok / Reels",
+          "Post behind-the-scenes content",
+          "Create educational + aesthetic content",
+          "Test different hooks and audiences",
+          "Collaborate with wellness influencers"
+        ]}
+      ]},
+      { title: "Retention", groups: [
+        { name: "User Retention", tasks: [
+          "Improve onboarding messaging",
+          "Analyze user drop-off points",
+          "Track daily active users",
+          "Track retention rate"
+        ]}
+      ]}
+    ]
+  },
+  {
+    id: "p2", emoji: "🎨", name: "Jacquie", role: "Design & Experience Lead",
+    sections: [
+      { title: "Testing & Polish", groups: [
+        { name: "UI Review", tasks: [
+          "Review UI consistency across all screens",
+          "Fix spacing issues",
+          "Fix font sizes",
+          "Fix alignment issues",
+          "Ensure premium look and feel"
+        ]},
+        { name: "Assets", tasks: [
+          "Create App Store screenshots",
+          "Create launch visuals (mockups, lifestyle)",
+          "Design app icon",
+          "Create preview video (optional)"
+        ]}
+      ]},
+      { title: "Beta Launch", groups: [
+        { name: "UX Improvements", tasks: [
+          "Adjust UX based on feedback",
+          "Improve onboarding flow",
+          "Simplify confusing screens"
+        ]}
+      ]},
+      { title: "Launch Support", groups: [
+        { name: "Content Assets", tasks: [
+          "Provide daily visual assets",
+          "Create social content templates",
+          "Ensure visual consistency across platforms"
+        ]}
+      ]},
+      { title: "Growth", groups: [
+        { name: "Brand Consistency", tasks: [
+          "Create branded content templates",
+          "Maintain visual identity across content",
+          "Support marketing with visuals"
+        ]}
+      ]}
+    ]
+  },
+  {
+    id: "p3", emoji: "🛠", name: "Ian", role: "Tech & Product Lead",
+    sections: [
+      { title: "Testing & Polish", groups: [
+        { name: "Core Testing", tasks: [
+          "Fix bugs from internal testing",
+          "Test on multiple iOS devices",
+          "Test on slow internet and offline states"
+        ]},
+        { name: "Core Systems", tasks: [
+          "Test login and signup flows",
+          "Test payments (if applicable)",
+          "Test notifications"
+        ]},
+        { name: "Infrastructure", tasks: [
+          "Set up crash reporting (e.g. Firebase)",
+          "Set up analytics tracking"
+        ]}
+      ]},
+      { title: "Beta Launch", groups: [
+        { name: "Performance", tasks: [
+          "Fix urgent bugs quickly",
+          "Improve app performance"
+        ]}
+      ]},
+      { title: "App Store", groups: [
+        { name: "Deployment", tasks: [
+          "Ensure App Store setup is correct",
+          "Fix any App Store rejection issues"
+        ]}
+      ]},
+      { title: "Launch", groups: [
+        { name: "Monitoring", tasks: [
+          "Monitor app for crashes",
+          "Fix issues in real-time during launch"
+        ]}
+      ]},
+      { title: "Growth", groups: [
+        { name: "Product Improvements", tasks: [
+          "Add new features based on usage",
+          "Improve retention systems (notifications, UX)"
+        ]}
+      ]},
+      { title: "Retention", groups: [
+        { name: "User Experience", tasks: [
+          "Improve onboarding experience",
+          "Add delight / wow moments",
+          "Analyze user behavior data"
+        ]}
+      ]}
+    ]
+  }
+];
+
+// ── STATE ──
+let state = {};
+let allTaskIds = [];
+let saving = false;
+let timers = {};
+
+// ── SUPABASE ──
+async function loadFromSupabase() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/task_state?select=id,done`, {
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+    });
+    const rows = await res.json();
+    if (Array.isArray(rows)) rows.forEach(r => { state[r.id] = r.done; });
+  } catch(e) { console.warn('Supabase load failed, using local state.', e); }
 }
 
-function joinWaitlist() {
-  alert("You're on the list 🌿");
+async function saveToSupabase(id, done) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/task_state`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'resolution=merge-duplicates' },
+      body: JSON.stringify({ id, done, updated_at: new Date().toISOString() })
+    });
+  } catch(e) { console.warn('Supabase save failed.', e); }
 }
 
-     // ============================================================
-// HAMBURGER & DRAWER — JS
-// Copy this toggleDrawer() function and the scroll listener
-// into any new page alongside the CSS and HTML blocks above.
-// ============================================================
- 
+async function saveSessionToSupabase(person, startedAt, endedAt) {
+  const durationSeconds = Math.floor((endedAt - startedAt) / 1000);
+  if (durationSeconds < 5) return;
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/time_sessions`, {
+      method: 'POST',
+      headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        person,
+        date: new Date(startedAt).toISOString().split('T')[0],
+        duration_seconds: durationSeconds,
+        started_at: new Date(startedAt).toISOString(),
+        ended_at: new Date(endedAt).toISOString()
+      })
+    });
+  } catch(e) { console.warn('Session save failed.', e); }
+}
+
+async function resetPersonInSupabase(personName) {
+  const prefix = slugify(personName);
+  const ids = Object.keys(state).filter(k => k.startsWith(prefix));
+  await Promise.all(ids.map(id => saveToSupabase(id, false)));
+}
+
+// ── UTILS ──
+function slugify(text) {
+  return text.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').substring(0, 60);
+}
+function taskId(personName, groupName, taskText) {
+  return `${slugify(personName)}__${slugify(groupName || 'deliverable')}__${slugify(taskText)}`;
+}
+function formatTime(ms) {
+  const totalSecs = Math.floor(ms / 1000);
+  const h = Math.floor(totalSecs / 3600);
+  const m = Math.floor((totalSecs % 3600) / 60);
+  const s = totalSecs % 60;
+  return h > 0
+    ? `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+    : `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// ── TIMER CONTROLS ──
+// ── TIMER CONTROLS ──
+function toggleTimer(personName) {
+  if (!timers[personName]) timers[personName] = { running: false, startTime: null, elapsed: 0 };
+  const t = timers[personName];
+
+  if (!t.running) {
+    // START
+    t.running = true;
+    t.startTime = Date.now();
+    saveTimerState();
+    t.interval = setInterval(() => {
+      const el = document.getElementById(`timer-display-${slugify(personName)}`);
+      if (el) el.textContent = formatTime(t.elapsed + (Date.now() - t.startTime));
+    }, 1000);
+    allTaskIds = [];
+    renderAll();
+  } else {
+    // STOP
+    clearInterval(t.interval);
+    const endedAt = Date.now();
+    const totalElapsed = t.elapsed + (endedAt - t.startTime);
+    const sessionStart = endedAt - totalElapsed;
+    t.elapsed = 0;
+    t.running = false;
+    t.startTime = null;
+    saveTimerState();
+    saveSessionToSupabase(personName, sessionStart, endedAt);
+    allTaskIds = [];
+    renderAll();
+  }
+}
+
+function saveTimerState() {
+  const serializable = {};
+  Object.entries(timers).forEach(([name, t]) => {
+    serializable[name] = { running: t.running, startTime: t.startTime, elapsed: t.elapsed };
+  });
+  localStorage.setItem('maracuya_timers', JSON.stringify(serializable));
+}
+
+function loadTimerState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('maracuya_timers') || '{}');
+    Object.entries(saved).forEach(([name, t]) => {
+      timers[name] = { running: t.running, startTime: t.startTime, elapsed: t.elapsed };
+      if (t.running) {
+        timers[name].interval = setInterval(() => {
+          const el = document.getElementById(`timer-display-${slugify(name)}`);
+          if (el) el.textContent = formatTime(timers[name].elapsed + (Date.now() - timers[name].startTime));
+        }, 1000);
+      }
+    });
+  } catch(e) { console.warn('Timer state load failed', e); }
+}
+
+// ── RENDER ──
+function renderAll() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  people.forEach(person => {
+    const card = document.createElement('div');
+    card.className = `person-card ${person.id}`;
+
+    let personTaskIds = [];
+    let sectionHtml = '';
+
+    person.sections.forEach((section, si) => {
+      let groupsHtml = '';
+      section.groups.forEach((group, gi) => {
+        let tasksHtml = '';
+        group.tasks.forEach((task, ti) => {
+          const id = taskId(person.name, group.name, task);
+          personTaskIds.push(id);
+          allTaskIds.push(id);
+          const done = state[id] ? 'done' : '';
+          tasksHtml += `
+  <div class="task-item ${done}" data-id="${id}">
+    <span class="custom-check" onclick="toggleTask('${id}')">
+      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+        <path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="task-label">${task}</span>
+  </div>`;
+        });
+        const groupNameHtml = group.name ? `<div class="task-group-name">${group.name}</div>` : '';
+        groupsHtml += `<div class="task-group">${groupNameHtml}${tasksHtml}</div>`;
+      });
+      const isDeliverable = section.title.toLowerCase().includes('deliverable');
+      sectionHtml += `
+        <div class="section">
+          <div class="section-title">${section.title}</div>
+          <div class="${isDeliverable ? 'deliverables-section' : ''}">${groupsHtml}</div>
+        </div>`;
+    });
+
+    const doneCount = personTaskIds.filter(id => state[id]).length;
+    const pct = personTaskIds.length ? Math.round(doneCount / personTaskIds.length * 100) : 0;
+    const slug = slugify(person.name);
+    const t = timers[person.name];
+    const currentElapsed = t ? (t.running ? t.elapsed + (Date.now() - t.startTime) : t.elapsed) : 0;
+    const isRunning = t && t.running;
+
+    card.innerHTML = `
+      <div class="timer-bar">
+        <span class="timer-display" id="timer-display-${slug}">${formatTime(currentElapsed)}</span>
+        <button class="timer-btn ${isRunning ? 'running' : ''}" id="timer-btn-${slug}" onclick="toggleTimer('${person.name}')">${isRunning ? 'Stop Timer' : 'Start Timer'}</button>
+      </div>
+      <div class="person-header">
+        <div class="avatar">${person.emoji}</div>
+        <div class="person-meta">
+          <h2>${person.name}</h2>
+          <div class="role">${person.role}</div>
+        </div>
+      </div>
+      <div class="person-progress">
+        <div class="mini-bar"><div class="mini-fill" style="width:${pct}%"></div></div>
+        <div class="mini-pct">${pct}%</div>
+      </div>
+      ${sectionHtml}
+      
+    `;
+    grid.appendChild(card);
+  });
+
+  updateGlobal();
+  attachListeners();
+}
+
+function updateGlobal() {
+  const total = allTaskIds.length;
+  const done = allTaskIds.filter(id => state[id]).length;
+  const pct = total ? Math.round(done / total * 100) : 0;
+  document.getElementById('globalFill').style.width = pct + '%';
+  document.getElementById('globalLabel').textContent = `${done} of ${total} tasks complete`;
+}
+
+async function toggleTask(id) {
+  const currentlyDone = !!state[id];
+
+  // Ask confirmation only when unchecking
+  if (currentlyDone) {
+    const confirmUndo = confirm("Are you sure you want to mark this task as incomplete?");
+    if (!confirmUndo) return;
+  }
+
+  state[id] = !state[id];
+  allTaskIds = [];
+  renderAll();
+  await saveToSupabase(id, state[id]);
+}
+
+function attachListeners() {
+  document.querySelectorAll('.reset-btn').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const personName = btn.dataset.person;
+      await resetPersonInSupabase(personName);
+      const prefix = slugify(personName);
+      Object.keys(state).forEach(k => { if (k.startsWith(prefix)) delete state[k]; });
+      allTaskIds = [];
+      renderAll();
+    });
+  });
+}
+
 function toggleDrawer() {
   document.getElementById('hamburger').classList.toggle('open');
   document.getElementById('drawer').classList.toggle('open');
   document.getElementById('drawerOverlay').classList.toggle('open');
 }
- 
-// Hides hamburger on scroll (back-to-top button appears instead)
+
 window.addEventListener('scroll', function() {
   const btn = document.getElementById('backToTop');
   const burger = document.getElementById('hamburger');
@@ -413,11 +665,13 @@ window.addEventListener('scroll', function() {
     burger.style.pointerEvents = 'all';
   }
 });
- 
-// ============================================================
-// END HAMBURGER & DRAWER — JS
-// ============================================================
-</script>
 
+(async () => {
+  document.getElementById('globalLabel').textContent = 'Loading…';
+  await loadFromSupabase();
+  loadTimerState();
+  renderAll();
+})();
+</script>
 </body>
 </html>
