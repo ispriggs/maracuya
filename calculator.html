@@ -17,6 +17,12 @@
     --accent: #c4451a;
     --accent2: #2a6b4a;
     --accent2-light: #e2f0e8;
+    --accent3: #7c4dbd;
+    --accent3-light: #f0ebff;
+    --accent4: #1a6bc4;
+    --accent4-light: #e8f0fb;
+    --warn: #b85a00;
+    --warn-light: #fff3e8;
     --border: #ddd5c5;
     --border-strong: #bfb5a5;
     --gold: #b8943a;
@@ -28,15 +34,15 @@
   }
   body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; padding: 2rem 1rem 4rem; }
   body::before { content: ''; position: fixed; inset: 0; background-image: radial-gradient(ellipse at 20% 10%, rgba(196,69,26,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 90%, rgba(42,107,74,0.06) 0%, transparent 50%); pointer-events: none; z-index: 0; }
-  .page { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; }
+  .page { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; }
 
-  header { text-align: center; margin-bottom: 1.75rem; }
+  header { text-align: center; margin-bottom: 1.75rem; padding-top: 0.5rem; }
   .eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
   header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 5vw, 38px); color: var(--ink); margin-bottom: 0.35rem; }
   header p { font-size: 14px; color: var(--ink2); font-weight: 300; }
 
-  .tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; background: var(--surface2); border-radius: var(--radius); padding: 5px; border: 1px solid var(--border); }
-  .tab { flex: 1; padding: 9px 12px; border-radius: var(--radius-sm); border: none; background: transparent; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink3); cursor: pointer; transition: all 0.15s; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; background: var(--surface2); border-radius: var(--radius); padding: 5px; border: 1px solid var(--border); flex-wrap: wrap; }
+  .tab { flex: 1; min-width: 120px; padding: 9px 10px; border-radius: var(--radius-sm); border: none; background: transparent; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500; color: var(--ink3); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
   .tab.active { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); border: 1px solid var(--border); }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
@@ -46,9 +52,16 @@
   .tier-badge { font-family: 'DM Mono', monospace; font-size: 11px; background: var(--gold); color: #fff; padding: 3px 10px; border-radius: 20px; }
 
   .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
-  @media (max-width: 680px) { .layout { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .layout { grid-template-columns: 1fr; } }
+  .layout-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.25rem; align-items: start; }
+  @media (max-width: 900px) { .layout-3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .layout-3 { grid-template-columns: 1fr; } }
 
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.3rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+  .card.accent-green { border-left: 3px solid var(--accent2); }
+  .card.accent-purple { border-left: 3px solid var(--accent3); }
+  .card.accent-blue { border-left: 3px solid var(--accent4); }
+  .card.accent-warn { border-left: 3px solid var(--warn); }
   .card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink3); margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--border); }
   .card-title span { display: inline-block; background: var(--surface2); border-radius: 4px; padding: 2px 8px; color: var(--ink2); }
 
@@ -81,18 +94,19 @@
   .toggle input:checked + .slider { background: var(--accent2); }
   .toggle input:checked + .slider::before { transform: translateX(18px); }
 
-  .sub-row { display: none; padding: 5px 0 5px 12px; align-items: center; gap: 10px; }
+  .sub-row { display: none; padding: 5px 0 5px 12px; align-items: center; gap: 10px; flex-wrap: wrap; }
   .sub-row.open { display: flex; }
   .sub-row label { font-size: 12px; color: var(--ink2); white-space: nowrap; }
 
-  .subsection { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.1em; margin: 1rem 0 0.5rem; }
+  .subsection { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.1em; margin: 1rem 0 0.5rem; padding: 4px 8px; background: var(--surface2); border-radius: 4px; display: inline-block; }
 
-  /* Results */
+  /* Results Panel */
   .results-panel { background: var(--ink); color: #fff; border-radius: var(--radius); padding: 1.3rem 1.4rem; box-shadow: var(--shadow-lg); position: sticky; top: 1rem; }
   .r-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .line-item { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; }
-  .line-item .li-label { font-size: 13px; color: rgba(255,255,255,0.55); flex: 1; }
-  .line-item .li-val { font-family: 'DM Mono', monospace; font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 500; }
+  .r-section { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin: 10px 0 4px; }
+  .line-item { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; }
+  .line-item .li-label { font-size: 12px; color: rgba(255,255,255,0.55); flex: 1; }
+  .line-item .li-val { font-family: 'DM Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.9); font-weight: 500; }
   .line-item.zero .li-label, .line-item.zero .li-val { color: rgba(255,255,255,0.2); }
   .r-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0; }
   .r-total { display: flex; justify-content: space-between; align-items: baseline; }
@@ -107,14 +121,14 @@
   .mc-row label { font-size: 12px; color: rgba(255,255,255,0.45); white-space: nowrap; }
   .mc-row input[type=number] { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; font-size: 13px; padding: 6px 10px; max-width: 120px; }
   .mc-row input[type=number]:focus { border-color: rgba(255,255,255,0.4); box-shadow: none; }
-  .margin-result { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 8px; line-height: 1.65; }
+  .margin-result { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 8px; line-height: 1.8; }
   .profit.pos { color: #6fcf97; font-weight: 600; }
   .profit.neg { color: #f87171; font-weight: 600; }
 
   .btn-reset { width: 100%; margin-top: 1rem; padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius-sm); color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 12px; cursor: pointer; transition: background 0.15s, color 0.15s; }
   .btn-reset:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
 
-  /* Monthly tab */
+  /* Monthly metrics */
   .metric-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 1.25rem; }
   @media (max-width: 500px) { .metric-grid { grid-template-columns: 1fr 1fr; } }
   .metric { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.85rem 1rem; box-shadow: var(--shadow); }
@@ -124,225 +138,131 @@
   .metric.hi { background: var(--accent); border-color: var(--accent); }
   .metric.hi .mlabel, .metric.hi .msub { color: rgba(255,255,255,0.6); }
   .metric.hi .mval { color: #fff; }
+  .metric.hi2 { background: var(--accent2); border-color: var(--accent2); }
+  .metric.hi2 .mlabel, .metric.hi2 .msub { color: rgba(255,255,255,0.6); }
+  .metric.hi2 .mval { color: #fff; }
 
   .breakdown-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.3rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
   .bc-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink3); margin-bottom: 1rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--border); }
-  .bc-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .bc-section { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.1em; margin: 12px 0 4px; padding: 3px 6px; background: var(--surface2); border-radius: 3px; display: inline-block; }
+  .bc-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--border); }
   .bc-row:last-child { border-bottom: none; }
   .bc-label { font-size: 13px; color: var(--ink2); }
   .bc-sub { font-size: 11px; color: var(--ink3); margin-top: 2px; font-family: 'DM Mono', monospace; }
   .bc-val { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: var(--ink); }
+  .bc-val.zero { color: var(--ink3); }
   .bc-total { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0 0; margin-top: 8px; border-top: 2px solid var(--ink); }
   .bc-total .tl { font-size: 14px; font-weight: 600; }
   .bc-total .tv { font-family: 'DM Serif Display', serif; font-size: 28px; }
 
   .stock-callout { background: var(--accent2-light); border: 1px solid var(--accent2); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 0.85rem; font-size: 13px; color: var(--accent2); line-height: 1.6; }
+  .warn-callout { background: var(--warn-light); border: 1px solid var(--warn); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 0.85rem; font-size: 13px; color: var(--warn); line-height: 1.6; }
+  .info-callout { background: var(--accent4-light); border: 1px solid var(--accent4); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 0.85rem; font-size: 13px; color: var(--accent4); line-height: 1.6; }
   .profit-block { font-size: 13px; color: var(--ink2); line-height: 2; margin-top: 4px; }
 
-  /* ============================================================
-     HAMBURGER & DRAWER NAVIGATION
-     ============================================================
-     Copy this entire block (CSS + HTML + JS) into any new page.
- 
-     WHAT TO CHANGE PER PAGE:
-       - In the HTML: set class="drawer-link active" on the
-         link that matches the current page.
-       - That's it. Everything else stays the same.
-     ============================================================ */
- 
-  /* -- Fixed hamburger button (top-left corner) -- */
-  .hamburger {
-    position: fixed;
-    top: 16px; left: 16px;
-    z-index: 1000;
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    background: rgba(245,240,232,0.7);
-    border: 1px solid rgba(138,158,133,0.15);
-    backdrop-filter: blur(8px);
-    cursor: pointer;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 4px;
-    transition: background 0.2s, opacity 0.3s ease;
-  }
+  /* FULL P&L table */
+  .pnl-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .pnl-table th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink3); padding: 6px 8px; text-align: left; border-bottom: 2px solid var(--border); }
+  .pnl-table td { padding: 8px 8px; border-bottom: 1px solid var(--border); color: var(--ink2); }
+  .pnl-table td:last-child { font-family: 'DM Mono', monospace; text-align: right; color: var(--ink); font-weight: 500; }
+  .pnl-table tr.section-header td { background: var(--surface2); font-size: 10px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink3); padding: 5px 8px; }
+  .pnl-table tr.subtotal td { border-top: 1px solid var(--border-strong); font-weight: 600; background: var(--surface2); }
+  .pnl-table tr.total-row td { border-top: 2px solid var(--ink); font-family: 'DM Serif Display', serif; font-size: 16px; color: var(--ink); background: var(--gold-light); }
+  .pnl-table tr.income td:last-child { color: var(--accent2); }
+  .pnl-table tr.expense td:last-child { color: var(--accent); }
+  .pnl-table tr.profit-row td:last-child { font-size: 18px; }
+  .pnl-table tr.profit-row.pos td:last-child { color: var(--accent2); }
+  .pnl-table tr.profit-row.neg td:last-child { color: var(--accent); }
+
+  /* Hamburger */
+  .hamburger { position: fixed; top: 16px; left: 16px; z-index: 1000; width: 36px; height: 36px; border-radius: 8px; background: rgba(245,240,232,0.7); border: 1px solid rgba(138,158,133,0.15); backdrop-filter: blur(8px); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; transition: background 0.2s, opacity 0.3s ease; }
   .hamburger:hover { background: rgba(245,240,232,0.95); }
-  .hamburger span {
-    display: block; width: 15px; height: 1.5px;
-    background: var(--ink); border-radius: 2px;
-    transition: all 0.3s ease; transform-origin: center;
-  }
-  /* Animate the 3 lines into an X when open */
+  .hamburger span { display: block; width: 15px; height: 1.5px; background: var(--ink); border-radius: 2px; transition: all 0.3s ease; transform-origin: center; }
   .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
   .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
   .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
- 
-  /* -- Back-to-top button (bottom center, appears on scroll) -- */
-  .back-to-top {
-    position: fixed;
-    bottom: 24px; left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    width: 42px; height: 42px;
-    border-radius: 8px;
-    background: rgba(245,240,232,0.7);
-    border: 1px solid rgba(138,158,133,0.15);
-    backdrop-filter: blur(8px);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease, background 0.2s;
-  }
+  .back-to-top { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 42px; height: 42px; border-radius: 8px; background: rgba(245,240,232,0.7); border: 1px solid rgba(138,158,133,0.15); backdrop-filter: blur(8px); cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, background 0.2s; }
   .back-to-top.visible { opacity: 1; pointer-events: all; }
   .back-to-top:hover { background: rgba(245,240,232,0.95); }
   .back-to-top svg { width: 14px; height: 14px; stroke: var(--ink); }
- 
-  /* -- Dark overlay behind the open drawer -- */
-  .drawer-overlay {
-    position: fixed; inset: 0;
-    background: rgba(44,44,44,0.3);
-    backdrop-filter: blur(3px);
-    z-index: 900;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(44,44,44,0.3); backdrop-filter: blur(3px); z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
   .drawer-overlay.open { opacity: 1; pointer-events: all; }
- 
-  /* -- Slide-in drawer panel -- */
-  .drawer {
-    position: fixed; top: 0; left: 0;
-    height: 100%; width: 280px;
-    background: white; z-index: 950;
-    padding: 80px 32px 40px;
-    transform: translateX(-100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 4px 0 40px rgba(0,0,0,0.1);
-    display: flex; flex-direction: column;
-  }
+  .drawer { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: white; z-index: 950; padding: 80px 32px 40px; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 4px 0 40px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
   .drawer.open { transform: translateX(0); }
- 
-  /* -- Drawer internals -- */
-  .drawer-logo { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .drawer-logo { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
   .drawer-tagline { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--ink3); margin-bottom: 40px; }
-  .drawer-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--sage); font-weight: 500; margin-bottom: 14px; }
+  .drawer-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--ink3); font-weight: 500; margin-bottom: 14px; }
   .drawer-nav { display: flex; flex-direction: column; gap: 8px; }
-  .drawer-link {
-    display: flex; align-items: center; gap: 14px;
-    padding: 14px 16px; border-radius: 12px;
-    text-decoration: none; color: var(--ink);
-    transition: background 0.15s, transform 0.15s;
-    border: 1px solid transparent;
-  }
-  .drawer-link:hover { background: var(--sand); border-color: rgba(138,158,133,0.2); transform: translateX(3px); }
+  .drawer-link { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; text-decoration: none; color: var(--ink); transition: background 0.15s, transform 0.15s; border: 1px solid transparent; }
+  .drawer-link:hover { background: var(--surface2); border-color: rgba(138,158,133,0.2); transform: translateX(3px); }
   .drawer-link.active { background: rgba(138,158,133,0.12); border-color: rgba(138,158,133,0.3); }
-  .drawer-link-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
-  }
-  .link-eshop .drawer-link-icon    { background: rgba(138,158,133,0.15); }
-  .link-calculator .drawer-link-icon { background: rgba(138,158,133,0.15); }
-  .link-vivi .drawer-link-icon     { background: rgba(194,123,90,0.12); }
-  .link-time .drawer-link-icon     { background: rgba(92,112,87,0.12); }
+  .drawer-link-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: rgba(138,158,133,0.15); }
   .drawer-link-text { font-size: 14px; font-weight: 500; }
   .drawer-link-sub { font-size: 11px; color: var(--ink3); margin-top: 1px; }
   .drawer-footer { margin-top: auto; font-size: 11px; color: var(--ink3); letter-spacing: 0.5px; }
- 
-  /* ============================================================
-     END HAMBURGER & DRAWER NAVIGATION
-     ============================================================ */
 
   footer { text-align: center; margin-top: 2.5rem; font-size: 11px; color: var(--ink3); font-family: 'DM Mono', monospace; }
+
+  /* new additions */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media(max-width:500px){ .two-col { grid-template-columns: 1fr; } }
+  .inline-field { display: flex; align-items: center; gap: 10px; }
+  .inline-field label { font-size: 12px; color: var(--ink2); white-space: nowrap; min-width: 110px; }
+  .inline-field input { max-width: 110px; }
+  .badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px; padding: 2px 7px; border-radius: 20px; margin-left: 6px; }
+  .badge-optional { background: var(--surface2); color: var(--ink3); }
+  .badge-new { background: var(--accent); color: #fff; }
 </style>
 </head>
 <body>
 <div class="page">
 
- <!-- ============================================================
-       HAMBURGER & DRAWER — HTML
-       Copy from here to the END MARKER below into any new page.
-       Remember: set class="drawer-link active" on the current page's link.
-       ============================================================ -->
- 
   <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
-    <svg viewBox="0 0 14 14" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M2 9.5L7 4.5L12 9.5"/>
-    </svg>
+    <svg viewBox="0 0 14 14" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9.5L7 4.5L12 9.5"/></svg>
   </button>
- 
+
   <button class="hamburger" id="hamburger" onclick="toggleDrawer()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
- 
+
   <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
- 
   <div class="drawer" id="drawer">
     <div class="drawer-logo">Maracuya</div>
     <div class="drawer-tagline">Team Workspace</div>
     <div class="drawer-label">Projects</div>
     <nav class="drawer-nav">
- 
-      <!-- Set class="drawer-link link-eshop active" on this page's link -->
-      <a href="index.html" class="drawer-link link-eshop">
-        <div class="drawer-link-icon">&#128717;</div>
-        <div>
-          <div class="drawer-link-text">E-Shop</div>
-          <div class="drawer-link-sub">Product &amp; Launch Tracker</div>
-        </div>
-      </a>
- 
-      <a href="vivi.html" class="drawer-link link-vivi">
-        <div class="drawer-link-icon">&#10024;</div>
-        <div>
-          <div class="drawer-link-text">ViviApp</div>
-          <div class="drawer-link-sub">Coming soon</div>
-        </div>
-      </a>
- 
-      <a href="timesheet.html" class="drawer-link link-time">
-        <div class="drawer-link-icon">&#9200;</div>
-        <div>
-          <div class="drawer-link-text">Timesheet</div>
-          <div class="drawer-link-sub">Hours per person</div>
-        </div>
-      </a>
- 
-      <a href="calculator.html" class="drawer-link link-calculator active">
-        <div class="drawer-link-icon">&#128171;</div>
-        <div>
-          <div class="drawer-link-text">Calculator</div>
-          <div class="drawer-link-sub">Fulfillment &amp; per order fee</div>
-        </div>
-      </a>
- 
+      <a href="index.html" class="drawer-link"><div class="drawer-link-icon">🛒</div><div><div class="drawer-link-text">E-Shop</div><div class="drawer-link-sub">Product &amp; Launch Tracker</div></div></a>
+      <a href="vivi.html" class="drawer-link"><div class="drawer-link-icon">✨</div><div><div class="drawer-link-text">ViviApp</div><div class="drawer-link-sub">Coming soon</div></div></a>
+      <a href="timesheet.html" class="drawer-link"><div class="drawer-link-icon">⏰</div><div><div class="drawer-link-text">Timesheet</div><div class="drawer-link-sub">Hours per person</div></div></a>
+      <a href="calculator.html" class="drawer-link active"><div class="drawer-link-icon">💫</div><div><div class="drawer-link-text">Calculator</div><div class="drawer-link-sub">Fulfillment &amp; per order fee</div></div></a>
     </nav>
     <div class="drawer-footer">Maracuya Team &copy; 2026</div>
   </div>
- 
-  <!-- ============================================================
-       END HAMBURGER & DRAWER — HTML
-       ============================================================ -->
 
   <header>
     <p class="eyebrow">Pura Maracuya</p>
     <h1>Fulfillment Cost Calculator</h1>
-    <p>Per-order costs &amp; full monthly warehouse bill — all from one proposal</p>
+    <p>Per-order · Monthly warehouse bill · Returns · Full P&amp;L — every cost in one place</p>
   </header>
 
   <div class="tabs">
-    <button class="tab active" onclick="showTab('order')">🛍️ Per Order Cost</button>
-    <button class="tab" onclick="showTab('monthly')">📅 Monthly Warehouse Bill</button>
+    <button class="tab active" onclick="showTab('order')">🛍️ Per Order</button>
+    <button class="tab" onclick="showTab('monthly')">📅 Monthly Bill</button>
+    <button class="tab" onclick="showTab('returns')">↩️ Returns</button>
+    <button class="tab" onclick="showTab('pnl')">📊 Full P&amp;L</button>
   </div>
 
-  <!-- TAB 1: PER ORDER -->
+  <!-- ═══════════════════════════════════════════════════════
+       TAB 1: PER ORDER
+  ═══════════════════════════════════════════════════════ -->
   <div class="tab-panel active" id="tab-order">
     <div class="tier-banner">
-      <span class="label">Pricing tier is set by your total monthly shipments</span>
+      <span class="label">Pricing tier set by total monthly shipments</span>
       <span class="tier-badge" id="tier-label-order">TIER 1 — 1–999/mo</span>
     </div>
-
     <div class="layout">
       <div>
+
         <div class="card">
           <div class="card-title"><span>📊 Monthly Volume</span> — Sets your tier</div>
           <div class="field">
@@ -353,7 +273,7 @@
         </div>
 
         <div class="card">
-          <div class="card-title"><span>🛍️ This Customer's Order</span></div>
+          <div class="card-title"><span>🛍️ This Order's Items</span></div>
           <div class="field">
             <label>Number of items in this order</label>
             <div class="stepper">
@@ -367,16 +287,12 @@
           <div class="subsection">Add-ons per order</div>
 
           <div class="toggle-row">
-            <div class="tinfo"><div class="tname">Insert (e.g. thank-you card)</div><div class="tprice">$0.05 per insert</div></div>
+            <div class="tinfo"><div class="tname">Insert (thank-you card etc.)</div><div class="tprice">$0.05 per insert</div></div>
             <label class="toggle"><input type="checkbox" id="add-insert" onchange="calc()"><span class="slider"></span></label>
           </div>
           <div class="sub-row" id="sr-insert">
             <label>Qty:</label>
-            <div class="stepper">
-              <button onclick="step('insert-qty',-1)">−</button>
-              <span class="count" id="insert-qty">1</span>
-              <button onclick="step('insert-qty',1)">+</button>
-            </div>
+            <div class="stepper"><button onclick="step('insert-qty',-1)">−</button><span class="count" id="insert-qty">1</span><button onclick="step('insert-qty',1)">+</button></div>
           </div>
 
           <div class="toggle-row">
@@ -385,16 +301,47 @@
           </div>
           <div class="sub-row" id="sr-sticker">
             <label>Qty:</label>
-            <div class="stepper">
-              <button onclick="step('sticker-qty',-1)">−</button>
-              <span class="count" id="sticker-qty">1</span>
-              <button onclick="step('sticker-qty',1)">+</button>
-            </div>
+            <div class="stepper"><button onclick="step('sticker-qty',-1)">−</button><span class="count" id="sticker-qty">1</span><button onclick="step('sticker-qty',1)">+</button></div>
           </div>
 
           <div class="toggle-row">
             <div class="tinfo"><div class="tname">Dunnage (void fill / padding)</div><div class="tprice">$0.10 per order</div></div>
             <label class="toggle"><input type="checkbox" id="add-dunnage" onchange="calc()"><span class="slider"></span></label>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Gift wrapping / tissue paper</div><div class="tprice">$0.25–$1.00</div></div>
+            <label class="toggle"><input type="checkbox" id="add-giftwrap" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-giftwrap">
+            <label>Cost:</label>
+            <select id="giftwrap-cost" onchange="calc()">
+              <option value="0.25">$0.25 tissue paper</option>
+              <option value="0.50">$0.50 tissue + sticker seal</option>
+              <option value="1.00">$1.00 full gift wrap</option>
+            </select>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Custom label / re-labelling</div><div class="tprice">$0.10 per label</div></div>
+            <label class="toggle"><input type="checkbox" id="add-relabel" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-relabel">
+            <label>Qty:</label>
+            <div class="stepper"><button onclick="step('relabel-qty',-1)">−</button><span class="count" id="relabel-qty">1</span><button onclick="step('relabel-qty',1)">+</button></div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Kitting / bundling (per unit)</div><div class="tprice">$0.25–$1.50</div></div>
+            <label class="toggle"><input type="checkbox" id="add-kitting" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-kitting">
+            <label>Complexity:</label>
+            <select id="kitting-cost" onchange="calc()">
+              <option value="0.25">$0.25 simple (2 items)</option>
+              <option value="0.75">$0.75 medium (3–5 items)</option>
+              <option value="1.50">$1.50 complex (6+ / assembly)</option>
+            </select>
           </div>
         </div>
 
@@ -424,7 +371,7 @@
           </div>
 
           <div class="toggle-row">
-            <div class="tinfo"><div class="tname">Outer carton / box</div><div class="tprice">$1.00–$4.00</div></div>
+            <div class="tinfo"><div class="tname">Outer carton / mailer box</div><div class="tprice">$1.00–$4.00</div></div>
             <label class="toggle"><input type="checkbox" id="pkg-carton" onchange="calc()"><span class="slider"></span></label>
           </div>
           <div class="sub-row" id="sr-carton">
@@ -449,27 +396,56 @@
             <div class="tinfo"><div class="tname">Shrink wrap (per unit)</div><div class="tprice">$0.75</div></div>
             <label class="toggle"><input type="checkbox" id="pkg-shrink" onchange="calc()"><span class="slider"></span></label>
           </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Tape / closure supplies</div><div class="tprice">$0.05–$0.15</div></div>
+            <label class="toggle"><input type="checkbox" id="pkg-tape" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-tape">
+            <label>Amount:</label>
+            <select id="tape-cost" onchange="calc()">
+              <option value="0.05">$0.05 standard</option><option value="0.15">$0.15 branded/fragile</option>
+            </select>
+          </div>
         </div>
+
+        <div class="card accent-blue">
+          <div class="card-title"><span>🚚 Outbound Shipping</span> — Carrier cost per order <span class="badge badge-optional">optional</span></div>
+          <div class="hint" style="margin-bottom:10px;">3PL passes carrier costs through to you. Enter your average rate to see true total order cost.</div>
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Include outbound shipping</div><div class="tprice">Enter your avg carrier rate</div></div>
+            <label class="toggle"><input type="checkbox" id="add-shipping" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-shipping">
+            <label>Avg cost ($):</label>
+            <input type="number" id="shipping-cost" value="5.50" min="0" step="0.01" style="max-width:100px;" oninput="calc()">
+          </div>
+        </div>
+
       </div>
 
       <!-- RIGHT: order results -->
       <div>
         <div class="results-panel">
           <div class="r-title">Cost for this order</div>
+
+          <div class="r-section">Fulfillment</div>
           <div class="line-item" id="li-pick"><span class="li-label">Pick &amp; Pack</span><span class="li-val" id="v-pick">$0.00</span></div>
-          <div class="line-item" id="li-addons"><span class="li-label">Inserts / Stickers / Dunnage</span><span class="li-val" id="v-addons">$0.00</span></div>
+          <div class="line-item" id="li-addons"><span class="li-label">Add-ons (inserts, kitting…)</span><span class="li-val" id="v-addons">$0.00</span></div>
           <div class="line-item" id="li-pkg"><span class="li-label">Packaging materials</span><span class="li-val" id="v-pkg">$0.00</span></div>
+          <div class="line-item" id="li-ship"><span class="li-label">Outbound shipping</span><span class="li-val" id="v-ship">$0.00</span></div>
+
           <hr class="r-divider">
           <div class="r-total">
             <span class="label">Total per order</span>
             <span class="amount"><span class="currency">$</span><span id="v-total">0.00</span></span>
           </div>
-          <div style="margin-top:10px; font-size:12px; color:rgba(255,255,255,0.3); line-height:1.5;">Receiving &amp; storage are shared costs — see the Monthly Bill tab.</div>
+          <div style="margin-top:8px; font-size:11px; color:rgba(255,255,255,0.3); line-height:1.5;">Receiving &amp; storage are shared monthly costs — see Monthly Bill tab.</div>
 
           <div class="margin-calc">
             <div class="mc-title">Profit check per order</div>
             <div class="mc-row"><label>Sell price ($)</label><input type="number" id="sell-price" value="25.00" min="0" step="0.01" oninput="calc()"></div>
-            <div class="mc-row"><label>Product cost ($)</label><input type="number" id="cogs" value="5.00" min="0" step="0.01" oninput="calc()"></div>
+            <div class="mc-row"><label>Product COGS ($)</label><input type="number" id="cogs" value="5.00" min="0" step="0.01" oninput="calc()"></div>
             <div class="margin-result" id="margin-result"></div>
           </div>
           <button class="btn-reset" onclick="resetAll()">↺ Reset all values</button>
@@ -478,13 +454,14 @@
     </div>
   </div>
 
-  <!-- TAB 2: MONTHLY BILL -->
+  <!-- ═══════════════════════════════════════════════════════
+       TAB 2: MONTHLY BILL
+  ═══════════════════════════════════════════════════════ -->
   <div class="tab-panel" id="tab-monthly">
     <div class="tier-banner">
-      <span class="label">Pricing tier based on your monthly shipments</span>
+      <span class="label">Tier based on monthly shipments (set in Per Order tab)</span>
       <span class="tier-badge" id="tier-label-monthly">TIER 1 — 1–999/mo</span>
     </div>
-
     <div class="layout">
       <div>
 
@@ -500,84 +477,58 @@
               <option value="container_floor">Container, floor loaded — $49.50/hour</option>
             </select>
           </div>
-
           <div class="field" id="f-recv-units">
             <label id="recv-units-label">Boxes received this month</label>
-            <div class="stepper">
-              <button onclick="step('recv-units',-1)">−</button>
-              <span class="count" id="recv-units">10</span>
-              <button onclick="step('recv-units',1)">+</button>
-            </div>
+            <div class="stepper"><button onclick="step('recv-units',-1)">−</button><span class="count" id="recv-units">10</span><button onclick="step('recv-units',1)">+</button></div>
           </div>
-
           <div class="field" id="f-recv-hours" style="display:none">
             <label>Hours of unloading</label>
-            <div class="stepper">
-              <button onclick="step('recv-hours',-1)">−</button>
-              <span class="count" id="recv-hours">2</span>
-              <button onclick="step('recv-hours',1)">+</button>
-            </div>
+            <div class="stepper"><button onclick="step('recv-hours',-1)">−</button><span class="count" id="recv-hours">2</span><button onclick="step('recv-hours',1)">+</button></div>
           </div>
-
           <div class="field" id="f-items-per-box">
             <label>Items inside each box</label>
-            <div class="stepper">
-              <button onclick="step('items-per-box',-1)">−</button>
-              <span class="count" id="items-per-box">10</span>
-              <button onclick="step('items-per-box',1)">+</button>
-            </div>
-            <div class="hint">The 3PL charges per <strong>box</strong>, not per item inside it. This just shows you your total stock received.</div>
+            <div class="stepper"><button onclick="step('items-per-box',-1)">−</button><span class="count" id="items-per-box">10</span><button onclick="step('items-per-box',1)">+</button></div>
+            <div class="hint">3PL charges per box, not per item. This just shows your total units received.</div>
           </div>
-
           <div class="stock-callout" id="stock-callout"></div>
         </div>
 
-        <!-- Storage -->
-        <div class="card">
-          <div class="card-title"><span>🏗️ Storage</span> — Billed weekly</div>
+        <!-- Storage — weekly -->
+        <div class="card accent-green">
+          <div class="card-title"><span>🏗️ Storage</span> — Billed weekly × 4.33 = monthly</div>
           <div class="field">
             <label>Shelf spaces used</label>
-            <div class="stepper">
-              <button onclick="step('stor-shelf',-1)">−</button>
-              <span class="count" id="stor-shelf">5</span>
-              <button onclick="step('stor-shelf',1)">+</button>
-            </div>
+            <div class="stepper"><button onclick="step('stor-shelf',-1)">−</button><span class="count" id="stor-shelf">5</span><button onclick="step('stor-shelf',1)">+</button></div>
             <div class="hint" id="stor-shelf-hint"></div>
           </div>
           <div class="field">
             <label>Bin spaces used</label>
-            <div class="stepper">
-              <button onclick="step('stor-bin',-1)">−</button>
-              <span class="count" id="stor-bin">3</span>
-              <button onclick="step('stor-bin',1)">+</button>
-            </div>
+            <div class="stepper"><button onclick="step('stor-bin',-1)">−</button><span class="count" id="stor-bin">3</span><button onclick="step('stor-bin',1)">+</button></div>
             <div class="hint" id="stor-bin-hint"></div>
           </div>
           <div class="field">
             <label>Pallets in storage</label>
-            <div class="stepper">
-              <button onclick="step('stor-pallet',-1)">−</button>
-              <span class="count" id="stor-pallet">0</span>
-              <button onclick="step('stor-pallet',1)">+</button>
-            </div>
+            <div class="stepper"><button onclick="step('stor-pallet',-1)">−</button><span class="count" id="stor-pallet">0</span><button onclick="step('stor-pallet',1)">+</button></div>
             <div class="hint" id="stor-pallet-hint"></div>
           </div>
+
+          <div class="info-callout" id="storage-weekly-summary"></div>
         </div>
 
         <!-- Monthly order averages -->
         <div class="card">
-          <div class="card-title"><span>📊 Monthly Orders</span> — Averages across all orders</div>
-          <div class="hint" style="margin-bottom:12px;">These are used to calculate your total pick &amp; pack bill for the month. Total orders comes from the Per Order tab.</div>
+          <div class="card-title"><span>📊 Monthly Order Averages</span></div>
+          <div class="hint" style="margin-bottom:12px;">Averages used to calculate your total pick &amp; pack bill. Order count comes from Per Order tab.</div>
           <div class="field">
             <label>Avg items per order</label>
             <input type="number" id="avg-items" value="1" min="1" step="1" oninput="calc()">
           </div>
           <div class="field">
-            <label>% of orders that include an insert</label>
+            <label>% of orders with an insert</label>
             <input type="number" id="pct-insert" value="0" min="0" max="100" oninput="calc()">
           </div>
           <div class="field">
-            <label>% of orders that include a sticker</label>
+            <label>% of orders with a sticker</label>
             <input type="number" id="pct-sticker" value="0" min="0" max="100" oninput="calc()">
           </div>
           <div class="field">
@@ -585,9 +536,82 @@
             <input type="number" id="pct-dunnage" value="0" min="0" max="100" oninput="calc()">
           </div>
           <div class="field">
+            <label>% of orders with gift wrap</label>
+            <input type="number" id="pct-giftwrap" value="0" min="0" max="100" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Avg gift wrap cost ($)</label>
+            <input type="number" id="avg-giftwrap-cost" value="0.50" min="0" step="0.01" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>% of orders with kitting</label>
+            <input type="number" id="pct-kitting" value="0" min="0" max="100" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Avg kitting cost ($)</label>
+            <input type="number" id="avg-kitting-cost" value="0.75" min="0" step="0.01" oninput="calc()">
+          </div>
+          <div class="field">
             <label>Avg packaging cost per order ($)</label>
             <input type="number" id="avg-pkg" value="0" min="0" step="0.01" oninput="calc()">
-            <div class="hint">Total of polybag + protective + carton etc. if 3PL supplies them</div>
+            <div class="hint">Polybag + protective + carton etc. if 3PL supplies them</div>
+          </div>
+          <div class="field">
+            <label>Avg outbound shipping per order ($)</label>
+            <input type="number" id="avg-shipping" value="0" min="0" step="0.01" oninput="calc()">
+            <div class="hint">Leave 0 if tracking separately</div>
+          </div>
+        </div>
+
+        <!-- Account-level monthly fees -->
+        <div class="card accent-warn">
+          <div class="card-title"><span>🏢 Account &amp; Platform Fees</span> — Fixed monthly <span class="badge badge-new">new</span></div>
+          <div class="hint" style="margin-bottom:12px;">Fixed monthly charges from your 3PL or platforms, regardless of order volume.</div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">3PL account / management fee</div><div class="tprice">billed monthly</div></div>
+            <label class="toggle"><input type="checkbox" id="fee-3pl-mgmt" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-3pl-mgmt">
+            <label>$/month:</label>
+            <input type="number" id="val-3pl-mgmt" value="50" min="0" step="1" style="max-width:100px;" oninput="calc()">
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">WMS / tech / portal fee</div><div class="tprice">warehouse management software</div></div>
+            <label class="toggle"><input type="checkbox" id="fee-wms" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-wms">
+            <label>$/month:</label>
+            <input type="number" id="val-wms" value="30" min="0" step="1" style="max-width:100px;" oninput="calc()">
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">e-commerce platform fee</div><div class="tprice">Shopify, WooCommerce etc.</div></div>
+            <label class="toggle"><input type="checkbox" id="fee-platform" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-platform">
+            <label>$/month:</label>
+            <input type="number" id="val-platform" value="39" min="0" step="1" style="max-width:100px;" oninput="calc()">
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Minimum monthly billing</div><div class="tprice">some 3PLs have a spend floor</div></div>
+            <label class="toggle"><input type="checkbox" id="fee-minimum" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-minimum">
+            <label>Minimum ($):</label>
+            <input type="number" id="val-minimum" value="200" min="0" step="1" style="max-width:100px;" oninput="calc()">
+            <div class="hint" id="minimum-hint" style="margin-top:0;"></div>
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Other fixed monthly fee</div><div class="tprice">insurance, tooling, custom</div></div>
+            <label class="toggle"><input type="checkbox" id="fee-other" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-other-fee">
+            <label>$/month:</label>
+            <input type="number" id="val-other-fee" value="0" min="0" step="1" style="max-width:100px;" oninput="calc()">
           </div>
         </div>
 
@@ -607,7 +631,7 @@
         </div>
 
         <div class="card">
-          <div class="card-title"><span>📈 Monthly profitability</span></div>
+          <div class="card-title"><span>📈 Monthly Profitability</span></div>
           <div class="field">
             <label>Average sell price per order ($)</label>
             <input type="number" id="avg-sell" value="25.00" min="0" step="0.01" oninput="calc()">
@@ -622,239 +646,621 @@
     </div>
   </div>
 
-  <footer>Rates from Pura Maracuya Fulfillment Pricing Proposal &nbsp;•&nbsp; Storage billed weekly (×4.33 for monthly estimate) &nbsp;•&nbsp; Excludes outbound carrier shipping costs</footer>
+  <!-- ═══════════════════════════════════════════════════════
+       TAB 3: RETURNS
+  ═══════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-returns">
+    <div class="layout">
+      <div>
+
+        <div class="card accent-warn">
+          <div class="card-title"><span>↩️ Return Volume</span></div>
+          <div class="field">
+            <label>Return rate (%)</label>
+            <input type="number" id="return-rate" value="5" min="0" max="100" step="0.5" oninput="calc()">
+            <div class="hint" id="return-count-hint">Based on your monthly shipment volume</div>
+          </div>
+          <div class="field">
+            <label>Or enter actual returns per month</label>
+            <input type="number" id="return-count-manual" value="" min="0" placeholder="Override (leave blank to use %)" oninput="calc()">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>💸 3PL Return Handling Fees</span></div>
+          <div class="hint" style="margin-bottom:12px;">These fees are charged by your 3PL when a parcel comes back to the warehouse.</div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Return receipt / check-in fee</div><div class="tprice">$2.00–$5.00 per return</div></div>
+            <label class="toggle"><input type="checkbox" id="ret-receipt" onchange="calc()" checked><span class="slider"></span></label>
+          </div>
+          <div class="sub-row open" id="sr-ret-receipt">
+            <label>Per return ($):</label>
+            <input type="number" id="val-ret-receipt" value="3.00" min="0" step="0.25" style="max-width:90px;" oninput="calc()">
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Inspection / quality check</div><div class="tprice">$1.00–$3.00 per unit</div></div>
+            <label class="toggle"><input type="checkbox" id="ret-inspect" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-ret-inspect">
+            <label>Per unit ($):</label>
+            <input type="number" id="val-ret-inspect" value="1.50" min="0" step="0.25" style="max-width:90px;" oninput="calc()">
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Repackaging / restocking</div><div class="tprice">$1.00–$5.00 per unit</div></div>
+            <label class="toggle"><input type="checkbox" id="ret-repack" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-ret-repack">
+            <label>Per unit ($):</label>
+            <input type="number" id="val-ret-repack" value="2.00" min="0" step="0.25" style="max-width:90px;" oninput="calc()">
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Return shipping label cost</div><div class="tprice">pre-paid label you provide</div></div>
+            <label class="toggle"><input type="checkbox" id="ret-label" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-ret-label">
+            <label>Per label ($):</label>
+            <input type="number" id="val-ret-label" value="5.50" min="0" step="0.25" style="max-width:90px;" oninput="calc()">
+          </div>
+
+          <div class="toggle-row">
+            <div class="tinfo"><div class="tname">Disposal / scrapping fee</div><div class="tprice">for unsalvageable units</div></div>
+            <label class="toggle"><input type="checkbox" id="ret-dispose" onchange="calc()"><span class="slider"></span></label>
+          </div>
+          <div class="sub-row" id="sr-ret-dispose">
+            <label>Per unit ($):</label>
+            <input type="number" id="val-ret-dispose" value="0.50" min="0" step="0.10" style="max-width:90px;" oninput="calc()">
+            <label style="margin-left:10px;">% disposed:</label>
+            <input type="number" id="val-ret-dispose-pct" value="20" min="0" max="100" style="max-width:70px;" oninput="calc()">
+          </div>
+        </div>
+
+        <div class="card accent-purple">
+          <div class="card-title"><span>📦 Inventory Impact</span> — Lost value per return</div>
+          <div class="hint" style="margin-bottom:12px;">Even resaleable returns have a cost — damaged goods, lost packaging, downgraded stock.</div>
+
+          <div class="field">
+            <label>% of returns that can be resold as-is</label>
+            <input type="number" id="ret-pct-resell" value="60" min="0" max="100" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>% resold at a discount (avg discount %)</label>
+            <input type="number" id="ret-pct-discount-sell" value="20" min="0" max="100" oninput="calc()">
+            <div class="hint">e.g. 20 means you sell them at 20% off original price</div>
+          </div>
+          <div class="field">
+            <label>% written off (unsalvageable / binned)</label>
+            <input type="number" id="ret-pct-writeoff" value="20" min="0" max="100" oninput="calc()">
+            <div class="hint">These units are a complete inventory loss</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: returns results -->
+      <div>
+        <div class="results-panel">
+          <div class="r-title">Returns — monthly cost</div>
+          <div class="line-item"><span class="li-label">Returns per month</span><span class="li-val" id="rv-count">0</span></div>
+          <hr class="r-divider">
+          <div class="r-section">3PL handling fees</div>
+          <div class="line-item" id="rli-receipt"><span class="li-label">Receipt / check-in</span><span class="li-val" id="rv-receipt">$0.00</span></div>
+          <div class="line-item" id="rli-inspect"><span class="li-label">Inspection</span><span class="li-val" id="rv-inspect">$0.00</span></div>
+          <div class="line-item" id="rli-repack"><span class="li-label">Repackaging</span><span class="li-val" id="rv-repack">$0.00</span></div>
+          <div class="line-item" id="rli-label"><span class="li-label">Return labels</span><span class="li-val" id="rv-label">$0.00</span></div>
+          <div class="line-item" id="rli-dispose"><span class="li-label">Disposal</span><span class="li-val" id="rv-dispose">$0.00</span></div>
+          <hr class="r-divider">
+          <div class="r-section">Inventory value lost</div>
+          <div class="line-item"><span class="li-label">COGS of returned units</span><span class="li-val" id="rv-cogs-impact">$0.00</span></div>
+          <div class="line-item"><span class="li-label">Write-off value</span><span class="li-val" id="rv-writeoff">$0.00</span></div>
+          <div class="line-item"><span class="li-label">Discount revenue loss</span><span class="li-val" id="rv-discount-loss">$0.00</span></div>
+          <hr class="r-divider">
+          <div class="r-total">
+            <span class="label">Total return cost/mo</span>
+            <span class="amount"><span class="currency">$</span><span id="rv-total">0.00</span></span>
+          </div>
+          <div style="margin-top:10px;">
+            <div class="margin-result" id="return-per-order-cost" style="color:rgba(255,255,255,0.45);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       TAB 4: FULL P&L
+  ═══════════════════════════════════════════════════════ -->
+  <div class="tab-panel" id="tab-pnl">
+    <div class="hint" style="margin-bottom:1rem; font-size:13px; color:var(--ink2);">All figures come from the other three tabs. Fill in your details there, then come here to see the full picture. Adjust any remaining fields below.</div>
+
+    <div class="layout">
+      <div>
+        <div class="card">
+          <div class="card-title"><span>💰 Revenue Inputs</span></div>
+          <div class="field">
+            <label>Avg sell price per order ($)</label>
+            <input type="number" id="pnl-sell" value="25.00" min="0" step="0.01" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Monthly order volume</label>
+            <input type="number" id="pnl-orders" value="50" min="1" oninput="calc()">
+            <div class="hint">Synced with Per Order tab (same as monthly-shipments)</div>
+          </div>
+          <div class="field">
+            <label>Payment processing fee (%)</label>
+            <input type="number" id="pnl-proc-pct" value="2.9" min="0" max="10" step="0.1" oninput="calc()">
+            <div class="hint">Stripe/PayPal: ~2.9% + $0.30 per transaction</div>
+          </div>
+          <div class="field">
+            <label>Payment processing flat fee ($/order)</label>
+            <input type="number" id="pnl-proc-flat" value="0.30" min="0" step="0.01" oninput="calc()">
+          </div>
+        </div>
+
+        <div class="card accent-purple">
+          <div class="card-title"><span>📣 Marketing &amp; Acquisition</span></div>
+          <div class="field">
+            <label>Monthly ad spend ($)</label>
+            <input type="number" id="pnl-ads" value="0" min="0" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Monthly influencer / affiliate spend ($)</label>
+            <input type="number" id="pnl-influencer" value="0" min="0" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Email / SMS platform fee ($/mo)</label>
+            <input type="number" id="pnl-email" value="0" min="0" oninput="calc()">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>👥 Labour &amp; Overhead</span></div>
+          <div class="field">
+            <label>Owner / staff hours per month</label>
+            <input type="number" id="pnl-hours" value="20" min="0" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Hourly rate ($/hr)</label>
+            <input type="number" id="pnl-rate" value="25" min="0" step="0.5" oninput="calc()">
+          </div>
+          <div class="field">
+            <label>Other overhead (accounting, legal, tools…)</label>
+            <input type="number" id="pnl-overhead" value="0" min="0" oninput="calc()">
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="breakdown-card" id="pnl-table-wrap">
+          <div class="bc-title">Full monthly P&amp;L</div>
+          <table class="pnl-table" id="pnl-table"></table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Rates from Pura Maracuya Fulfillment Pricing Proposal &nbsp;•&nbsp; Storage billed weekly (×4.33 for monthly estimate) &nbsp;•&nbsp; Returns &amp; overheads are estimates — verify with your 3PL &amp; accountant</footer>
 </div>
 
 <script>
-  const counters = {
-    'items': 1, 'insert-qty': 1, 'sticker-qty': 1,
-    'recv-units': 10, 'recv-hours': 2, 'items-per-box': 10,
-    'stor-shelf': 5, 'stor-bin': 3, 'stor-pallet': 0,
-  };
+// ─── State ──────────────────────────────────────────────────────────────────
+const counters = {
+  'items': 1, 'insert-qty': 1, 'sticker-qty': 1, 'relabel-qty': 1,
+  'recv-units': 10, 'recv-hours': 2, 'items-per-box': 10,
+  'stor-shelf': 5, 'stor-bin': 3, 'stor-pallet': 0,
+};
 
-  function step(id, delta) {
-    const min = ['items','items-per-box'].includes(id) ? 1 : 0;
-    counters[id] = Math.max(min, (counters[id] || 0) + delta);
-    document.getElementById(id).textContent = counters[id];
-    calc();
-  }
+function step(id, delta) {
+  const min = ['items','items-per-box'].includes(id) ? 1 : 0;
+  counters[id] = Math.max(min, (counters[id] || 0) + delta);
+  document.getElementById(id).textContent = counters[id];
+  calc();
+}
 
-  const g = id => document.getElementById(id);
-  const gv = id => parseFloat(g(id).value) || 0;
-  const gc = id => counters[id] || 0;
-  const fmt = n => n.toFixed(2);
-  const fmtDollar = n => '$' + fmt(n);
+const g   = id => document.getElementById(id);
+const gv  = id => parseFloat(g(id)?.value) || 0;
+const gc  = id => counters[id] || 0;
+const fmt = n  => n.toFixed(2);
+const fmtDollar = n => '$' + fmt(n);
 
-  function tier(m) { return m >= 2501 ? 3 : m >= 1000 ? 2 : 1; }
+function tier(m) { return m >= 2501 ? 3 : m >= 1000 ? 2 : 1; }
 
-  const R = {
-    orderFee:   [null, 2.15, 1.95, 1.65],
-    addPick:    [null, 0.90, 0.75, 0.50],
-    shelfWeek:  [null, 1.26, 1.00, 0.85],
-    binWeek:    [null, 0.40, 0.30, 0.25],
-    palletWeek: [null, 6.00, 5.00, 4.00],
-  };
+const R = {
+  orderFee:   [null, 2.15, 1.95, 1.65],
+  addPick:    [null, 0.90, 0.75, 0.50],
+  shelfWeek:  [null, 1.26, 1.00, 0.85],
+  binWeek:    [null, 0.40, 0.30, 0.25],
+  palletWeek: [null, 6.00, 5.00, 4.00],
+};
 
-  function showTab(name) {
-    document.querySelectorAll('.tab').forEach((tab, i) => tab.classList.toggle('active', ['order','monthly'][i] === name));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    g('tab-' + name).classList.add('active');
-  }
+// ─── Tab switching ───────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach((tab, i) =>
+    tab.classList.toggle('active', ['order','monthly','returns','pnl'][i] === name));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  g('tab-' + name).classList.add('active');
+}
 
-  function setLine(liId, valId, val) {
-    if (!g(liId)) return;
-    g(liId).className = 'line-item' + (Math.abs(val) < 0.001 ? ' zero' : '');
-    g(valId).textContent = fmtDollar(val);
-  }
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+function setLine(liId, valId, val) {
+  if (!g(liId)) return;
+  g(liId).className = 'line-item' + (Math.abs(val) < 0.001 ? ' zero' : '');
+  g(valId).textContent = fmtDollar(val);
+}
 
-  function toggleSub(ckId, rowId) {
-    const on = g(ckId).checked;
-    g(rowId).className = 'sub-row' + (on ? ' open' : '');
-    return on;
-  }
+function toggleSub(ckId, rowId) {
+  const on = g(ckId)?.checked;
+  if (g(rowId)) g(rowId).className = 'sub-row' + (on ? ' open' : '');
+  return on;
+}
 
-  function calc() {
-    const monthly = Math.max(1, parseInt(g('monthly-shipments').value) || 1);
-    const t = tier(monthly);
-    const tLabels = ['','TIER 1 — 1–999/mo','TIER 2 — 1,000–2,500/mo','TIER 3 — 2,501+/mo'];
-    g('tier-label-order').textContent = tLabels[t];
-    if (g('tier-label-monthly')) g('tier-label-monthly').textContent = tLabels[t];
+// ─── Main calc ───────────────────────────────────────────────────────────────
+function calc() {
+  const monthly = Math.max(1, parseInt(g('monthly-shipments')?.value) || 1);
+  const t = tier(monthly);
+  const tLabels = ['','TIER 1 — 1–999/mo','TIER 2 — 1,000–2,500/mo','TIER 3 — 2,501+/mo'];
+  ['tier-label-order','tier-label-monthly'].forEach(id => { if(g(id)) g(id).textContent = tLabels[t]; });
 
-    // ===== PER ORDER =====
-    const items = gc('items');
-    const orderFee = R.orderFee[t];
-    const addPick  = R.addPick[t];
-    const pickCost = orderFee + (items - 1) * addPick;
-    g('pick-hint').textContent = items === 1
-      ? `$${fmt(orderFee)} base (Tier ${t})`
-      : `$${fmt(orderFee)} + ${items-1} × $${fmt(addPick)} = ${fmtDollar(pickCost)} (Tier ${t})`;
+  // ═══ PER ORDER ═══════════════════════════════════════════════════
+  const items    = gc('items');
+  const orderFee = R.orderFee[t];
+  const addPick  = R.addPick[t];
+  const pickCost = orderFee + (items - 1) * addPick;
+  if (g('pick-hint')) g('pick-hint').textContent = items === 1
+    ? `$${fmt(orderFee)} base (Tier ${t})`
+    : `$${fmt(orderFee)} + ${items-1} × $${fmt(addPick)} = ${fmtDollar(pickCost)} (Tier ${t})`;
 
-    toggleSub('add-insert',  'sr-insert');
-    toggleSub('add-sticker', 'sr-sticker');
-    ['polybag','protective','carton','bubble'].forEach(k => toggleSub('pkg-'+k, 'sr-'+k));
+  toggleSub('add-insert',   'sr-insert');
+  toggleSub('add-sticker',  'sr-sticker');
+  toggleSub('add-giftwrap', 'sr-giftwrap');
+  toggleSub('add-relabel',  'sr-relabel');
+  toggleSub('add-kitting',  'sr-kitting');
+  toggleSub('add-shipping', 'sr-shipping');
+  ['polybag','protective','carton','bubble','tape'].forEach(k => toggleSub('pkg-'+k, 'sr-'+k));
 
-    const insertCost  = g('add-insert').checked  ? gc('insert-qty')  * 0.05 : 0;
-    const stickerCost = g('add-sticker').checked ? gc('sticker-qty') * 0.05 : 0;
-    const dunnageCost = g('add-dunnage').checked ? 0.10 : 0;
-    const addonsCost  = insertCost + stickerCost + dunnageCost;
+  const insertCost   = g('add-insert')?.checked  ? gc('insert-qty')  * 0.05 : 0;
+  const stickerCost  = g('add-sticker')?.checked ? gc('sticker-qty') * 0.05 : 0;
+  const dunnageCost  = g('add-dunnage')?.checked ? 0.10 : 0;
+  const giftwrapCost = g('add-giftwrap')?.checked ? parseFloat(g('giftwrap-cost')?.value || 0) : 0;
+  const relabelCost  = g('add-relabel')?.checked  ? gc('relabel-qty') * 0.10 : 0;
+  const kittingCost  = g('add-kitting')?.checked  ? parseFloat(g('kitting-cost')?.value || 0) : 0;
+  const addonsCost   = insertCost + stickerCost + dunnageCost + giftwrapCost + relabelCost + kittingCost;
 
-    const polybagCost    = g('pkg-polybag').checked    ? parseFloat(g('polybag-cost').value)    : 0;
-    const protectiveCost = g('pkg-protective').checked ? parseFloat(g('protective-cost').value) : 0;
-    const cartonCost     = g('pkg-carton').checked     ? parseFloat(g('carton-cost').value)     : 0;
-    const bubbleCost     = g('pkg-bubble').checked     ? parseFloat(g('bubble-cost').value)     : 0;
-    const shrinkCost     = g('pkg-shrink').checked     ? 0.75                                   : 0;
-    const pkgCost = polybagCost + protectiveCost + cartonCost + bubbleCost + shrinkCost;
+  const polybagCost    = g('pkg-polybag')?.checked    ? parseFloat(g('polybag-cost')?.value||0)    : 0;
+  const protectiveCost = g('pkg-protective')?.checked ? parseFloat(g('protective-cost')?.value||0) : 0;
+  const cartonCost     = g('pkg-carton')?.checked     ? parseFloat(g('carton-cost')?.value||0)     : 0;
+  const bubbleCost     = g('pkg-bubble')?.checked     ? parseFloat(g('bubble-cost')?.value||0)     : 0;
+  const shrinkCost     = g('pkg-shrink')?.checked     ? 0.75 : 0;
+  const tapeCost       = g('pkg-tape')?.checked       ? parseFloat(g('tape-cost')?.value||0) : 0;
+  const pkgCost = polybagCost + protectiveCost + cartonCost + bubbleCost + shrinkCost + tapeCost;
 
-    const orderTotal = pickCost + addonsCost + pkgCost;
-    setLine('li-pick',   'v-pick',   pickCost);
-    setLine('li-addons', 'v-addons', addonsCost);
-    setLine('li-pkg',    'v-pkg',    pkgCost);
-    g('v-total').textContent = fmt(orderTotal);
+  const shippingOrderCost = g('add-shipping')?.checked ? gv('shipping-cost') : 0;
+  const orderTotal = pickCost + addonsCost + pkgCost + shippingOrderCost;
 
-    const sell = gv('sell-price'), cogs = gv('cogs');
-    const profit = sell - cogs - orderTotal;
-    const margin = sell > 0 ? profit / sell * 100 : 0;
-    const s = profit >= 0 ? '+' : '';
-    g('margin-result').innerHTML =
-      `${fmtDollar(sell)} sell &minus; ${fmtDollar(cogs)} cost &minus; ${fmtDollar(orderTotal)} fulfillment<br>` +
-      `Profit: <span class="profit ${profit>=0?'pos':'neg'}">${s}${fmtDollar(profit)} &nbsp;(${s}${margin.toFixed(1)}%)</span>`;
+  setLine('li-pick',   'v-pick',   pickCost);
+  setLine('li-addons', 'v-addons', addonsCost);
+  setLine('li-pkg',    'v-pkg',    pkgCost);
+  setLine('li-ship',   'v-ship',   shippingOrderCost);
+  if (g('v-total')) g('v-total').textContent = fmt(orderTotal);
 
-    // ===== MONTHLY =====
-    const recvType = g('recv-type').value;
-    const isHours = recvType === 'container_floor';
-    const isPallet = recvType === 'pallet_same';
+  const sell = gv('sell-price'), cogs = gv('cogs');
+  const profit = sell - cogs - orderTotal;
+  const margin = sell > 0 ? profit / sell * 100 : 0;
+  const s = profit >= 0 ? '+' : '';
+  if (g('margin-result')) g('margin-result').innerHTML =
+    `${fmtDollar(sell)} sell &minus; ${fmtDollar(cogs)} COGS &minus; ${fmtDollar(orderTotal)} fulfillment<br>` +
+    `Profit: <span class="profit ${profit>=0?'pos':'neg'}">${s}${fmtDollar(profit)} &nbsp;(${s}${margin.toFixed(1)}%)</span>`;
 
-    g('f-recv-units').style.display = isHours ? 'none' : 'block';
-    g('f-recv-hours').style.display = isHours ? 'block' : 'none';
-    g('f-items-per-box').style.display = (isHours || isPallet) ? 'none' : 'block';
-    g('recv-units-label').textContent = isPallet ? 'Pallets received this month' : 'Boxes / cartons received this month';
+  // ═══ MONTHLY RECEIVING & STORAGE ════════════════════════════════
+  const recvType = g('recv-type')?.value || 'carton_carrier';
+  const isHours  = recvType === 'container_floor';
+  const isPallet = recvType === 'pallet_same';
+  if (g('f-recv-units'))     g('f-recv-units').style.display     = isHours ? 'none' : 'block';
+  if (g('f-recv-hours'))     g('f-recv-hours').style.display     = isHours ? 'block' : 'none';
+  if (g('f-items-per-box'))  g('f-items-per-box').style.display  = (isHours || isPallet) ? 'none' : 'block';
+  if (g('recv-units-label')) g('recv-units-label').textContent   = isPallet ? 'Pallets received this month' : 'Boxes / cartons received this month';
 
-    const recvRateMap = { carton_carrier: 2.25, carton_mixed: 1.95, pallet_same: 13.75 };
-    let recvCost = 0, stockUnits = 0, recvDesc = '';
-    if (isHours) {
-      recvCost = gc('recv-hours') * 49.50;
-      recvDesc = `${gc('recv-hours')} hrs × $49.50`;
-    } else {
-      const rate = recvRateMap[recvType];
-      const units = gc('recv-units');
-      recvCost = units * rate;
-      if (isPallet) {
-        recvDesc = `${units} pallets × $${fmt(rate)}`;
-      } else {
-        const ipb = gc('items-per-box');
-        stockUnits = units * ipb;
-        recvDesc = `${units} boxes × $${fmt(rate)}`;
-      }
-    }
-
-    const calloutEl = g('stock-callout');
-    if (isHours) {
-      calloutEl.innerHTML = `<strong>Container floor-loaded:</strong> ${gc('recv-hours')} hours × $49.50 = <strong>${fmtDollar(recvCost)}</strong>`;
-    } else if (isPallet) {
-      calloutEl.innerHTML = `<strong>${gc('recv-units')} pallets received</strong> — charged at $13.75 per pallet<br>Receiving cost: <strong>${fmtDollar(recvCost)}</strong>`;
+  const recvRateMap = { carton_carrier: 2.25, carton_mixed: 1.95, pallet_same: 13.75 };
+  let recvCost = 0, stockUnits = 0, recvDesc = '';
+  if (isHours) {
+    recvCost = gc('recv-hours') * 49.50;
+    recvDesc = `${gc('recv-hours')} hrs × $49.50`;
+  } else {
+    const rate = recvRateMap[recvType];
+    const units = gc('recv-units');
+    recvCost = units * rate;
+    if (isPallet) {
+      recvDesc = `${units} pallets × $${fmt(rate)}`;
     } else {
       const ipb = gc('items-per-box');
-      calloutEl.innerHTML = `<strong>${gc('recv-units')} boxes × ${ipb} items = ${stockUnits} units received</strong><br>3PL charges per box, not per item inside it.<br>Receiving cost: <strong>${fmtDollar(recvCost)}</strong> (${fmtDollar(recvCost / Math.max(1,stockUnits))} per unit received)`;
+      stockUnits = units * ipb;
+      recvDesc = `${units} boxes × $${fmt(rate)}`;
     }
-
-    const shR = R.shelfWeek[t], biR = R.binWeek[t], paR = R.palletWeek[t];
-    const storWeekly  = gc('stor-shelf') * shR + gc('stor-bin') * biR + gc('stor-pallet') * paR;
-    const storMonthly = storWeekly * 4.33;
-    g('stor-shelf-hint').textContent  = `${gc('stor-shelf')} × $${shR}/wk = ${fmtDollar(gc('stor-shelf')*shR)}/wk`;
-    g('stor-bin-hint').textContent    = `${gc('stor-bin')} × $${biR}/wk = ${fmtDollar(gc('stor-bin')*biR)}/wk`;
-    g('stor-pallet-hint').textContent = `${gc('stor-pallet')} × $${paR}/wk = ${fmtDollar(gc('stor-pallet')*paR)}/wk`;
-
-    const avgItems   = Math.max(1, gv('avg-items'));
-    const avgPick    = R.orderFee[t] + (avgItems - 1) * R.addPick[t];
-    const pI = Math.min(100, gv('pct-insert'))  / 100;
-    const pS = Math.min(100, gv('pct-sticker')) / 100;
-    const pD = Math.min(100, gv('pct-dunnage')) / 100;
-    const avgPkg     = gv('avg-pkg');
-    const avgOrder   = avgPick + pI * 0.05 + pS * 0.05 + pD * 0.10 + avgPkg;
-    const monthlyPP  = avgOrder * monthly;
-    const monthlyTotal = recvCost + storMonthly + monthlyPP;
-
-    // Metrics
-    g('metric-grid').innerHTML = `
-      <div class="metric"><div class="mlabel">Orders/mo</div><div class="mval">${monthly}</div><div class="msub">${tLabels[t]}</div></div>
-      <div class="metric"><div class="mlabel">Receiving</div><div class="mval">${fmtDollar(recvCost)}</div><div class="msub">${recvDesc}</div></div>
-      <div class="metric"><div class="mlabel">Storage/mo</div><div class="mval">${fmtDollar(storMonthly)}</div><div class="msub">${fmtDollar(storWeekly)}/wk × 4.33</div></div>
-      <div class="metric"><div class="mlabel">Pick &amp; Pack</div><div class="mval">${fmtDollar(monthlyPP)}</div><div class="msub">${monthly} × ${fmtDollar(avgOrder)} avg</div></div>
-      <div class="metric"><div class="mlabel">Cost per unit</div><div class="mval">${stockUnits > 0 ? fmtDollar(recvCost/stockUnits) : '—'}</div><div class="msub">receiving only</div></div>
-      <div class="metric hi"><div class="mlabel">Monthly total</div><div class="mval">${fmtDollar(monthlyTotal)}</div><div class="msub">all warehouse fees</div></div>
-    `;
-
-    // Breakdown lines
-    const palletLine = gc('stor-pallet') > 0
-      ? `<div class="bc-row"><div><div class="bc-label">Storage — pallets</div><div class="bc-sub">${gc('stor-pallet')} × $${paR}/wk × 4.33</div></div><span class="bc-val">${fmtDollar(gc('stor-pallet')*paR*4.33)}</span></div>` : '';
-
-    g('bc-lines').innerHTML = `
-      <div class="bc-row"><div><div class="bc-label">Receiving</div><div class="bc-sub">${recvDesc}</div></div><span class="bc-val">${fmtDollar(recvCost)}</span></div>
-      <div class="bc-row"><div><div class="bc-label">Storage — shelves</div><div class="bc-sub">${gc('stor-shelf')} × $${shR}/wk × 4.33</div></div><span class="bc-val">${fmtDollar(gc('stor-shelf')*shR*4.33)}</span></div>
-      <div class="bc-row"><div><div class="bc-label">Storage — bins</div><div class="bc-sub">${gc('stor-bin')} × $${biR}/wk × 4.33</div></div><span class="bc-val">${fmtDollar(gc('stor-bin')*biR*4.33)}</span></div>
-      ${palletLine}
-      <div class="bc-row"><div><div class="bc-label">Pick &amp; Pack (${monthly} orders)</div><div class="bc-sub">avg ${avgItems} item/order, ${fmtDollar(avgPick)} base + add-ons</div></div><span class="bc-val">${fmtDollar(monthlyPP)}</span></div>
-    `;
-    g('bc-total-val').textContent = fmtDollar(monthlyTotal);
-
- 
-
-    // Monthly profit
-    const avgSell2 = gv('avg-sell'), avgCogs2 = gv('avg-cogs');
-    const rev = avgSell2 * monthly;
-    const cogsTotal = avgCogs2 * monthly;
-    const mProfit = rev - cogsTotal - monthlyTotal;
-    const mMargin = rev > 0 ? mProfit / rev * 100 : 0;
-    const ms = mProfit >= 0 ? '+' : '';
-    g('monthly-profit-block').innerHTML =
-      `Revenue: <strong>${fmtDollar(rev)}</strong> (${monthly} × ${fmtDollar(avgSell2)})<br>` +
-      `Product costs: <strong>−${fmtDollar(cogsTotal)}</strong><br>` +
-      `Warehouse fees: <strong>−${fmtDollar(monthlyTotal)}</strong><br>` +
-      `<span class="profit ${mProfit>=0?'pos':'neg'}" style="font-size:16px;">${ms}${fmtDollar(mProfit)} monthly profit &nbsp;(${ms}${mMargin.toFixed(1)}%)</span>`;
   }
 
-  function resetAll() {
-    Object.assign(counters, { 'items':1,'insert-qty':1,'sticker-qty':1,'recv-units':10,'recv-hours':2,'items-per-box':10,'stor-shelf':5,'stor-bin':3,'stor-pallet':0 });
-    Object.keys(counters).forEach(id => { const el = g(id); if(el) el.textContent = counters[id]; });
-    ['add-insert','add-sticker','add-dunnage','pkg-polybag','pkg-protective','pkg-carton','pkg-bubble','pkg-shrink'].forEach(id => { if(g(id)) g(id).checked = false; });
-    ['monthly-shipments','sell-price','cogs','avg-sell','avg-cogs'].forEach((id,i) => { if(g(id)) g(id).value = [50,25,5,25,5][i]; });
-    ['avg-items','pct-insert','pct-sticker','pct-dunnage','avg-pkg'].forEach((id,i) => { if(g(id)) g(id).value = [1,0,0,0,0][i]; });
-    if(g('recv-type')) g('recv-type').value = 'carton_carrier';
-    calc();
+  if (g('stock-callout')) {
+    if (isHours) {
+      g('stock-callout').innerHTML = `<strong>Container floor-loaded:</strong> ${gc('recv-hours')} hrs × $49.50 = <strong>${fmtDollar(recvCost)}</strong>`;
+    } else if (isPallet) {
+      g('stock-callout').innerHTML = `<strong>${gc('recv-units')} pallets received</strong> at $13.75/pallet<br>Receiving cost: <strong>${fmtDollar(recvCost)}</strong>`;
+    } else {
+      const ipb = gc('items-per-box');
+      g('stock-callout').innerHTML = `<strong>${gc('recv-units')} boxes × ${ipb} items = ${stockUnits} units received</strong><br>3PL charges per box, not per item.<br>Receiving: <strong>${fmtDollar(recvCost)}</strong> (${fmtDollar(recvCost / Math.max(1, stockUnits))} per unit received)`;
+    }
   }
 
+  const shR = R.shelfWeek[t], biR = R.binWeek[t], paR = R.palletWeek[t];
+  const storWeekly  = gc('stor-shelf') * shR + gc('stor-bin') * biR + gc('stor-pallet') * paR;
+  const storMonthly = storWeekly * 4.33;
+  if (g('stor-shelf-hint'))  g('stor-shelf-hint').textContent  = `${gc('stor-shelf')} × $${shR}/wk = ${fmtDollar(gc('stor-shelf')*shR)}/wk`;
+  if (g('stor-bin-hint'))    g('stor-bin-hint').textContent    = `${gc('stor-bin')} × $${biR}/wk = ${fmtDollar(gc('stor-bin')*biR)}/wk`;
+  if (g('stor-pallet-hint')) g('stor-pallet-hint').textContent = `${gc('stor-pallet')} × $${paR}/wk = ${fmtDollar(gc('stor-pallet')*paR)}/wk`;
+  if (g('storage-weekly-summary')) g('storage-weekly-summary').innerHTML =
+    `Weekly storage: <strong>${fmtDollar(storWeekly)}</strong> &nbsp;→&nbsp; Monthly (×4.33): <strong>${fmtDollar(storMonthly)}</strong>`;
+
+  // ═══ MONTHLY PICK & PACK ════════════════════════════════════════
+  const avgItems   = Math.max(1, gv('avg-items'));
+  const avgPick    = R.orderFee[t] + (avgItems - 1) * R.addPick[t];
+  const pI = Math.min(100, gv('pct-insert'))   / 100;
+  const pS = Math.min(100, gv('pct-sticker'))  / 100;
+  const pD = Math.min(100, gv('pct-dunnage'))  / 100;
+  const pG = Math.min(100, gv('pct-giftwrap')) / 100;
+  const pK = Math.min(100, gv('pct-kitting'))  / 100;
+  const avgGWcost  = gv('avg-giftwrap-cost');
+  const avgKcost   = gv('avg-kitting-cost');
+  const avgPkg     = gv('avg-pkg');
+  const avgShip    = gv('avg-shipping');
+  const avgOrder   = avgPick + pI*0.05 + pS*0.05 + pD*0.10 + pG*avgGWcost + pK*avgKcost + avgPkg + avgShip;
+  const monthlyPP  = avgOrder * monthly;
+
+  // ═══ FIXED MONTHLY FEES ═════════════════════════════════════════
+  toggleSub('fee-3pl-mgmt', 'sr-3pl-mgmt');
+  toggleSub('fee-wms',      'sr-wms');
+  toggleSub('fee-platform', 'sr-platform');
+  toggleSub('fee-minimum',  'sr-minimum');
+  toggleSub('fee-other',    'sr-other-fee');
+
+  const fee3plMgmt = g('fee-3pl-mgmt')?.checked ? gv('val-3pl-mgmt') : 0;
+  const feeWms     = g('fee-wms')?.checked       ? gv('val-wms')      : 0;
+  const feePlatform= g('fee-platform')?.checked  ? gv('val-platform') : 0;
+  const feeOther   = g('fee-other')?.checked     ? gv('val-other-fee'): 0;
+  const fixedFees  = fee3plMgmt + feeWms + feePlatform + feeOther;
+
+  // Minimum monthly billing
+  let minimumSurcharge = 0;
+  if (g('fee-minimum')?.checked) {
+    const minVal = gv('val-minimum');
+    const variableSoFar = recvCost + storMonthly + monthlyPP;
+    if (variableSoFar < minVal) {
+      minimumSurcharge = minVal - variableSoFar;
+      if (g('minimum-hint')) g('minimum-hint').textContent = `Variable bill ($${fmt(variableSoFar)}) is below minimum — surcharge: $${fmt(minimumSurcharge)}`;
+    } else {
+      minimumSurcharge = 0;
+      if (g('minimum-hint')) g('minimum-hint').textContent = `Variable bill ($${fmt(variableSoFar)}) exceeds minimum — no surcharge.`;
+    }
+  }
+
+  const monthlyTotal = recvCost + storMonthly + monthlyPP + fixedFees + minimumSurcharge;
+
+  // ═══ METRICS ════════════════════════════════════════════════════
+  if (g('metric-grid')) g('metric-grid').innerHTML = `
+    <div class="metric"><div class="mlabel">Orders/mo</div><div class="mval">${monthly}</div><div class="msub">${tLabels[t]}</div></div>
+    <div class="metric"><div class="mlabel">Receiving</div><div class="mval">${fmtDollar(recvCost)}</div><div class="msub">${recvDesc}</div></div>
+    <div class="metric"><div class="mlabel">Storage/mo</div><div class="mval">${fmtDollar(storMonthly)}</div><div class="msub">${fmtDollar(storWeekly)}/wk × 4.33</div></div>
+    <div class="metric"><div class="mlabel">Pick &amp; Pack</div><div class="mval">${fmtDollar(monthlyPP)}</div><div class="msub">${monthly} × ${fmtDollar(avgOrder)} avg</div></div>
+    <div class="metric"><div class="mlabel">Fixed fees</div><div class="mval">${fmtDollar(fixedFees + minimumSurcharge)}</div><div class="msub">platform + 3PL fees</div></div>
+    <div class="metric hi"><div class="mlabel">Monthly total</div><div class="mval">${fmtDollar(monthlyTotal)}</div><div class="msub">all warehouse fees</div></div>
+  `;
+
+  // ═══ BREAKDOWN ══════════════════════════════════════════════════
+  const palletLine = gc('stor-pallet') > 0
+    ? `<div class="bc-row"><div><div class="bc-label">Storage — pallets</div><div class="bc-sub">${gc('stor-pallet')} × $${paR}/wk × 4.33</div></div><span class="bc-val">${fmtDollar(gc('stor-pallet')*paR*4.33)}</span></div>` : '';
+  const minLine = minimumSurcharge > 0
+    ? `<div class="bc-row"><div><div class="bc-label">Minimum billing surcharge</div><div class="bc-sub">Raised to $${fmt(gv('val-minimum'))} floor</div></div><span class="bc-val">${fmtDollar(minimumSurcharge)}</span></div>` : '';
+
+  if (g('bc-lines')) g('bc-lines').innerHTML = `
+    <div class="bc-section">Receiving</div>
+    <div class="bc-row"><div><div class="bc-label">Receiving</div><div class="bc-sub">${recvDesc}</div></div><span class="bc-val">${fmtDollar(recvCost)}</span></div>
+    <div class="bc-section">Storage</div>
+    <div class="bc-row"><div><div class="bc-label">Shelves</div><div class="bc-sub">${gc('stor-shelf')} × $${shR}/wk × 4.33</div></div><span class="bc-val">${fmtDollar(gc('stor-shelf')*shR*4.33)}</span></div>
+    <div class="bc-row"><div><div class="bc-label">Bins</div><div class="bc-sub">${gc('stor-bin')} × $${biR}/wk × 4.33</div></div><span class="bc-val">${fmtDollar(gc('stor-bin')*biR*4.33)}</span></div>
+    ${palletLine}
+    <div class="bc-section">Pick &amp; Pack</div>
+    <div class="bc-row"><div><div class="bc-label">Pick &amp; pack (${monthly} orders)</div><div class="bc-sub">avg ${avgItems} item/order · ${fmtDollar(avgPick)} base + add-ons</div></div><span class="bc-val">${fmtDollar(monthlyPP)}</span></div>
+    ${fixedFees > 0 || minimumSurcharge > 0 ? '<div class="bc-section">Fixed &amp; Platform Fees</div>' : ''}
+    ${fee3plMgmt > 0 ? `<div class="bc-row"><div><div class="bc-label">3PL account / mgmt fee</div></div><span class="bc-val">${fmtDollar(fee3plMgmt)}</span></div>` : ''}
+    ${feeWms > 0 ? `<div class="bc-row"><div><div class="bc-label">WMS / tech fee</div></div><span class="bc-val">${fmtDollar(feeWms)}</span></div>` : ''}
+    ${feePlatform > 0 ? `<div class="bc-row"><div><div class="bc-label">e-commerce platform</div></div><span class="bc-val">${fmtDollar(feePlatform)}</span></div>` : ''}
+    ${feeOther > 0 ? `<div class="bc-row"><div><div class="bc-label">Other fixed fee</div></div><span class="bc-val">${fmtDollar(feeOther)}</span></div>` : ''}
+    ${minLine}
+  `;
+  if (g('bc-total-val')) g('bc-total-val').textContent = fmtDollar(monthlyTotal);
+
+  // Monthly profitability
+  const avgSell2 = gv('avg-sell'), avgCogs2 = gv('avg-cogs');
+  const rev2 = avgSell2 * monthly;
+  const cogsTotal2 = avgCogs2 * monthly;
+  const mProfit2 = rev2 - cogsTotal2 - monthlyTotal;
+  const mMargin2 = rev2 > 0 ? mProfit2 / rev2 * 100 : 0;
+  const ms2 = mProfit2 >= 0 ? '+' : '';
+  if (g('monthly-profit-block')) g('monthly-profit-block').innerHTML =
+    `Revenue: <strong>${fmtDollar(rev2)}</strong> (${monthly} × ${fmtDollar(avgSell2)})<br>` +
+    `Product costs: <strong>−${fmtDollar(cogsTotal2)}</strong><br>` +
+    `Warehouse fees: <strong>−${fmtDollar(monthlyTotal)}</strong><br>` +
+    `<span class="profit ${mProfit2>=0?'pos':'neg'}" style="font-size:16px;">${ms2}${fmtDollar(mProfit2)} monthly profit &nbsp;(${ms2}${mMargin2.toFixed(1)}%)</span>`;
+
+  // ═══ RETURNS ════════════════════════════════════════════════════
+  const returnRatePct  = gv('return-rate');
+  const manualOverride = g('return-count-manual')?.value?.trim();
+  const returnCount    = manualOverride ? Math.max(0, parseInt(manualOverride)||0) : Math.round(monthly * returnRatePct / 100);
+  if (g('rv-count')) g('rv-count').textContent = returnCount;
+  if (g('return-count-hint') && !manualOverride) g('return-count-hint').textContent = `${returnRatePct}% of ${monthly} orders = ~${returnCount} returns/mo`;
+
+  // toggle sub-rows for returns
+  toggleSub('ret-receipt', 'sr-ret-receipt');
+  toggleSub('ret-inspect', 'sr-ret-inspect');
+  toggleSub('ret-repack',  'sr-ret-repack');
+  toggleSub('ret-label',   'sr-ret-label');
+  toggleSub('ret-dispose', 'sr-ret-dispose');
+
+  const retReceiptCost = g('ret-receipt')?.checked ? returnCount * gv('val-ret-receipt') : 0;
+  const retInspectCost = g('ret-inspect')?.checked ? returnCount * gv('val-ret-inspect') : 0;
+  const retRepackCost  = g('ret-repack')?.checked  ? returnCount * gv('val-ret-repack')  : 0;
+  const retLabelCost   = g('ret-label')?.checked   ? returnCount * gv('val-ret-label')   : 0;
+  const retDisposePct  = (gv('val-ret-dispose-pct') / 100);
+  const retDisposedUnits = returnCount * retDisposePct;
+  const retDisposeCost = g('ret-dispose')?.checked  ? retDisposedUnits * gv('val-ret-dispose') : 0;
+
+  const retHandlingTotal = retReceiptCost + retInspectCost + retRepackCost + retLabelCost + retDisposeCost;
+
+  // Inventory impact
+  const retCogs     = gv('cogs');  // use per-order cogs
+  const retPctResell = gv('ret-pct-resell') / 100;
+  const retPctDiscSell = gv('ret-pct-discount-sell') / 100;
+  const retPctWriteoff = gv('ret-pct-writeoff') / 100;
+  const retCogsTotalImpact = returnCount * retCogs;
+  const retWriteoffValue   = returnCount * retPctWriteoff * retCogs;
+  const retDiscountLoss    = returnCount * retPctResell * retPctDiscSell * gv('sell-price');
+
+  const retTotal = retHandlingTotal + retWriteoffValue + retDiscountLoss;
+
+  setLine('rli-receipt', 'rv-receipt', retReceiptCost);
+  setLine('rli-inspect', 'rv-inspect', retInspectCost);
+  setLine('rli-repack',  'rv-repack',  retRepackCost);
+  setLine('rli-label',   'rv-label',   retLabelCost);
+  setLine('rli-dispose', 'rv-dispose', retDisposeCost);
+  if (g('rv-cogs-impact')) g('rv-cogs-impact').textContent = fmtDollar(retCogsTotalImpact);
+  if (g('rv-writeoff'))    g('rv-writeoff').textContent    = fmtDollar(retWriteoffValue);
+  if (g('rv-discount-loss'))g('rv-discount-loss').textContent = fmtDollar(retDiscountLoss);
+  if (g('rv-total'))       g('rv-total').textContent       = fmt(retTotal);
+  if (g('return-per-order-cost')) g('return-per-order-cost').innerHTML =
+    returnCount > 0
+      ? `Return handling: ${fmtDollar(retHandlingTotal / returnCount)}/return &nbsp;·&nbsp; Total return cost per <em>shipped</em> order: ${fmtDollar(retTotal / monthly)}`
+      : 'No returns this month.';
+
+  // ═══ FULL P&L ═══════════════════════════════════════════════════
+  // sync pnl inputs
+  if (g('pnl-sell'))   g('pnl-sell').value   = g('avg-sell')?.value  || g('sell-price')?.value || '25';
+  if (g('pnl-orders')) g('pnl-orders').value  = monthly;
+
+  const pnlSell     = gv('pnl-sell');
+  const pnlOrders   = Math.max(1, gv('pnl-orders'));
+  const pnlProcPct  = gv('pnl-proc-pct');
+  const pnlProcFlat = gv('pnl-proc-flat');
+  const pnlAds      = gv('pnl-ads');
+  const pnlInfluencer=gv('pnl-influencer');
+  const pnlEmail    = gv('pnl-email');
+  const pnlHours    = gv('pnl-hours');
+  const pnlRate     = gv('pnl-rate');
+  const pnlOverhead = gv('pnl-overhead');
+
+  const grossRevenue  = pnlSell * pnlOrders;
+  const procFees      = (pnlSell * pnlProcPct / 100 + pnlProcFlat) * pnlOrders;
+  const netRevenue    = grossRevenue - procFees;
+  const cogsPnl       = gv('avg-cogs') * pnlOrders;
+  const grossProfit   = netRevenue - cogsPnl;
+  const marketingTotal= pnlAds + pnlInfluencer + pnlEmail;
+  const labourTotal   = pnlHours * pnlRate;
+  const overheadTotal = pnlOverhead;
+  const warehouseTotal= monthlyTotal;
+  const returnCostPnl = retTotal;
+  const totalCosts    = cogsPnl + marketingTotal + labourTotal + overheadTotal + warehouseTotal + returnCostPnl + procFees;
+  const netProfit     = grossRevenue - totalCosts;
+  const netMargin     = grossRevenue > 0 ? netProfit / grossRevenue * 100 : 0;
+
+  const rowClass = netProfit >= 0 ? 'pos' : 'neg';
+
+  if (g('pnl-table')) g('pnl-table').innerHTML = `
+    <thead><tr><th>Line item</th><th style="text-align:right;">Monthly ($)</th></tr></thead>
+    <tbody>
+      <tr class="section-header"><td colspan="2">Revenue</td></tr>
+      <tr class="income"><td>Gross sales (${pnlOrders} orders × ${fmtDollar(pnlSell)})</td><td>${fmtDollar(grossRevenue)}</td></tr>
+      <tr class="expense"><td>Payment processing (${pnlProcPct}% + ${fmtDollar(pnlProcFlat)}/order)</td><td>−${fmtDollar(procFees)}</td></tr>
+      <tr class="subtotal"><td>Net Revenue</td><td>${fmtDollar(netRevenue)}</td></tr>
+
+      <tr class="section-header"><td colspan="2">Cost of Goods</td></tr>
+      <tr class="expense"><td>Product COGS (${pnlOrders} × ${fmtDollar(gv('avg-cogs'))})</td><td>−${fmtDollar(cogsPnl)}</td></tr>
+      <tr class="subtotal"><td>Gross Profit</td><td>${fmtDollar(grossProfit)}</td></tr>
+
+      <tr class="section-header"><td colspan="2">Warehouse &amp; Fulfillment</td></tr>
+      <tr class="expense"><td>Receiving</td><td>−${fmtDollar(recvCost)}</td></tr>
+      <tr class="expense"><td>Storage (shelves, bins, pallets)</td><td>−${fmtDollar(storMonthly)}</td></tr>
+      <tr class="expense"><td>Pick &amp; Pack</td><td>−${fmtDollar(monthlyPP)}</td></tr>
+      ${fixedFees + minimumSurcharge > 0 ? `<tr class="expense"><td>Fixed 3PL / platform fees</td><td>−${fmtDollar(fixedFees + minimumSurcharge)}</td></tr>` : ''}
+
+      <tr class="section-header"><td colspan="2">Returns</td></tr>
+      <tr class="expense"><td>Return handling (${returnCount} returns)</td><td>−${fmtDollar(retHandlingTotal)}</td></tr>
+      <tr class="expense"><td>Inventory write-offs &amp; discounts</td><td>−${fmtDollar(retWriteoffValue + retDiscountLoss)}</td></tr>
+
+      <tr class="section-header"><td colspan="2">Marketing &amp; Acquisition</td></tr>
+      <tr class="expense"><td>Ads</td><td>${pnlAds > 0 ? '−'+fmtDollar(pnlAds) : '—'}</td></tr>
+      <tr class="expense"><td>Influencer / affiliate</td><td>${pnlInfluencer > 0 ? '−'+fmtDollar(pnlInfluencer) : '—'}</td></tr>
+      <tr class="expense"><td>Email / SMS platform</td><td>${pnlEmail > 0 ? '−'+fmtDollar(pnlEmail) : '—'}</td></tr>
+
+      <tr class="section-header"><td colspan="2">Labour &amp; Overhead</td></tr>
+      <tr class="expense"><td>Labour (${pnlHours} hrs × ${fmtDollar(pnlRate)})</td><td>${labourTotal > 0 ? '−'+fmtDollar(labourTotal) : '—'}</td></tr>
+      <tr class="expense"><td>Other overhead</td><td>${overheadTotal > 0 ? '−'+fmtDollar(overheadTotal) : '—'}</td></tr>
+
+      <tr class="total-row profit-row ${rowClass}"><td><strong>Net Profit / Loss</strong></td><td><strong>${netProfit >= 0 ? '+' : ''}${fmtDollar(netProfit)}</strong> (${netMargin.toFixed(1)}%)</td></tr>
+    </tbody>
+  `;
+}
+
+// ─── Reset ────────────────────────────────────────────────────────────────────
+function resetAll() {
+  Object.assign(counters, { 'items':1,'insert-qty':1,'sticker-qty':1,'relabel-qty':1,'recv-units':10,'recv-hours':2,'items-per-box':10,'stor-shelf':5,'stor-bin':3,'stor-pallet':0 });
+  Object.keys(counters).forEach(id => { const el = g(id); if(el) el.textContent = counters[id]; });
+  ['add-insert','add-sticker','add-dunnage','add-giftwrap','add-relabel','add-kitting','add-shipping',
+   'pkg-polybag','pkg-protective','pkg-carton','pkg-bubble','pkg-shrink','pkg-tape',
+   'fee-3pl-mgmt','fee-wms','fee-platform','fee-minimum','fee-other',
+   'ret-inspect','ret-repack','ret-label','ret-dispose'
+  ].forEach(id => { if(g(id)) g(id).checked = false; });
+  if(g('ret-receipt')) g('ret-receipt').checked = true;
+  ['monthly-shipments','sell-price','cogs','avg-sell','avg-cogs'].forEach((id,i) => { if(g(id)) g(id).value = [50,25,5,25,5][i]; });
+  ['avg-items','pct-insert','pct-sticker','pct-dunnage','pct-giftwrap','avg-giftwrap-cost','pct-kitting','avg-kitting-cost','avg-pkg','avg-shipping'].forEach((id,i) => { if(g(id)) g(id).value = [1,0,0,0,0,0.5,0,0.75,0,0][i]; });
+  if(g('recv-type')) g('recv-type').value = 'carton_carrier';
+  if(g('return-rate')) g('return-rate').value = 5;
+  if(g('return-count-manual')) g('return-count-manual').value = '';
+  if(g('ret-pct-resell')) g('ret-pct-resell').value = 60;
+  if(g('ret-pct-discount-sell')) g('ret-pct-discount-sell').value = 20;
+  if(g('ret-pct-writeoff')) g('ret-pct-writeoff').value = 20;
+  if(g('val-ret-receipt')) g('val-ret-receipt').value = 3.00;
+  if(g('val-ret-inspect')) g('val-ret-inspect').value = 1.50;
+  if(g('val-ret-repack'))  g('val-ret-repack').value  = 2.00;
+  if(g('val-ret-label'))   g('val-ret-label').value   = 5.50;
+  if(g('val-ret-dispose')) g('val-ret-dispose').value = 0.50;
+  if(g('val-ret-dispose-pct')) g('val-ret-dispose-pct').value = 20;
+  ['pnl-ads','pnl-influencer','pnl-email','pnl-overhead'].forEach(id => { if(g(id)) g(id).value = 0; });
+  if(g('pnl-hours')) g('pnl-hours').value = 20;
+  if(g('pnl-rate'))  g('pnl-rate').value  = 25;
+  if(g('pnl-proc-pct'))  g('pnl-proc-pct').value  = 2.9;
+  if(g('pnl-proc-flat')) g('pnl-proc-flat').value  = 0.30;
   calc();
+}
 
-   // ============================================================
-// HAMBURGER & DRAWER — JS
-// Copy this toggleDrawer() function and the scroll listener
-// into any new page alongside the CSS and HTML blocks above.
-// ============================================================
- 
+calc();
+
+// ─── Drawer / hamburger ──────────────────────────────────────────────────────
 function toggleDrawer() {
   document.getElementById('hamburger').classList.toggle('open');
   document.getElementById('drawer').classList.toggle('open');
   document.getElementById('drawerOverlay').classList.toggle('open');
 }
- 
-// Hides hamburger on scroll (back-to-top button appears instead)
+
 window.addEventListener('scroll', function() {
-  const btn = document.getElementById('backToTop');
+  const btn    = document.getElementById('backToTop');
   const burger = document.getElementById('hamburger');
   if (window.scrollY > 300) {
     btn.classList.add('visible');
-    burger.style.opacity = '0';
-    burger.style.pointerEvents = 'none';
+    burger.style.opacity = '0'; burger.style.pointerEvents = 'none';
   } else {
     btn.classList.remove('visible');
-    burger.style.opacity = '1';
-    burger.style.pointerEvents = 'all';
+    burger.style.opacity = '1'; burger.style.pointerEvents = 'all';
   }
 });
- 
-// ============================================================
-// END HAMBURGER & DRAWER — JS
-// ============================================================
 </script>
 </body>
 </html>
